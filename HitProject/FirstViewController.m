@@ -28,7 +28,6 @@
     if (self) {
         self  = [super init];
         server = [ServerSocket sharedSocket];
-//        control = [HitControl sharedControl];
     }
     return self;
 }

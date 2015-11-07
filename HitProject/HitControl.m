@@ -173,10 +173,4 @@ static HitControl* _instance = nil;
 
 
 
-
-
-
-
-
-
 @end

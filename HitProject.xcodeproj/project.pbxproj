@@ -24,7 +24,6 @@
 		E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FC61BEC32C6003AE247 /* AsyncUdpSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E3E91FCC1BEC8117003AE247 /* HitControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FCB1BEC8117003AE247 /* HitControl.m */; };
 		E3FC88881BEAF3750016376D /* RadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FC88871BEAF3750016376D /* RadioButton.m */; };
-		E3FC888D1BEB52B10016376D /* SocketShowScreenViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3FC888C1BEB52B10016376D /* SocketShowScreenViewController_iPhone.xib */; };
 		E3FC889F1BEB54050016376D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3FC889E1BEB54050016376D /* CFNetwork.framework */; };
 		E3FC88A11BEB54150016376D /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3FC88A01BEB54150016376D /* CoreFoundation.framework */; };
 		E3FC88A31BEB541D0016376D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3FC88A21BEB541D0016376D /* UIKit.framework */; };
@@ -48,11 +47,11 @@
 		E357F60F1BE20F6500AE9454 /* ThirdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThirdViewController.m; sourceTree = "<group>"; };
 		E357F6111BE20F8100AE9454 /* FourthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FourthViewController.h; sourceTree = "<group>"; };
 		E357F6121BE20F8100AE9454 /* FourthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FourthViewController.m; sourceTree = "<group>"; };
-		E37BA5001BE30EE300DB7A96 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		E37BA5011BE462C700DB7A96 /* JSAnalogueStick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSAnalogueStick.h; sourceTree = "<group>"; };
 		E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSAnalogueStick.m; sourceTree = "<group>"; };
 		E37BA5081BE7162500DB7A96 /* DeskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeskView.h; sourceTree = "<group>"; };
 		E37BA5091BE7162500DB7A96 /* DeskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeskView.m; sourceTree = "<group>"; };
+		E3B146BD1BED9CB100963FA8 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		E3C0B51E1BE1EAA5004437EC /* HitProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HitProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3C0B5221BE1EAA5004437EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3C0B5231BE1EAA5004437EC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -78,7 +77,6 @@
 		E3E91FCB1BEC8117003AE247 /* HitControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HitControl.m; sourceTree = "<group>"; };
 		E3FC88861BEAF3750016376D /* RadioButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadioButton.h; sourceTree = "<group>"; };
 		E3FC88871BEAF3750016376D /* RadioButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadioButton.m; sourceTree = "<group>"; };
-		E3FC888C1BEB52B10016376D /* SocketShowScreenViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SocketShowScreenViewController_iPhone.xib; sourceTree = "<group>"; };
 		E3FC889E1BEB54050016376D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		E3FC88A01BEB54150016376D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		E3FC88A21BEB541D0016376D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -150,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				E3E91FC91BEC7795003AE247 /* AppMacro.h */,
+				E3B146BD1BED9CB100963FA8 /* PrefixHeader.pch */,
 				E3FC888E1BEB52EE0016376D /* AsyncSocket */,
 				E3C0B5251BE1EAA5004437EC /* AppDelegate.h */,
 				E3C0B5261BE1EAA5004437EC /* AppDelegate.m */,
@@ -169,9 +168,7 @@
 				E3FC88871BEAF3750016376D /* RadioButton.m */,
 				E3C0B5311BE1EAA5004437EC /* Images.xcassets */,
 				E3C0B5331BE1EAA5004437EC /* LaunchScreen.xib */,
-				E3FC888C1BEB52B10016376D /* SocketShowScreenViewController_iPhone.xib */,
 				E3C0B5211BE1EAA5004437EC /* Supporting Files */,
-				E37BA5001BE30EE300DB7A96 /* PrefixHeader.pch */,
 			);
 			path = HitProject;
 			sourceTree = "<group>";
@@ -302,7 +299,6 @@
 			files = (
 				E3C0B5351BE1EAA5004437EC /* LaunchScreen.xib in Resources */,
 				E3C0B5321BE1EAA5004437EC /* Images.xcassets in Resources */,
-				E3FC888D1BEB52B10016376D /* SocketShowScreenViewController_iPhone.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,7 +485,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = /Users/li529700/Documents/HitProject/HitProject/HitProject/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/li529700/Documents/HitRobot/HitProject/HitProject/PrefixHeader.pch;
 				INFOPLIST_FILE = HitProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -505,7 +501,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = /Users/li529700/Documents/HitProject/HitProject/HitProject/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/li529700/Documents/HitRobot/HitProject/HitProject/PrefixHeader.pch;
 				INFOPLIST_FILE = HitProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
