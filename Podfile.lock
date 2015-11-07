@@ -1,0 +1,16 @@
+PODS:
+  - IQKeyboardManager (3.3.4)
+  - Masonry (0.6.3)
+  - Toast (3.0)
+
+DEPENDENCIES:
+  - IQKeyboardManager
+  - Masonry
+  - Toast
+
+SPEC CHECKSUMS:
+  IQKeyboardManager: ac803e61e5b50efae6b3aeedd95a02c7c7d3b2b3
+  Masonry: ff105a956abcd19a618b2028b121cb638d7a8e2f
+  Toast: 32c59229abfcf41850162b83bb9259dc84372473
+
+COCOAPODS: 0.37.1
