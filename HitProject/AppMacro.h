@@ -18,7 +18,8 @@
 //连接失败
 #define NOTICE_CONNECTFAIL                  @"NOTICE_CONNECTFAIL"
 
-#define NOTICE_TIME_BUTTON_CLICK            @"NOTICE_TIME_BUTTON_CLICK"
+//失去连接
+#define NOTICE_DISCONNECT                   @"NOTICE_DISCONNECT"
 
 #define NOTICE_OPEN_LOCAL_VIEW              @"NOTICE_OPEN_LOCAL_VIEW"
 

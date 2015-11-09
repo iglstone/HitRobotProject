@@ -10,9 +10,13 @@
 
 @interface HitControl : NSObject
 
-@property (nonatomic) ServerSocket *server;
+@property (nonatomic, strong) ServerSocket *server;
 
 + (instancetype) sharedControl;
+
+- (void)startListen ;
+
+- (void)stopListen ;
 
 - (void)mealMode ;
 

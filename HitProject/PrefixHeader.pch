@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "ServerSocket.h"
 #import "HitControl.h"
+#import "CommonsFunc.h"
 
 #ifndef HitProject_PrefixHeader_pch
 #define HitProject_PrefixHeader_pch

@@ -11,6 +11,7 @@
 #import "SecondViewController.h"
 #import "ThirdViewController.h"
 #import "FourthViewController.h"
+#import "MainViewController.h"
 
 @interface AppDelegate ()
 
@@ -25,26 +26,27 @@
 //    self.server = [[ServerSocket alloc] init];
     
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
-    FirstViewController *first = [FirstViewController new];
+    MainViewController *main = [MainViewController new];
     
-    UIImage *image = [UIImage imageNamed:@"me.png"];
-    image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UITabBarItem *itm = [[UITabBarItem alloc]initWithTitle:@"欢迎界面" image:image selectedImage:nil];
-    first.tabBarItem = itm;
+//    UIImage *image = [UIImage imageNamed:@"me.png"];
+//    FirstViewController *first = [FirstViewController new];
+//    image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+//    UITabBarItem *itm = [[UITabBarItem alloc]initWithTitle:@"欢迎界面" image:image selectedImage:nil];
+//    first.tabBarItem = itm;
+//    
+//    SecondViewController *second = [SecondViewController new];
+//    second.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"操作界面" image:image selectedImage:nil];
+//    
+//    ThirdViewController *third = [ThirdViewController new];
+//    third.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"送餐界面" image:image selectedImage:nil];
+//    
+//    FourthViewController *fourth = [FourthViewController new];
+//    fourth.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"语音界面" image:image selectedImage:nil];
+//    
+//    UITabBarController *tb = [[UITabBarController alloc]init];
+//    tb.viewControllers = @[first, second, third, fourth];
     
-    SecondViewController *second = [SecondViewController new];
-    second.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"操作界面" image:image selectedImage:nil];
-    
-    ThirdViewController *third = [ThirdViewController new];
-    third.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"送餐界面" image:image selectedImage:nil];
-    
-    FourthViewController *fourth = [FourthViewController new];
-    fourth.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"语音界面" image:image selectedImage:nil];
-    
-    UITabBarController *tb = [[UITabBarController alloc]init];
-    tb.viewControllers = @[first, second, third, fourth];
-    
-    self.window.rootViewController = tb;
+    self.window.rootViewController = main;//tb;
     [self.window makeKeyAndVisible];
     return YES;
 }

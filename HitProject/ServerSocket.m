@@ -93,7 +93,8 @@ static ServerSocket* _instance = nil;
         result = [[NSMutableString alloc] init];
         
         listenSocket = [[AsyncSocket alloc] initWithDelegate:self];
-        connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
+//        connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
+        connectedSockets = [[NSMutableArray alloc] init];
         [listenSocket setRunLoopModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
         
         isRunning = NO;
@@ -113,7 +114,6 @@ static ServerSocket* _instance = nil;
         [s disconnect];
     }
     [connectedSockets release];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
 }
 
@@ -128,6 +128,7 @@ static ServerSocket* _instance = nil;
 - (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {
     NSLog(@"Server willDisconnectWithError");
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
 }
 
 /**
@@ -143,6 +144,7 @@ static ServerSocket* _instance = nil;
 {
     NSLog(@"Server onSocketDidDisconnect");
     [connectedSockets removeObject:sock];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
 }
 
 /**
@@ -198,7 +200,9 @@ static ServerSocket* _instance = nil;
     [sock readDataWithTimeout:-1 tag:0];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONNECTSUCCESS object:nil userInfo:@{@"port":@(port),
-                                                                                                           @"host":host}];
+                                                                                                           @"host":host,
+                                                                                                           @"status":@"connected",
+                                                                                                           @"socket":sock}];
 }
 
 /**

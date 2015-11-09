@@ -9,25 +9,24 @@
 #import "FirstViewController.h"
 #include <ifaddrs.h>
 #include <arpa/inet.h>
-
+#import "ConnectStatesCell.h"
 
 @interface FirstViewController ()
 
 @property (nonatomic) ServerSocket *server;
 
-//@property (nonatomic) HitControl *control;
+@property (nonatomic) HitControl *control;
 
 @end
 
 @implementation FirstViewController
-@synthesize server;
-//@synthesize control;
+@synthesize control;
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         self  = [super init];
-        server = [ServerSocket sharedSocket];
+        control = [HitControl sharedControl];
     }
     return self;
 }
@@ -43,7 +42,7 @@
         make.bottom.equalTo(self.view).offset(-100);
         make.left.equalTo(self.view).offset(150);
     }];
-
+    
     UITextField *ipTextField = [UITextField new];
     NSString *serverIp = [self deviceIPAdress];
     ipTextField.text = serverIp;
@@ -64,7 +63,7 @@
     
     UITextField *portTextField = [UITextField new];
     NSInteger portNum = LISTEN_PORT;
-    portTextField.text = [NSString stringWithFormat:@"%ld", portNum];//@"1234";
+    portTextField.text = [NSString stringWithFormat:@"%ld", (long)portNum];//@"1234";
     portTextField.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:portTextField];
     [portTextField mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -93,20 +92,22 @@
     }];
     [stopBtn addTarget:self action:@selector(stopBtnTaped:) forControlEvents:UIControlEventTouchUpInside];
     [stopBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
+    
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)playBtnTaped:(UIButton *)btn {
     NSLog(@"image taped");
     [btn setBackgroundColor:[UIColor lightGrayColor]];
-    
-    [server startListen];
+    [control startListen];
 }
 
 - (void)stopBtnTaped :(UIButton *)btn {
     NSLog(@"stopTaped");
-    
-//    [server sendMessage];
-    [server stopListen];
+    [control stopListen];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -119,11 +120,8 @@
     struct ifaddrs *interfaces = NULL;
     struct ifaddrs *temp_addr = NULL;
     int success = 0;
-    
     success = getifaddrs(&interfaces);
-    
     if (success == 0) { // 0 表示获取成功
-        
         temp_addr = interfaces;
         while (temp_addr != NULL) {
             if( temp_addr->ifa_addr->sa_family == AF_INET) {
@@ -133,13 +131,10 @@
                     address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
                 }
             }
-            
             temp_addr = temp_addr->ifa_next;
         }
     }
-    
-    freeifaddrs(interfaces);  
-    
+    freeifaddrs(interfaces);
     NSLog(@"server的IP是：%@", address);
     return address;  
 }

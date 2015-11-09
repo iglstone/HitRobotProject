@@ -33,7 +33,7 @@
     rawView.backgroundColor = [UIColor lightGrayColor];
     [self.view addSubview:rawView];
     [rawView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 250, 300));
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 5, 250, 300+15));
     }];
     
     DeskView *desk1 = [[DeskView alloc] init];//WithFrame:CGRectMake(0, 0, 150, 150)];
@@ -91,6 +91,8 @@
     }];
     [slide addTarget:self action:@selector(updateVoice:) forControlEvents:UIControlEventValueChanged];
     
+//    UIButton *btn = [UIButton new];
+    
     UIButton *playBtn = [UIButton new];
     [playBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
     [playBtn setBackgroundImage:[UIImage imageNamed:@"button-pressed.png"] forState:UIControlStateSelected];
@@ -125,7 +127,7 @@
         make.top.equalTo(rawView);
         make.left.equalTo(rawView.mas_right).offset(50);
         make.right.equalTo(self.view.mas_right).offset(-50);
-        make.height.mas_equalTo(@300);
+        make.height.mas_equalTo(@200);
     }];
     
     UILabel *questionText = [[UILabel alloc] initWithFrame:CGRectMake(0,0,280,20)];
@@ -181,7 +183,7 @@
     deskview.backgroundColor = [UIColor grayColor];
     
     self.deskNum = deskview.tag - 1;
-    NSLog(@"song num ;%ld",self.deskNum);
+    NSLog(@"song num ;%ld",(long)self.deskNum);
     
 }
 

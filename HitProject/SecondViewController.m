@@ -9,6 +9,7 @@
 #import "SecondViewController.h"
 #import "JSAnalogueStick.h"
 #import <math.h>
+#import "CHYSlider.h"
 
 @interface SecondViewController ()<JSAnalogueStickDelegate>{
 
@@ -19,6 +20,7 @@
 @property (nonatomic) UILabel *velocityLabel;
 @property (nonatomic) ServerSocket *server;
 @property (nonatomic) HitControl *control;
+@property (nonatomic) CHYSlider *steppedSlider;
 
 @property (nonatomic) int direction;
 
@@ -56,7 +58,7 @@
     self.analogueStick.delegate = self;
     
     self.velocityLabel = [UILabel new];
-    self.velocityLabel.text = @"速度设置：50.0";
+    self.velocityLabel.text = @"速度设置：3.0";
     self.velocityLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.velocityLabel];
     [self.velocityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -65,18 +67,33 @@
         make.width.mas_equalTo(@150);
     }];
     
-    UISlider *slide = [[UISlider alloc]initWithFrame:CGRectMake(100, 100, 200, 100)];
-    slide.minimumValue = 0;
-    slide.maximumValue = 100;
-    slide.value = 50;
-    slide.continuous = NO;
-    [self.view addSubview:slide];
-    [slide mas_makeConstraints:^(MASConstraintMaker *make) {
+//    UISlider *slide = [[UISlider alloc]initWithFrame:CGRectMake(100, 100, 200, 100)];
+//    slide.minimumValue = 0;
+//    slide.maximumValue = 100;
+//    slide.value = 50;
+//    slide.continuous = NO;
+//    [self.view addSubview:slide];
+//    [slide mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerX.equalTo(self.velocityLabel);
+//        make.top.equalTo(self.velocityLabel.mas_bottom).offset(10);
+//        make.size.mas_equalTo(CGSizeMake(150, 50));
+//    }];
+//    [slide addTarget:self action:@selector(updateVelocity:) forControlEvents:UIControlEventValueChanged];
+    
+    _steppedSlider = [[CHYSlider alloc] init];//WithFrame:CGRectMake(0, 0, 250, 30)];
+    _steppedSlider.stepped = YES;
+    _steppedSlider.minimumValue = 0;
+    _steppedSlider.maximumValue = 5;
+    _steppedSlider.value = 3;
+    _steppedSlider.labelAboveThumb.font = [UIFont fontWithName:@"AmericanTypewriter-Bold" size:20.f];
+    _steppedSlider.labelAboveThumb.textColor = [UIColor blueColor];
+    [self.view addSubview:_steppedSlider];
+    [_steppedSlider mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.velocityLabel);
-        make.top.equalTo(self.velocityLabel.mas_bottom).offset(10);
-        make.size.mas_equalTo(CGSizeMake(150, 50));
+        make.top.equalTo(self.velocityLabel.mas_bottom).offset(30);
+        make.size.mas_equalTo(CGSizeMake(250, 30));
     }];
-    [slide addTarget:self action:@selector(updateVelocity:) forControlEvents:UIControlEventValueChanged];
+    [_steppedSlider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     
     UISwitch *controlSwitch = [UISwitch new];
     controlSwitch.tag = 100;
@@ -138,17 +155,40 @@
     }];
     
     UIButton *stopBtn = [UIButton new];
+    [stopBtn setTitle:@"STOP" forState:UIControlStateNormal];
+    [stopBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [stopBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
     [self.view addSubview:stopBtn];
     [stopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.analogueStick);
-        make.top.equalTo(self.analogueStick.mas_bottom).offset(40);
+        make.bottom.equalTo(self.view).offset(-40-40);
     }];
     [stopBtn addTarget:self action:@selector(stopRun:) forControlEvents:UIControlEventTouchUpInside];
 }
 
+- (void)sliderValueChanged :(CHYSlider *)slider {
+    NSLog(@"change %f",slider.value);
+    self.velocityLabel.text = [NSString stringWithFormat:@"速度设置：%.0f",slider.value];
+   
+    if (slider.value == 1) {
+        [control speed:1];
+    }
+    if (slider.value == 2) {
+        [control speed:2];
+    }
+    if (slider.value == 3) {
+        [control speed:3];
+    }
+    if (slider.value == 4) {
+        [control speed:4];
+    }
+    if (slider.value == 5) {
+        [control speed:5];
+    }
+
+}
+
 - (void)stopRun:(UIButton *)btn {
-//    [server sendMessage:@"g"];
     [control stopMove];
 }
 
@@ -160,7 +200,6 @@
         if (swith2.on == YES) {
             swith2.on = NO;
             NSLog(@"开启控制模式");
-//            [self.server sendMessage:@"b"];
             [control controlMode];
         }
     }
@@ -176,30 +215,25 @@
     
 }
 
-- (void )updateVelocity:(UISlider *)slider {
-    self.velocityLabel.text = [NSString stringWithFormat:@"速度设置：%.1f",slider.value];
-    if (slider.value < 20) {
-//        [server sendMessage:@"j"];
-        [control speed:1];
-    }
-    if (20 <= slider.value && slider.value < 40) {
-//        [server sendMessage:@"k"];
-        [control speed:2];
-    }
-    if (40 <= slider.value && slider.value < 60) {
-//        [server sendMessage:@"l"];
-        [control speed:3];
-    }
-    if (60 <= slider.value && slider.value < 80) {
-//        [server sendMessage:@"m"];
-        [control speed:4];
-    }
-    if (80 <= slider.value && slider.value < 100) {
-//        [server sendMessage:@"n"];
-        [control speed:5];
-    }
-    
-}
+//- (void )updateVelocity:(UISlider *)slider {
+//    self.velocityLabel.text = [NSString stringWithFormat:@"速度设置：%.1f",slider.value];
+//    if (slider.value < 20) {
+//        [control speed:1];
+//    }
+//    if (20 <= slider.value && slider.value < 40) {
+//        [control speed:2];
+//    }
+//    if (40 <= slider.value && slider.value < 60) {
+//        [control speed:3];
+//    }
+//    if (60 <= slider.value && slider.value < 80) {
+//        [control speed:4];
+//    }
+//    if (80 <= slider.value && slider.value < 100) {
+//        [control speed:5];
+//    }
+//    
+//}
 
 - (void)analogueStickDidChangeValue:(JSAnalogueStick *)analogueStick {
     [self updateAnalogueLabel];
@@ -227,28 +261,24 @@
         switch (direction) {
             case 1:
                 NSLog(@"向上");
-//                [server sendMessage:@"c"];
                 [control forward];
                 direction = 0;
                 break;
             
             case 2:
                 NSLog(@"向下");
-//                [server sendMessage:@"d"];
                 [control backward];
                 direction = 0;
                 break;
             
             case 3:
                 NSLog(@"向右");
-//                [server sendMessage:@"f"];
                 [control turnRight];
                 direction = 0;
                 break;
                 
             case 4:
                 NSLog(@"向左");
-//                [server sendMessage:@"e"];
                 [control turnLeft];
                 direction = 0;
                 break;

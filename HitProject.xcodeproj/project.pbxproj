@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		4C667AEEA938854297F27795 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC05B4E2E18680CC4941107 /* libPods.a */; };
+		E316366F1BEDA80A002EB100 /* ConnectStatesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E316366E1BEDA80A002EB100 /* ConnectStatesCell.m */; };
+		E31636721BEDAA5D002EB100 /* CommonsFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = E31636711BEDAA5D002EB100 /* CommonsFunc.m */; };
+		E31636751BF0428F002EB100 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E31636741BF0428F002EB100 /* AsyncSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		E31636781BF05607002EB100 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E31636771BF05607002EB100 /* MainViewController.m */; };
+		E316367C1BF07AE4002EB100 /* CHYSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = E316367B1BF07AE4002EB100 /* CHYSlider.m */; };
 		E357F6101BE20F6500AE9454 /* ThirdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E357F60F1BE20F6500AE9454 /* ThirdViewController.m */; };
 		E357F6131BE20F8100AE9454 /* FourthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E357F6121BE20F8100AE9454 /* FourthViewController.m */; };
 		E37BA5031BE462C700DB7A96 /* JSAnalogueStick.m in Sources */ = {isa = PBXBuildFile; fileRef = E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */; };
@@ -20,7 +25,6 @@
 		E3C0B5351BE1EAA5004437EC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3C0B5331BE1EAA5004437EC /* LaunchScreen.xib */; };
 		E3C0B5411BE1EAA6004437EC /* HitProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3C0B5401BE1EAA6004437EC /* HitProjectTests.m */; };
 		E3E91FC21BEC318F003AE247 /* ServerSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FC11BEC318F003AE247 /* ServerSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		E3E91FC71BEC32C6003AE247 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FC41BEC32C6003AE247 /* AsyncSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FC61BEC32C6003AE247 /* AsyncUdpSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E3E91FCC1BEC8117003AE247 /* HitControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FCB1BEC8117003AE247 /* HitControl.m */; };
 		E3FC88881BEAF3750016376D /* RadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FC88871BEAF3750016376D /* RadioButton.m */; };
@@ -43,6 +47,16 @@
 		397759819632A14F21F4B158 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		5977BFAC93DE4DCB521D4947 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		AAC05B4E2E18680CC4941107 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E316366D1BEDA80A002EB100 /* ConnectStatesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectStatesCell.h; sourceTree = "<group>"; };
+		E316366E1BEDA80A002EB100 /* ConnectStatesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectStatesCell.m; sourceTree = "<group>"; };
+		E31636701BEDAA5D002EB100 /* CommonsFunc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonsFunc.h; sourceTree = "<group>"; };
+		E31636711BEDAA5D002EB100 /* CommonsFunc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonsFunc.m; sourceTree = "<group>"; };
+		E31636731BF0428F002EB100 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
+		E31636741BF0428F002EB100 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
+		E31636761BF05607002EB100 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		E31636771BF05607002EB100 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		E316367A1BF07AE4002EB100 /* CHYSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHYSlider.h; sourceTree = "<group>"; };
+		E316367B1BF07AE4002EB100 /* CHYSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHYSlider.m; sourceTree = "<group>"; };
 		E357F60E1BE20F6500AE9454 /* ThirdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThirdViewController.h; sourceTree = "<group>"; };
 		E357F60F1BE20F6500AE9454 /* ThirdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThirdViewController.m; sourceTree = "<group>"; };
 		E357F6111BE20F8100AE9454 /* FourthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FourthViewController.h; sourceTree = "<group>"; };
@@ -68,8 +82,6 @@
 		E3C0B5401BE1EAA6004437EC /* HitProjectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HitProjectTests.m; sourceTree = "<group>"; };
 		E3E91FC01BEC318F003AE247 /* ServerSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerSocket.h; sourceTree = "<group>"; };
 		E3E91FC11BEC318F003AE247 /* ServerSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerSocket.m; sourceTree = "<group>"; };
-		E3E91FC31BEC32C6003AE247 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
-		E3E91FC41BEC32C6003AE247 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
 		E3E91FC51BEC32C6003AE247 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncUdpSocket.h; sourceTree = "<group>"; };
 		E3E91FC61BEC32C6003AE247 /* AsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncUdpSocket.m; sourceTree = "<group>"; };
 		E3E91FC91BEC7795003AE247 /* AppMacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppMacro.h; sourceTree = "<group>"; };
@@ -124,6 +136,23 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		E31636791BF07ACC002EB100 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				E31636701BEDAA5D002EB100 /* CommonsFunc.h */,
+				E31636711BEDAA5D002EB100 /* CommonsFunc.m */,
+				E316367A1BF07AE4002EB100 /* CHYSlider.h */,
+				E316367B1BF07AE4002EB100 /* CHYSlider.m */,
+				E3FC88861BEAF3750016376D /* RadioButton.h */,
+				E3FC88871BEAF3750016376D /* RadioButton.m */,
+				E37BA5011BE462C700DB7A96 /* JSAnalogueStick.h */,
+				E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */,
+				E37BA5081BE7162500DB7A96 /* DeskView.h */,
+				E37BA5091BE7162500DB7A96 /* DeskView.m */,
+			);
+			name = Tools;
+			sourceTree = "<group>";
+		};
 		E3C0B5151BE1EAA5004437EC = {
 			isa = PBXGroup;
 			children = (
@@ -147,25 +176,24 @@
 		E3C0B5201BE1EAA5004437EC /* HitProject */ = {
 			isa = PBXGroup;
 			children = (
+				E31636791BF07ACC002EB100 /* Tools */,
+				E3FC888E1BEB52EE0016376D /* AsyncSocket */,
 				E3E91FC91BEC7795003AE247 /* AppMacro.h */,
 				E3B146BD1BED9CB100963FA8 /* PrefixHeader.pch */,
-				E3FC888E1BEB52EE0016376D /* AsyncSocket */,
 				E3C0B5251BE1EAA5004437EC /* AppDelegate.h */,
 				E3C0B5261BE1EAA5004437EC /* AppDelegate.m */,
+				E31636761BF05607002EB100 /* MainViewController.h */,
+				E31636771BF05607002EB100 /* MainViewController.m */,
+				E316366D1BEDA80A002EB100 /* ConnectStatesCell.h */,
+				E316366E1BEDA80A002EB100 /* ConnectStatesCell.m */,
 				E3C0B5281BE1EAA5004437EC /* FirstViewController.h */,
 				E3C0B5291BE1EAA5004437EC /* FirstViewController.m */,
 				E3C0B52B1BE1EAA5004437EC /* SecondViewController.h */,
 				E3C0B52C1BE1EAA5004437EC /* SecondViewController.m */,
-				E37BA5011BE462C700DB7A96 /* JSAnalogueStick.h */,
-				E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */,
 				E357F60E1BE20F6500AE9454 /* ThirdViewController.h */,
 				E357F60F1BE20F6500AE9454 /* ThirdViewController.m */,
-				E37BA5081BE7162500DB7A96 /* DeskView.h */,
-				E37BA5091BE7162500DB7A96 /* DeskView.m */,
 				E357F6111BE20F8100AE9454 /* FourthViewController.h */,
 				E357F6121BE20F8100AE9454 /* FourthViewController.m */,
-				E3FC88861BEAF3750016376D /* RadioButton.h */,
-				E3FC88871BEAF3750016376D /* RadioButton.m */,
 				E3C0B5311BE1EAA5004437EC /* Images.xcassets */,
 				E3C0B5331BE1EAA5004437EC /* LaunchScreen.xib */,
 				E3C0B5211BE1EAA5004437EC /* Supporting Files */,
@@ -202,8 +230,8 @@
 		E3FC888E1BEB52EE0016376D /* AsyncSocket */ = {
 			isa = PBXGroup;
 			children = (
-				E3E91FC31BEC32C6003AE247 /* AsyncSocket.h */,
-				E3E91FC41BEC32C6003AE247 /* AsyncSocket.m */,
+				E31636731BF0428F002EB100 /* AsyncSocket.h */,
+				E31636741BF0428F002EB100 /* AsyncSocket.m */,
 				E3E91FC51BEC32C6003AE247 /* AsyncUdpSocket.h */,
 				E3E91FC61BEC32C6003AE247 /* AsyncUdpSocket.m */,
 				E3E91FC01BEC318F003AE247 /* ServerSocket.h */,
@@ -352,15 +380,19 @@
 				E357F6131BE20F8100AE9454 /* FourthViewController.m in Sources */,
 				E3E91FCC1BEC8117003AE247 /* HitControl.m in Sources */,
 				E3C0B52D1BE1EAA5004437EC /* SecondViewController.m in Sources */,
+				E31636781BF05607002EB100 /* MainViewController.m in Sources */,
 				E357F6101BE20F6500AE9454 /* ThirdViewController.m in Sources */,
 				E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */,
 				E37BA5031BE462C700DB7A96 /* JSAnalogueStick.m in Sources */,
+				E31636751BF0428F002EB100 /* AsyncSocket.m in Sources */,
+				E316366F1BEDA80A002EB100 /* ConnectStatesCell.m in Sources */,
 				E3C0B5271BE1EAA5004437EC /* AppDelegate.m in Sources */,
 				E3FC88881BEAF3750016376D /* RadioButton.m in Sources */,
 				E3C0B52A1BE1EAA5004437EC /* FirstViewController.m in Sources */,
-				E3E91FC71BEC32C6003AE247 /* AsyncSocket.m in Sources */,
 				E3E91FC21BEC318F003AE247 /* ServerSocket.m in Sources */,
 				E3C0B5241BE1EAA5004437EC /* main.m in Sources */,
+				E316367C1BF07AE4002EB100 /* CHYSlider.m in Sources */,
+				E31636721BEDAA5D002EB100 /* CommonsFunc.m in Sources */,
 				E37BA50A1BE7162500DB7A96 /* DeskView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

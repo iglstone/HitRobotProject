@@ -31,6 +31,14 @@ static HitControl* _instance = nil;
     return self;
 }
 
+- (void)startListen {
+    [server startListen];
+}
+
+- (void)stopListen {
+    [server stopListen];
+}
+
 - (void)mealMode {
     [server sendMessage:@"a"];
 }
