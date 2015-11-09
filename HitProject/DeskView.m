@@ -10,7 +10,8 @@
 
 @implementation DeskView
 @synthesize deskName;
-
+@synthesize img;
+@synthesize selected;
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -22,7 +23,9 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        UIImageView *img = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"hit.png"]];
+        selected = NO;
+        
+        img = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"desk_white.png"]];
         [self addSubview:img];
         [img mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self);
@@ -31,7 +34,6 @@
         }];
         
         deskName = [UILabel new];
-//        deskName.text = @"1号桌";
         [self addSubview:deskName];
         [deskName mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(img.mas_bottom).offset(10);

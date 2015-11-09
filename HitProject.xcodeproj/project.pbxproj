@@ -31,6 +31,7 @@
 		E3FC889F1BEB54050016376D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3FC889E1BEB54050016376D /* CFNetwork.framework */; };
 		E3FC88A11BEB54150016376D /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3FC88A01BEB54150016376D /* CoreFoundation.framework */; };
 		E3FC88A31BEB541D0016376D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3FC88A21BEB541D0016376D /* UIKit.framework */; };
+		E3FCC5EC1BF0924100FAB88C /* UIColor+Hex.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FCC5EB1BF0924100FAB88C /* UIColor+Hex.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +93,8 @@
 		E3FC889E1BEB54050016376D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		E3FC88A01BEB54150016376D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		E3FC88A21BEB541D0016376D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		E3FCC5EA1BF0924100FAB88C /* UIColor+Hex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Hex.h"; sourceTree = "<group>"; };
+		E3FCC5EB1BF0924100FAB88C /* UIColor+Hex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Hex.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +152,8 @@
 				E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */,
 				E37BA5081BE7162500DB7A96 /* DeskView.h */,
 				E37BA5091BE7162500DB7A96 /* DeskView.m */,
+				E3FCC5EA1BF0924100FAB88C /* UIColor+Hex.h */,
+				E3FCC5EB1BF0924100FAB88C /* UIColor+Hex.m */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -390,6 +395,7 @@
 				E3FC88881BEAF3750016376D /* RadioButton.m in Sources */,
 				E3C0B52A1BE1EAA5004437EC /* FirstViewController.m in Sources */,
 				E3E91FC21BEC318F003AE247 /* ServerSocket.m in Sources */,
+				E3FCC5EC1BF0924100FAB88C /* UIColor+Hex.m in Sources */,
 				E3C0B5241BE1EAA5004437EC /* main.m in Sources */,
 				E316367C1BF07AE4002EB100 /* CHYSlider.m in Sources */,
 				E31636721BEDAA5D002EB100 /* CommonsFunc.m in Sources */,

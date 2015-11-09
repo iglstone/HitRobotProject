@@ -13,25 +13,26 @@
 
 @property (nonatomic) UILabel *infoLabel;
 @property (nonatomic) NSInteger deskNum;
-//@property (nonatomic) ServerSocket *server;
 @property (nonatomic) HitControl *control;
-
+@property (nonatomic) DeskView *tmpDeskView;
 @end
 
 @implementation ThirdViewController
 @synthesize infoLabel;
-//@synthesize server;
 @synthesize control;
+@synthesize tmpDeskView;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     
-//    server = [ServerSocket sharedSocket];
     control = [HitControl sharedControl];
     
     UIView *rawView = [UIView new];
-    rawView.backgroundColor = [UIColor lightGrayColor];
+    rawView.backgroundColor = [UIColor colorWithHexString:@"F8F8FF"];
+    rawView.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    rawView.layer.borderWidth = 0.8;
+    rawView.layer.masksToBounds = YES;
     [self.view addSubview:rawView];
     [rawView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, 400));
@@ -111,10 +112,9 @@
 }
 
 - (void)deskTaped:(UIGestureRecognizer *)gesture {
-    DeskView *deskview = (DeskView *)[gesture view];
-    deskview.backgroundColor = [UIColor grayColor];
+    tmpDeskView = (DeskView *)[gesture view];
     
-    self.deskNum = deskview.tag - 1;
+    self.deskNum = tmpDeskView.tag - 1;
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"确定选择" message:@"确定选择1号桌？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
     [alert show];
@@ -122,7 +122,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -130,9 +129,17 @@
         
     }else{
         infoLabel.text = [NSString stringWithFormat:@"信息窗口: %ld号桌", (long)self.deskNum];
-        [control deskNumber:1];
+        if (tmpDeskView.selected == YES) {//取消送餐
+            tmpDeskView.selected = NO;
+            [tmpDeskView.img setImage:[UIImage imageNamed:@"dest_white.png"]];
+        }
+        else
+        {
+            tmpDeskView.selected = YES;
+            [tmpDeskView.img setImage:[UIImage imageNamed:@"desk_red.png"]];
+            [control deskNumber:1];
+        }
     }
-    
 }
 
 

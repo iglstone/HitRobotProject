@@ -16,16 +16,19 @@
 @property (nonatomic) UIView *rawView;
 @property (nonatomic) NSInteger deskNum;
 @property (nonatomic) HitControl *control;
+@property (nonatomic) NSInteger voice;
 
 @end
 
 @implementation FourthViewController
 @synthesize rawView;
 @synthesize control;
+@synthesize voice;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    voice = 50;
     
     control = [HitControl sharedControl];
     
@@ -69,7 +72,7 @@
     desk1.hidden = YES;
     
     self.voiceLabel = [UILabel new];
-    self.voiceLabel.text = @"音量设置：50.0";
+    self.voiceLabel.text = @"音量设置：50";
     self.voiceLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.voiceLabel];
     [self.voiceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -90,34 +93,82 @@
         make.size.mas_equalTo(CGSizeMake(150, 50));
     }];
     [slide addTarget:self action:@selector(updateVoice:) forControlEvents:UIControlEventValueChanged];
+    slide.hidden = YES;
     
-//    UIButton *btn = [UIButton new];
+    UIButton *voiceUpBtn = [UIButton new];
+    [self.view addSubview:voiceUpBtn];
+    [voiceUpBtn setImage:[UIImage imageNamed:@"voiceUp.png"] forState:UIControlStateNormal];
+    [voiceUpBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.voiceLabel.mas_bottom).offset(20);
+        make.left.equalTo(self.voiceLabel);
+    }];
+    [voiceUpBtn addTarget:self action:@selector(voiceUp:) forControlEvents:UIControlEventTouchUpInside];
+
+    UIButton *voiceDownBtn = [UIButton new];
+    [self.view addSubview:voiceDownBtn];
+    [voiceDownBtn setImage:[UIImage imageNamed:@"voiceDown.png"] forState:UIControlStateNormal];
+    [voiceDownBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.voiceLabel.mas_bottom).offset(20);
+        make.right.equalTo(self.voiceLabel);
+    }];
+    [voiceDownBtn addTarget:self action:@selector(voiceDown:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *playBtn = [UIButton new];
-    [playBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
-    [playBtn setBackgroundImage:[UIImage imageNamed:@"button-pressed.png"] forState:UIControlStateSelected];
-    [playBtn setTitle:@"播放" forState:UIControlStateNormal];
+    [playBtn setBackgroundImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
+//    [playBtn setTitle:@"播放" forState:UIControlStateNormal];
     [self.view addSubview:playBtn];
     [playBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(slide);
-        make.left.equalTo(slide.mas_right).offset(100);
+        make.left.equalTo(slide.mas_right).offset(200);
     }];
     [playBtn addTarget:self action:@selector(play:) forControlEvents:UIControlEventTouchUpInside];
     
+    UILabel *playLabel = [UILabel new];
+    playLabel.text = @"播放";
+    [self.view addSubview:playLabel];
+    [playLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(playBtn);
+        make.top.equalTo(playBtn.mas_bottom).offset(2);
+    }];
+    
     UIButton *cancelBtn = [UIButton new];
-    [cancelBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
-    [cancelBtn setBackgroundImage:[UIImage imageNamed:@"button-pressed.png"] forState:UIControlStateHighlighted];
-    [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+    [cancelBtn setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
     [self.view addSubview:cancelBtn];
     [cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(playBtn);
-        make.left.equalTo(playBtn.mas_right).offset(100);
+        make.left.equalTo(playBtn.mas_right).offset(70);
     }];
     [cancelBtn addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UILabel *pauseLabel = [UILabel new];
+    pauseLabel.text = @"停止";
+    [self.view addSubview:pauseLabel];
+    [pauseLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(cancelBtn);
+        make.top.equalTo(playBtn.mas_bottom).offset(2);
+    }];
     
     [self addRadioBtn];
 }
 
+- (void)voiceUp:(UIButton *)button {
+    NSLog(@"voice up");
+    if (voice <= 90) {
+        voice += 10;
+        self.voiceLabel.text = [NSString stringWithFormat:@"音量设置：%ld",(long)voice];
+    }
+    
+    [control voiceUp];
+}
+
+- (void)voiceDown :(UIButton *)button {
+    NSLog(@"voice down");
+    if (voice >= 10) {
+        voice -= 10;
+        self.voiceLabel.text = [NSString stringWithFormat:@"音量设置：%ld",(long)voice];
+    }
+    [control voiceDown];
+}
 
 - (void)addRadioBtn {
     UIView *container = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 300, 400)];
@@ -170,7 +221,6 @@
     if ([btn.titleLabel.text isEqualToString:@"停止"]) {
         [btn setTitle:@"停止" forState:UIControlStateNormal];
     }
-    
 }
 
 - (void)cancel:(UIButton *)btn {
@@ -184,7 +234,6 @@
     
     self.deskNum = deskview.tag - 1;
     NSLog(@"song num ;%ld",(long)self.deskNum);
-    
 }
 
 - (void)updateVoice:(UISlider *)slider {

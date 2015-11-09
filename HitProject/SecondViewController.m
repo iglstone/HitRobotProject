@@ -169,7 +169,9 @@
 - (void)sliderValueChanged :(CHYSlider *)slider {
     NSLog(@"change %f",slider.value);
     self.velocityLabel.text = [NSString stringWithFormat:@"速度设置：%.0f",slider.value];
-   
+    if (slider.value == 0) {
+        [control stopMove];
+    }
     if (slider.value == 1) {
         [control speed:1];
     }

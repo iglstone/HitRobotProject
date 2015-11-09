@@ -12,6 +12,7 @@
 #import "ServerSocket.h"
 #import "HitControl.h"
 #import "CommonsFunc.h"
+#import "UIColor+Hex.h"
 
 #ifndef HitProject_PrefixHeader_pch
 #define HitProject_PrefixHeader_pch

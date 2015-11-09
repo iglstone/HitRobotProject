@@ -11,5 +11,7 @@
 @interface DeskView : UIView
 
 @property (nonatomic) UILabel *deskName;
+@property (nonatomic) UIImageView *img;
+@property (nonatomic) BOOL selected;
 
 @end
