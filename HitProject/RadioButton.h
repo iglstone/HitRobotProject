@@ -24,7 +24,6 @@
 @property(nonatomic,retain)NSString *groupId;
 @property(nonatomic,assign)NSUInteger index;
 @property(nonatomic,strong)UIButton *button;
-//@property(nonatomic,strong)UILabel *detailLabel;
 
 -(id)initWithGroupId:(NSString*)groupId index:(NSUInteger)index;
 +(void)addObserverForGroupId:(NSString*)groupId observer:(id)observer;

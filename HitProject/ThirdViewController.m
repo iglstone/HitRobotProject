@@ -24,12 +24,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
     
     control = [HitControl sharedControl];
     
     UIView *rawView = [UIView new];
-    rawView.backgroundColor = [UIColor colorWithHexString:@"F8F8FF"];
+    rawView.backgroundColor = [CommonsFunc colorOfLight];
     rawView.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     rawView.layer.borderWidth = 0.8;
     rawView.layer.masksToBounds = YES;
@@ -48,7 +48,7 @@
     }];
     
     NSInteger deskWidth  = (self.view.bounds.size.width - 400 -20)/7;
-    NSInteger deskHeight = (self.view.bounds.size.height - 120 - 20)/5;
+    NSInteger deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
     
     int deskNum = 1;
     
@@ -62,7 +62,7 @@
             [deskview mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(desk1).offset((deskWidth)*j);
                 make.top.equalTo(desk1).offset((deskHeight + 10)*i);
-                make.size.mas_equalTo(CGSizeMake(50, 70));
+                make.size.mas_equalTo(CGSizeMake(60, 60));
             }];
             deskview.userInteractionEnabled = YES;
             [deskview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deskTaped:)]];

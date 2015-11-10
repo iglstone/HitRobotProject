@@ -33,7 +33,27 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
+    
+    UIImageView *robot1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"robot_1.png"]];
+    [self.view addSubview:robot1];
+    [robot1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view).offset(20);
+        make.left.equalTo(self.view).offset(10);
+    }];
+
+    UIImageView *robot2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"robot_2.png"]];
+    [self.view addSubview:robot2];
+    [robot2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view).offset(20);
+        make.right.equalTo(self.view).offset(5);
+    }];
+    
+    UIImageView *robot3 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"robot_3.png"]];
+    [self.view addSubview:robot3];
+    [robot3 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.view);
+    }];
     
     UILabel *ipLabel= [UILabel new];
     ipLabel.text = @"本机ip地址";

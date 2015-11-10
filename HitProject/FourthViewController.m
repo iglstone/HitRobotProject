@@ -17,6 +17,8 @@
 @property (nonatomic) NSInteger deskNum;
 @property (nonatomic) HitControl *control;
 @property (nonatomic) NSInteger voice;
+@property (nonatomic) BOOL isPlay;
+@property (nonatomic) UILabel *playLabel;
 
 @end
 
@@ -24,12 +26,14 @@
 @synthesize rawView;
 @synthesize control;
 @synthesize voice;
+@synthesize isPlay;
+@synthesize playLabel;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
     voice = 50;
-    
+    isPlay = NO;
     control = [HitControl sharedControl];
     
     rawView = [UIView new];
@@ -45,25 +49,27 @@
     [desk1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(rawView).offset(20);
         make.left.equalTo(rawView).offset(20);
-        make.size.mas_equalTo(CGSizeMake(50, 70));
+        make.size.mas_equalTo(CGSizeMake(60, 60));
     }];
     
-    NSInteger deskWidth  = (self.view.bounds.size.width - 300 -20)/7;
-    NSInteger deskHeight = (self.view.bounds.size.height - 250 - 20 - 20)/4;
+    NSInteger deskWidth  = (self.view.bounds.size.width - 315 -5)/7;
+    NSInteger deskHeight = (self.view.bounds.size.height - 250 - 20 -40)/4;
     
     int deskNum = 1;
     
     for (int i = 0; i <= 3; i++) {
         for (int j = 0; j < 7; j++) {
             DeskView *deskview = [DeskView new];
+            [deskview.img setImage:[UIImage imageNamed:@"music.png"]];
             deskview.deskName.text = [NSString stringWithFormat:@"歌曲%d",deskNum];
             deskNum ++;
             deskview.tag = deskNum;
             [self.view addSubview:deskview];
             [deskview mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(desk1).offset((deskWidth)*j);
-                make.top.equalTo(desk1).offset((deskHeight + 10)*i);
-                make.size.mas_equalTo(CGSizeMake(50, 70));
+//                make.top.equalTo(desk1).offset((deskHeight + 10)*i);
+                make.top.equalTo(desk1).offset((deskHeight + 5)*i);
+                make.size.mas_equalTo(CGSizeMake(60, 60));
             }];
             deskview.userInteractionEnabled = YES;
             [deskview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(songTaped:)]];
@@ -114,6 +120,7 @@
     [voiceDownBtn addTarget:self action:@selector(voiceDown:) forControlEvents:UIControlEventTouchUpInside];
     
     UIButton *playBtn = [UIButton new];
+    playBtn.tag = 1000;
     [playBtn setBackgroundImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
 //    [playBtn setTitle:@"播放" forState:UIControlStateNormal];
     [self.view addSubview:playBtn];
@@ -123,7 +130,7 @@
     }];
     [playBtn addTarget:self action:@selector(play:) forControlEvents:UIControlEventTouchUpInside];
     
-    UILabel *playLabel = [UILabel new];
+    playLabel = [UILabel new];
     playLabel.text = @"播放";
     [self.view addSubview:playLabel];
     [playLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -132,6 +139,7 @@
     }];
     
     UIButton *cancelBtn = [UIButton new];
+    cancelBtn.tag = 1001;
     [cancelBtn setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
     [self.view addSubview:cancelBtn];
     [cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -218,14 +226,31 @@
 - (void)play:(UIButton *)btn {
     [control singSong:(self.deskNum + 1)];
     
-    if ([btn.titleLabel.text isEqualToString:@"停止"]) {
-        [btn setTitle:@"停止" forState:UIControlStateNormal];
+    UIButton *stopBtn = (UIButton *)[self.view viewWithTag:1001];
+    
+    if (isPlay == NO) {
+        isPlay = YES;
+        [btn setBackgroundImage:[UIImage imageNamed:@"pause2.png"] forState:UIControlStateNormal];
+        [stopBtn setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
+        playLabel.text = @"暂停";
+    }else
+    {
+        isPlay = NO;
+        [btn setBackgroundImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
+        playLabel.text = @"播放";
     }
 }
 
 - (void)cancel:(UIButton *)btn {
     NSLog(@"cancel button taped..");
     [control stopSingSong];
+    
+    [btn setBackgroundImage:[UIImage imageNamed:@"stop_pressed.png"] forState:UIControlStateNormal];
+    
+    isPlay = NO;
+    UIButton *play = (UIButton *)[self.view viewWithTag:1000];
+    [play setBackgroundImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
+    playLabel.text = @"播放";
 }
 
 - (void)songTaped:(UITapGestureRecognizer *)tap {

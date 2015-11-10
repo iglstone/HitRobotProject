@@ -47,7 +47,7 @@
     self.viewControllers = @[first, second, third, fourth];
     
     m_tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, 100, 40) style:UITableViewStylePlain];
-    [m_tableView setBackgroundColor:[UIColor lightGrayColor]];
+    [m_tableView setBackgroundColor:[CommonsFunc colorOfLight]];
     m_tableView.delegate = self;
     m_tableView.dataSource = self;
     [self.view addSubview:m_tableView];

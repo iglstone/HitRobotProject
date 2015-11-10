@@ -11,44 +11,27 @@
 
 @implementation CommonsFunc
 
-+(NSString *)changeSexNumToString:(NSString *)sexNum{
-    if ([sexNum isKindOfClass:[NSString class]]) {
-        if ([sexNum isEqualToString:@"1"] || [sexNum isEqualToString:@"男"]) {
-            return @"男";
-        }
-        if ([sexNum isEqualToString:@"2"] || [sexNum isEqualToString:@"女"]) {
-            return @"女";
-        }
-        if ([sexNum isEqualToString:@"0"] || [sexNum isEqualToString:@"保密"]) {
-            return @"保密";
-        }
-    }
-    return @"";
-}
-
-/*
 +(UIColor *)colorOfSystemBackground{
     UIColor *color = [UIColor colorWithHexString:@"#f3efef"];//  ecececgu
     return color;
 }
 
-+(UIColor *)colorOfSixThree{
-    UIColor *color = [UIColor colorWithHexString:@"#333333"];//  ecececgu
++(UIColor *)colorOfLight{
+    UIColor *color = [UIColor colorWithHexString:@"F8F8FF"];//  ecececgu
     return color;
 }
 
-
-+(UIColor *)colorOfSxiNine{
++(UIColor *)colorOfMiddle{
     UIColor *color = [UIColor colorWithHexString:@"#999999"];//  ecececgu
     return color;
 }
 
-+(UIColor *)colorOfSixSix{
++(UIColor *)colorOfDark{
     UIColor *color = [UIColor colorWithHexString:@"#666666"];//  ecececgu
     return color;
 }
 
-
+/*
 // 设置超时时间
 +(void)setTimeOut:(AFHTTPRequestOperationManager *)manager{
     [CommonsFunc setTimeOutInterval:manager interval:0];

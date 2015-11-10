@@ -11,10 +11,10 @@
 
 @interface CommonsFunc : NSObject
 //获得系统背景色
-//+(UIColor *)colorOfSystemBackground;
-//+(UIColor *)colorOfSxiNine;
-//+(UIColor *)colorOfSixThree;
-//+(UIColor *)colorOfSixSix;
++(UIColor *)colorOfSystemBackground;
++(UIColor *)colorOfLight;
++(UIColor *)colorOfMiddle;
++(UIColor *)colorOfDark;
 
 //+(void)GetJsonWithUrl:(NSString *)url parameters:(id)parameter success:(void(^)(id responseObjec))succes faild:(void (^)(AFHTTPRequestOperation *operation))faildd;
 ////post 也是带token的

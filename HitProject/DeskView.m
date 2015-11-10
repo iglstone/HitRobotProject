@@ -30,13 +30,13 @@
         [img mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self);
             make.left.equalTo(self);
-            make.size.mas_equalTo(CGSizeMake(50, 50));
+            make.size.mas_equalTo(CGSizeMake(60, 60));
         }];
         
         deskName = [UILabel new];
         [self addSubview:deskName];
         [deskName mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(img.mas_bottom).offset(10);
+            make.top.equalTo(img.mas_bottom).offset(5);
             make.centerX.equalTo(img);
         }];
         self.userInteractionEnabled = YES;

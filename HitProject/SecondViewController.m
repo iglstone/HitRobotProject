@@ -10,9 +10,10 @@
 #import "JSAnalogueStick.h"
 #import <math.h>
 #import "CHYSlider.h"
+#import "RadioButton.h"
 
 @interface SecondViewController ()<JSAnalogueStickDelegate>{
-
+    
 }
 
 @property (nonatomic) UILabel *analogueLabel;
@@ -21,6 +22,7 @@
 @property (nonatomic) ServerSocket *server;
 @property (nonatomic) HitControl *control;
 @property (nonatomic) CHYSlider *steppedSlider;
+@property (nonatomic) UIView *radioContainer;
 
 @property (nonatomic) int direction;
 
@@ -30,10 +32,11 @@
 @synthesize direction;
 @synthesize server;
 @synthesize control;
+@synthesize radioContainer;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
     
     self.server = [ServerSocket sharedSocket];
     control = [HitControl sharedControl];
@@ -58,7 +61,7 @@
     self.analogueStick.delegate = self;
     
     self.velocityLabel = [UILabel new];
-    self.velocityLabel.text = @"速度设置：3.0";
+    self.velocityLabel.text = @"速度设置：3";
     self.velocityLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.velocityLabel];
     [self.velocityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -66,19 +69,6 @@
         make.left.equalTo(self.analogueLabel.mas_right).offset(200);
         make.width.mas_equalTo(@150);
     }];
-    
-//    UISlider *slide = [[UISlider alloc]initWithFrame:CGRectMake(100, 100, 200, 100)];
-//    slide.minimumValue = 0;
-//    slide.maximumValue = 100;
-//    slide.value = 50;
-//    slide.continuous = NO;
-//    [self.view addSubview:slide];
-//    [slide mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.centerX.equalTo(self.velocityLabel);
-//        make.top.equalTo(self.velocityLabel.mas_bottom).offset(10);
-//        make.size.mas_equalTo(CGSizeMake(150, 50));
-//    }];
-//    [slide addTarget:self action:@selector(updateVelocity:) forControlEvents:UIControlEventValueChanged];
     
     _steppedSlider = [[CHYSlider alloc] init];//WithFrame:CGRectMake(0, 0, 250, 30)];
     _steppedSlider.stepped = YES;
@@ -95,64 +85,11 @@
     }];
     [_steppedSlider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     
-    UISwitch *controlSwitch = [UISwitch new];
-    controlSwitch.tag = 100;
-    controlSwitch.on = NO;
-    [self.view addSubview:controlSwitch];
-    [controlSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.analogueLabel);
-        make.right.equalTo(self.analogueLabel.mas_left).offset(-240);
-    }];
-    [controlSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+    //添加单选模式
+    [self addRadioBtn];
     
-    UILabel *controlLabel = [UILabel new];
-    controlLabel.text = @"控制模式:";
-    [self.view addSubview:controlLabel];
-    [controlLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(controlSwitch);
-        make.right.equalTo(controlSwitch.mas_left).offset(-20);
-    }];
-    
-    UISwitch *mealSwitch = [UISwitch new];
-    mealSwitch.tag = 101;
-    [self.view addSubview:mealSwitch];
-    [mealSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(controlSwitch);
-        make.centerY.equalTo(controlSwitch).offset(50);
-    }];
-    [mealSwitch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
-    
-    UILabel *mealLabel = [UILabel new];
-    mealLabel.text = @"送餐模式:";
-    [self.view addSubview:mealLabel];
-    [mealLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(mealSwitch);
-        make.right.equalTo(controlLabel);
-    }];
-    
-    UILabel *powerLabel = [UILabel new];
-    powerLabel.text = @"剩余电量： 80%";
-    [self.view addSubview:powerLabel];
-    [powerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(mealLabel);
-        make.top.equalTo(mealLabel.mas_bottom).offset(40);
-    }];
-    
-    UILabel *speedLabel = [UILabel new];
-    speedLabel.text = @"当前速度： 0.7 m/s";
-    [self.view addSubview:speedLabel];
-    [speedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(powerLabel);
-        make.top.equalTo(powerLabel.mas_bottom).offset(20);
-    }];
-    
-    UILabel *voiceLable = [UILabel new];
-    voiceLable.text = @"当前音量： 70";
-    [self.view addSubview:voiceLable];
-    [voiceLable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(speedLabel);
-        make.top.equalTo(speedLabel.mas_bottom).offset(20);
-    }];
+    //添加信息显示模式
+    [self addMessageContainner];
     
     UIButton *stopBtn = [UIButton new];
     [stopBtn setTitle:@"STOP" forState:UIControlStateNormal];
@@ -164,6 +101,112 @@
         make.bottom.equalTo(self.view).offset(-40-40);
     }];
     [stopBtn addTarget:self action:@selector(stopRun:) forControlEvents:UIControlEventTouchUpInside];
+    
+}
+
+- (void)addMessageContainner {
+    UIView *messageContainer = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 300, 400)];
+    messageContainer.backgroundColor = [UIColor lightGrayColor];
+    messageContainer.layer.cornerRadius = 4;
+    messageContainer.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    messageContainer.layer.borderWidth = 1.0;
+    [self.view addSubview:messageContainer];
+    [messageContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(radioContainer.mas_bottom).offset(20);
+        make.left.equalTo(radioContainer);
+        make.width.mas_equalTo(@200);
+        make.height.mas_equalTo(@200);
+    }];
+    
+    UILabel *questionText = [[UILabel alloc] initWithFrame:CGRectMake(0,0,280,20)];
+    questionText.backgroundColor = [UIColor clearColor];
+    questionText.text = @"信息显示：";
+    [messageContainer addSubview:questionText];
+    [questionText mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(messageContainer);
+        make.left.equalTo(messageContainer);
+    }];
+    
+    UILabel *powerLabel = [UILabel new];
+    powerLabel.text = @"剩余电量： 80%";
+    powerLabel.textColor = [UIColor darkGrayColor];
+    [self.view addSubview:powerLabel];
+    [powerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(questionText).offset(20);
+        make.top.equalTo(questionText.mas_bottom).offset(20);
+    }];
+    
+    UILabel *speedLabel = [UILabel new];
+    speedLabel.text = @"当前速度： 0.7 m/s";
+    speedLabel.textColor = [UIColor darkGrayColor];
+    [self.view addSubview:speedLabel];
+    [speedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(powerLabel);
+        make.top.equalTo(powerLabel.mas_bottom).offset(20);
+    }];
+    
+    UILabel *voiceLable = [UILabel new];
+    voiceLable.text = @"当前音量： 70";
+    voiceLable.textColor = [UIColor darkGrayColor];
+    [self.view addSubview:voiceLable];
+    [voiceLable mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(speedLabel);
+        make.top.equalTo(speedLabel.mas_bottom).offset(20);
+    }];
+}
+
+- (void)addRadioBtn {
+    radioContainer = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 300, 400)];
+    radioContainer.backgroundColor = [UIColor lightGrayColor];
+    radioContainer.layer.cornerRadius = 4;
+    radioContainer.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    radioContainer.layer.borderWidth = 1.0;
+    [self.view addSubview:radioContainer];
+    [radioContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view).offset(50);
+        make.left.equalTo(self.view).offset(50);
+        make.width.mas_equalTo(@200);
+        make.height.mas_equalTo(@150);
+    }];
+    
+    UILabel *questionText = [[UILabel alloc] initWithFrame:CGRectMake(0,0,280,20)];
+    questionText.backgroundColor = [UIColor clearColor];
+    questionText.text = @"选择服务模式：";
+    [radioContainer addSubview:questionText];
+    [questionText mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(radioContainer);
+        make.left.equalTo(radioContainer);
+    }];
+    
+    NSArray *arr = @[@"送餐模式",@"控制模式"];
+    for (int i = 0; i < 2; i++) {
+        RadioButton *rb = [[RadioButton alloc] initWithGroupId:@"first group" index:i];
+        rb.tag = i + 100;
+        [radioContainer addSubview:rb];
+        [rb mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(radioContainer).offset(40 + 50*i);
+            make.left.equalTo(radioContainer).offset(10);
+            make.size.mas_equalTo(CGSizeMake(100, 22));
+        }];
+        [rb.button setTitle:arr[i] forState:UIControlStateNormal];
+    }
+    
+    RadioButton *rb = (RadioButton *)[self.view viewWithTag:100];
+    [rb setChecked:YES];
+    [RadioButton addObserverForGroupId:@"first group" observer:self];
+}
+
+-(void)radioButtonSelectedAtIndex:(NSUInteger)index inGroup:(NSString *)groupId{
+    NSLog(@"changed to %lu in %@",(unsigned long)index,groupId);
+    if (index == 0) {
+        NSLog(@"meal mode");
+        [control mealMode];
+    }
+    else
+    {
+        NSLog(@"control mode");
+        [control controlMode];
+    }
 }
 
 - (void)sliderValueChanged :(CHYSlider *)slider {
@@ -193,49 +236,6 @@
 - (void)stopRun:(UIButton *)btn {
     [control stopMove];
 }
-
-- (void)switchAction:(UISwitch *)swi {
-    UISwitch *swith1 = (UISwitch *)[self.view viewWithTag:100];
-    UISwitch *swith2 = (UISwitch *)[self.view viewWithTag:101];
-    
-    if (swi.tag == 100 && swi.on == YES) {
-        if (swith2.on == YES) {
-            swith2.on = NO;
-            NSLog(@"开启控制模式");
-            [control controlMode];
-        }
-    }
-    
-    if (swi.tag == 101 && swi.on == YES) {
-        if (swith1.on == YES) {
-            swith1.on = NO;
-            NSLog(@"开启送餐模式");
-//            [self.server sendMessage:@"a"];
-            [control mealMode];
-        }
-    }
-    
-}
-
-//- (void )updateVelocity:(UISlider *)slider {
-//    self.velocityLabel.text = [NSString stringWithFormat:@"速度设置：%.1f",slider.value];
-//    if (slider.value < 20) {
-//        [control speed:1];
-//    }
-//    if (20 <= slider.value && slider.value < 40) {
-//        [control speed:2];
-//    }
-//    if (40 <= slider.value && slider.value < 60) {
-//        [control speed:3];
-//    }
-//    if (60 <= slider.value && slider.value < 80) {
-//        [control speed:4];
-//    }
-//    if (80 <= slider.value && slider.value < 100) {
-//        [control speed:5];
-//    }
-//    
-//}
 
 - (void)analogueStickDidChangeValue:(JSAnalogueStick *)analogueStick {
     [self updateAnalogueLabel];
