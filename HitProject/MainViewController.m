@@ -17,18 +17,21 @@
 
 @property (nonatomic) UITableView *m_tableView;
 @property (nonatomic) NSMutableArray *m_modelsArray;
+@property (nonatomic) NSMutableArray *m_selecedModelsArray;
 
 @end
 
 @implementation MainViewController
 @synthesize m_tableView;
 @synthesize m_modelsArray;
+@synthesize m_selecedModelsArray;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     UIImage *image = [UIImage imageNamed:@"me.png"];
     
     m_modelsArray = [[NSMutableArray alloc] init];
+    m_selecedModelsArray = [[NSMutableArray alloc] init];
     
     FirstViewController *first = [FirstViewController new];
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -63,7 +66,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectSuccess:) name:NOTICE_CONNECTSUCCESS object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientDisconnect:) name:NOTICE_DISCONNECT object:nil];
 }
-
 
 - (void)clientDisconnect :(NSNotification *)noti {
     NSDictionary *dic = [noti userInfo];
@@ -123,6 +125,13 @@
     return m_modelsArray.count;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    ConnectStatesCell *cell = (ConnectStatesCell *)[tableView cellForRowAtIndexPath:indexPath];
+    cell.isChecked = !cell.isChecked;
+    ConnectModel *model = [m_modelsArray objectAtIndex:indexPath.row];
+    [m_selecedModelsArray addObject:model];
+}
+
 
 - (UIView *)tableHeaderView {
     UIView *headerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 30)];
@@ -131,7 +140,7 @@
     [headerview addSubview:iplabel];
     [iplabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(headerview);
-        make.left.equalTo(headerview).offset(10);
+        make.left.equalTo(headerview).offset(20);
     }];
     
     UILabel *portLable = [UILabel new];

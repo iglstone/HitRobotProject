@@ -23,7 +23,6 @@
 @property (nonatomic) HitControl *control;
 @property (nonatomic) CHYSlider *steppedSlider;
 @property (nonatomic) UIView *radioContainer;
-
 @property (nonatomic) int direction;
 
 @end
@@ -214,6 +213,7 @@
     self.velocityLabel.text = [NSString stringWithFormat:@"速度设置：%.0f",slider.value];
     if (slider.value == 0) {
         [control stopMove];
+        [self updateAnalogueLabel:@"停止"];
     }
     if (slider.value == 1) {
         [control speed:1];
@@ -235,10 +235,10 @@
 
 - (void)stopRun:(UIButton *)btn {
     [control stopMove];
+    [self updateAnalogueLabel:@"停止"];
 }
 
 - (void)analogueStickDidChangeValue:(JSAnalogueStick *)analogueStick {
-    [self updateAnalogueLabel];
     float x = analogueStick.xValue;
     float y = analogueStick.yValue;
     if ((0 < y) &&  (fabs(x) < fabs(y))) {
@@ -257,30 +257,35 @@
         direction = 4;//向左
     }
     
+    NSString *turn = @"";
     if (analogueStick.xValue == 0 && analogueStick.yValue == 0) {
         NSLog(@"backToOrigine");
-
+        
         switch (direction) {
             case 1:
                 NSLog(@"向上");
+                turn = @"向上";
                 [control forward];
                 direction = 0;
                 break;
             
             case 2:
                 NSLog(@"向下");
+                turn = @"向下";
                 [control backward];
                 direction = 0;
                 break;
             
             case 3:
                 NSLog(@"向右");
+                turn = @"向右";
                 [control turnRight];
                 direction = 0;
                 break;
                 
             case 4:
                 NSLog(@"向左");
+                turn = @"向左";
                 [control turnLeft];
                 direction = 0;
                 break;
@@ -289,11 +294,12 @@
                 break;
         }
     }
+    [self updateAnalogueLabel: turn];
 }
 
-- (void)updateAnalogueLabel
+- (void)updateAnalogueLabel: (NSString *)turn
 {
-    [self.analogueLabel setText:[NSString stringWithFormat:@"x:%.1f , y:%.1f", self.analogueStick.xValue, self.analogueStick.yValue]];
+    [self.analogueLabel setText:[NSString stringWithFormat:@"x:%.1f , y:%.1f\n%@", self.analogueStick.xValue, self.analogueStick.yValue, turn]];
 }
 
 

@@ -16,6 +16,7 @@
 +(UIColor *)colorOfMiddle;
 +(UIColor *)colorOfDark;
 
+
 //+(void)GetJsonWithUrl:(NSString *)url parameters:(id)parameter success:(void(^)(id responseObjec))succes faild:(void (^)(AFHTTPRequestOperation *operation))faildd;
 ////post 也是带token的
 //+ (void)postJSONWithUrl:(NSString *)urlStr parameters:(id)parameters success:(void (^)(id responseObject))success fail:(void (^)( AFHTTPRequestOperation *operation))fail; //参数是void (^)(id responseObject)，所以上面传的时候也必须是这种类型的
@@ -23,7 +24,8 @@
 //+(void)PutJsonWithUrl:(NSString *)url parameters:(id)parameter success:(void(^)(id responseObjec))succes fail:(void (^)(AFHTTPRequestOperation *operation))fail;
 ////delete
 //+(void)DeleteJsonWithUrl:(NSString *)url parameters:(id)parameter success:(void(^)(id responseObjec))succes fail:(void (^)(AFHTTPRequestOperation *operation))fail;
-//
+
+
 ////是否有token
 //+(BOOL)hasToken;
 ////获得本地token
@@ -32,7 +34,7 @@
 //+(void)deleteLocalToken;
 ////存储token到本地
 //+(void)saveLocalToken:(NSString *)token;
-//
+
 +(void)com_custumLabel:(UILabel *)label fontSize:(NSInteger)font color:(UIColor *)color numberOfLines:(NSInteger)lines alignment:(NSTextAlignment )alignment;
 
 +(void)com_custumLabel:(UILabel *)label parentView:(UIView *)parentView  text:(NSString *)text fontSize:(NSInteger)font color:(UIColor *)color numberOfLines:(NSInteger)lines textAlignment:(NSTextAlignment )alignment ;//mas_constrant:(void(^)(MASConstraintMaker *))block;

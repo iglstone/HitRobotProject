@@ -144,7 +144,7 @@ static ServerSocket* _instance = nil;
 {
     NSLog(@"Server onSocketDidDisconnect");
     [connectedSockets removeObject:sock];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
 }
 
 /**

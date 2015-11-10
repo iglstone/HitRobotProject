@@ -22,6 +22,8 @@
 @property (nonatomic) UILabel * hostIpLabel;
 @property (nonatomic) UILabel * statusLabel;
 @property (nonatomic) UILabel * portLabel;
+@property (nonatomic) UIImageView *checkImg;
+@property (nonatomic) BOOL isChecked;
 
 - (void)configModel :(ConnectModel *)model ;
 
