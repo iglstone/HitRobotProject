@@ -11,7 +11,6 @@
 #import "SecondViewController.h"
 #import "ThirdViewController.h"
 #import "FourthViewController.h"
-#import "MainViewController.h"
 
 @interface AppDelegate ()
 
@@ -26,7 +25,7 @@
 //    self.server = [[ServerSocket alloc] init];
     
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
-    MainViewController *main = [MainViewController new];
+    _main = [MainViewController new];
     
 //    UIImage *image = [UIImage imageNamed:@"me.png"];
 //    FirstViewController *first = [FirstViewController new];
@@ -46,7 +45,7 @@
 //    UITabBarController *tb = [[UITabBarController alloc]init];
 //    tb.viewControllers = @[first, second, third, fourth];
     
-    self.window.rootViewController = main;//tb;
+    self.window.rootViewController = _main;//tb;
     [self.window makeKeyAndVisible];
     return YES;
 }

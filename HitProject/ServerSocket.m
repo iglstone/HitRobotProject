@@ -7,6 +7,7 @@
 //
 
 #import "ServerSocket.h"
+//#import "a"
 
 @implementation ServerSocket
 @synthesize result;
@@ -42,6 +43,9 @@ static ServerSocket* _instance = nil;
 
 - (void)sendMessage :(NSString *)string
 {
+    AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
+    [dele.main setDebugLabelText:string];
+    
     for (AsyncSocket * s in connectedSockets)
     {
         [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];

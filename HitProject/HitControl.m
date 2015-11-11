@@ -114,6 +114,36 @@ static HitControl* _instance = nil;
         case 5:
             [server sendMessage:@"s"];
             break;
+        case 6:
+            [server sendMessage:@"t"];
+            break;
+        case 7:
+            [server sendMessage:@"u"];
+            break;
+        case 8:
+            [server sendMessage:@"v"];
+            break;
+        case 9:
+            [server sendMessage:@"w"];
+            break;
+        case 10:
+            [server sendMessage:@"x"];
+            break;
+        case 11:
+            [server sendMessage:@"y"];
+            break;
+        case 12:
+            [server sendMessage:@"z"];
+            break;
+        case 13:
+            [server sendMessage:@"A"];
+            break;
+        case 14:
+            [server sendMessage:@"B"];
+            break;
+        case 15:
+            [server sendMessage:@"C"];
+            break;
         default:
             break;
     }

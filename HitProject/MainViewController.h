@@ -10,4 +10,6 @@
 
 @interface MainViewController : UITabBarController
 
+- (void)setDebugLabelText:(NSString *)string ;
+
 @end

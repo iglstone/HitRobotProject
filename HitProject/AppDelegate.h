@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "ServerSocket.h"
+#import "MainViewController.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
-//@property (strong, nonatomic) ServerSocket *server;
+@property (strong, nonatomic) MainViewController *main;
 
 @end

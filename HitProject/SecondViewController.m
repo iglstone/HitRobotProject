@@ -44,11 +44,12 @@
     self.analogueLabel = [UILabel new];
     self.analogueLabel.text = @"0 , 0";
     self.analogueLabel.textAlignment = NSTextAlignmentCenter;
+    self.analogueLabel.numberOfLines = 0;
     [self.view addSubview:self.analogueLabel];
     [self.analogueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(100);
         make.centerX.equalTo(self.view);
-        make.size.mas_equalTo(CGSizeMake(120, 40));
+        make.size.mas_equalTo(CGSizeMake(120, 80));
     }];
     
     self.analogueStick = [[JSAnalogueStick alloc] initWithFrame:CGRectMake(100, 100, 120, 120)];
@@ -105,7 +106,7 @@
 
 - (void)addMessageContainner {
     UIView *messageContainer = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 300, 400)];
-    messageContainer.backgroundColor = [UIColor lightGrayColor];
+    messageContainer.backgroundColor = [CommonsFunc colorOfLight];
     messageContainer.layer.cornerRadius = 4;
     messageContainer.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     messageContainer.layer.borderWidth = 1.0;
@@ -156,7 +157,7 @@
 
 - (void)addRadioBtn {
     radioContainer = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 300, 400)];
-    radioContainer.backgroundColor = [UIColor lightGrayColor];
+    radioContainer.backgroundColor = [CommonsFunc colorOfLight];
     radioContainer.layer.cornerRadius = 4;
     radioContainer.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     radioContainer.layer.borderWidth = 1.0;
@@ -299,7 +300,7 @@
 
 - (void)updateAnalogueLabel: (NSString *)turn
 {
-    [self.analogueLabel setText:[NSString stringWithFormat:@"x:%.1f , y:%.1f\n%@", self.analogueStick.xValue, self.analogueStick.yValue, turn]];
+    [self.analogueLabel setText:[NSString stringWithFormat:@"x:%.1f , y:%.1f \n %@", self.analogueStick.xValue, self.analogueStick.yValue, turn]];
 }
 
 

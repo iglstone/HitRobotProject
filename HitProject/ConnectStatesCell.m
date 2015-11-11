@@ -55,7 +55,7 @@
         
         hostIpLabel= [[UILabel alloc]init];
         hostIpLabel.text = @"192.168.100.100";
-        hostIpLabel.backgroundColor = [UIColor redColor];
+//        hostIpLabel.backgroundColor = [UIColor redColor];
         [CommonsFunc com_custumLabel:hostIpLabel fontSize:12 color:[UIColor darkGrayColor] numberOfLines:1 alignment:NSTextAlignmentLeft];
         [self.contentView addSubview:hostIpLabel];
         [hostIpLabel mas_makeConstraints:^(MASConstraintMaker *make) {

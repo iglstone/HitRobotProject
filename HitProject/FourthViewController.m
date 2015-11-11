@@ -13,12 +13,13 @@
 @interface FourthViewController ()
 
 @property (nonatomic) UILabel *voiceLabel;
-@property (nonatomic) UIView *rawView;
+@property (nonatomic) UIScrollView *rawView;
 @property (nonatomic) NSInteger deskNum;
 @property (nonatomic) HitControl *control;
 @property (nonatomic) NSInteger voice;
 @property (nonatomic) BOOL isPlay;
 @property (nonatomic) UILabel *playLabel;
+@property (nonatomic) NSMutableArray *musicsArray;
 
 @end
 
@@ -28,6 +29,7 @@
 @synthesize voice;
 @synthesize isPlay;
 @synthesize playLabel;
+@synthesize musicsArray;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -36,16 +38,24 @@
     isPlay = NO;
     control = [HitControl sharedControl];
     
-    rawView = [UIView new];
-    rawView.backgroundColor = [UIColor lightGrayColor];
+    musicsArray = [[NSMutableArray alloc] init];
+    
+    rawView = [UIScrollView new];
+    rawView.backgroundColor = [CommonsFunc colorOfLight];
+    rawView.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    rawView.layer.borderWidth = 0.8;
+    rawView.layer.cornerRadius = 12;
+    rawView.layer.masksToBounds = YES;
+    rawView.backgroundColor = [CommonsFunc colorOfLight];
     [self.view addSubview:rawView];
     [rawView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 5, 250, 300+15));
     }];
+    rawView.contentSize = CGSizeMake(400, 1000);
     
     DeskView *desk1 = [[DeskView alloc] init];//WithFrame:CGRectMake(0, 0, 150, 150)];
     desk1.backgroundColor = [UIColor redColor];
-    [self.view addSubview:desk1];
+    [rawView addSubview:desk1];
     [desk1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(rawView).offset(20);
         make.left.equalTo(rawView).offset(20);
@@ -57,22 +67,22 @@
     
     int deskNum = 1;
     
-    for (int i = 0; i <= 3; i++) {
+    for (int i = 0; i <= 7; i++) {
         for (int j = 0; j < 7; j++) {
             DeskView *deskview = [DeskView new];
-            [deskview.img setImage:[UIImage imageNamed:@"music.png"]];
+            [deskview.img setImage:[UIImage imageNamed:@"music_unplay.png"]];
             deskview.deskName.text = [NSString stringWithFormat:@"歌曲%d",deskNum];
             deskNum ++;
             deskview.tag = deskNum;
-            [self.view addSubview:deskview];
+            [rawView addSubview:deskview];
             [deskview mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(desk1).offset((deskWidth)*j);
-//                make.top.equalTo(desk1).offset((deskHeight + 10)*i);
                 make.top.equalTo(desk1).offset((deskHeight + 5)*i);
                 make.size.mas_equalTo(CGSizeMake(60, 60));
             }];
             deskview.userInteractionEnabled = YES;
             [deskview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(songTaped:)]];
+            [musicsArray addObject:deskview];
         }
     }
     desk1.hidden = YES;
@@ -180,7 +190,7 @@
 
 - (void)addRadioBtn {
     UIView *container = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 300, 400)];
-    container.backgroundColor = [UIColor lightGrayColor];
+    container.backgroundColor = [CommonsFunc colorOfLight];
     [self.view addSubview:container];
     [container mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(rawView);
@@ -224,41 +234,55 @@
 
 
 - (void)play:(UIButton *)btn {
-    [control singSong:(self.deskNum + 1)];
-    
-    UIButton *stopBtn = (UIButton *)[self.view viewWithTag:1001];
-    
-    if (isPlay == NO) {
-        isPlay = YES;
-        [btn setBackgroundImage:[UIImage imageNamed:@"pause2.png"] forState:UIControlStateNormal];
-        [stopBtn setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
-        playLabel.text = @"暂停";
+    if (self.deskNum <= 15) {
+        [control singSong:(self.deskNum)];
     }else
-    {
-        isPlay = NO;
-        [btn setBackgroundImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
-        playLabel.text = @"播放";
-    }
+        [control singSong:5];
+    
+//    UIButton *stopBtn = (UIButton *)[self.view viewWithTag:1001];
+    
+//    if (isPlay == NO) {
+//        isPlay = YES;
+//        [btn setBackgroundImage:[UIImage imageNamed:@"pause2.png"] forState:UIControlStateNormal];
+//        [stopBtn setBackgroundImage:[UIImage imageNamed:@"pause.png"] forState:UIControlStateNormal];
+//        playLabel.text = @"暂停";
+//    }else
+//    {
+//        isPlay = NO;
+//        [btn setBackgroundImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
+//        playLabel.text = @"播放";
+//        //本来应该是暂停的
+//        [self setUnPlayImage];
+//        [control stopSingSong];
+//    }
 }
 
 - (void)cancel:(UIButton *)btn {
     NSLog(@"cancel button taped..");
     [control stopSingSong];
-    
+    [self setUnPlayImage];
     [btn setBackgroundImage:[UIImage imageNamed:@"stop_pressed.png"] forState:UIControlStateNormal];
     
     isPlay = NO;
     UIButton *play = (UIButton *)[self.view viewWithTag:1000];
     [play setBackgroundImage:[UIImage imageNamed:@"play.png"] forState:UIControlStateNormal];
     playLabel.text = @"播放";
+    
 }
 
 - (void)songTaped:(UITapGestureRecognizer *)tap {
     DeskView *deskview = (DeskView *)[tap view];
-    deskview.backgroundColor = [UIColor grayColor];
+    [self setUnPlayImage];
+    [deskview.img setImage:[UIImage imageNamed:@"music_play.png"]];
     
     self.deskNum = deskview.tag - 1;
     NSLog(@"song num ;%ld",(long)self.deskNum);
+}
+
+- (void)setUnPlayImage {
+    for (DeskView *deskView2 in musicsArray) {
+        [deskView2.img setImage:[UIImage imageNamed:@"music_unplay.png"]];
+    }
 }
 
 - (void)updateVoice:(UISlider *)slider {

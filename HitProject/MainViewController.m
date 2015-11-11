@@ -19,6 +19,8 @@
 @property (nonatomic) NSMutableArray *m_modelsArray;
 @property (nonatomic) NSMutableArray *m_selecedModelsArray;
 @property (nonatomic) UIButton *stopBtn;
+@property (nonatomic) UILabel *m_debugLabel;
+@property (nonatomic) NSString *tmpString;
 
 @end
 
@@ -27,11 +29,13 @@
 @synthesize m_modelsArray;
 @synthesize m_selecedModelsArray;
 @synthesize stopBtn;
+@synthesize m_debugLabel;
+@synthesize tmpString;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     UIImage *image = [UIImage imageNamed:@"me.png"];
-    
+    tmpString = @"";
     m_modelsArray = [[NSMutableArray alloc] init];
     m_selecedModelsArray = [[NSMutableArray alloc] init];
     
@@ -59,26 +63,62 @@
     [m_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.view).offset(-5);
         make.width.mas_equalTo(@300);
-        make.top.equalTo(self.view).offset(300);
+//        make.top.equalTo(self.view).offset(300);
         make.bottom.equalTo(self.view).offset(-50-5);
+        make.height.mas_equalTo(@250);
     }];
     m_tableView.tableFooterView =[[UIView alloc] initWithFrame:CGRectZero];
-    m_tableView.tableHeaderView = [self tableHeaderView];
+//    m_tableView.tableHeaderView = [self tableHeaderView];
+    UIView *header = [self tableHeaderView];
+    [self.view addSubview:header];
+    [header mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(m_tableView.mas_top);
+        make.left.equalTo(m_tableView);
+        make.width.equalTo(m_tableView);
+        make.height.mas_equalTo(@30);
+    }];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectSuccess:) name:NOTICE_CONNECTSUCCESS object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientDisconnect:) name:NOTICE_DISCONNECT object:nil];
     
     stopBtn = [UIButton new];
     [self.view addSubview:stopBtn];
+    stopBtn.backgroundColor = [UIColor lightGrayColor];
+    stopBtn.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    stopBtn.layer.borderWidth = 1.0;
+    stopBtn.layer.masksToBounds = YES;
+    stopBtn.layer.cornerRadius = 5.0;
     [self setStopBtnGray];
     [stopBtn setTitle:@"断开连接" forState:UIControlStateNormal];
-    stopBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+    stopBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [stopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(m_tableView);
         make.centerX.equalTo(m_tableView);
+        make.width.mas_equalTo(@110);
+        
     }];
     [stopBtn addTarget:self action:@selector(stopBtnTaped:) forControlEvents:UIControlEventTouchUpInside];
-    [stopBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
+    
+    m_debugLabel = [UILabel new];
+    m_debugLabel.textColor = [UIColor lightGrayColor];
+    [self.view addSubview:m_debugLabel];
+    m_debugLabel.numberOfLines = 0;
+    m_debugLabel.backgroundColor = [CommonsFunc colorOfLight];
+    [m_debugLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(header.mas_top).offset(-10);
+        make.width.equalTo(m_tableView);
+        make.height.mas_equalTo(@50);
+        make.left.equalTo(m_tableView);
+    }];
+    
+}
+
+- (void)setDebugLabelText:(NSString *)string {
+    m_debugLabel.text = nil;
+//    if (tmpString.length != 0)
+        m_debugLabel.text = [NSString stringWithFormat:@"send message: %@ \nsend message: %@",tmpString,string];
+    
+    tmpString = string;
 }
 
 - (void)stopBtnTaped :(UIButton *)btn {
@@ -91,6 +131,8 @@
 //            [self setStopBtnRed];
     }
 }
+
+
 
 - (void)clientDisconnect :(NSNotification *)noti {
     NSDictionary *dic = [noti userInfo];
@@ -187,6 +229,7 @@
 
 - (void )setStopBtnRed {
     [stopBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+//    [stopBtn setBackgroundColor:[UIColor ]]
 }
 
 - (void )setStopBtnGray {
@@ -195,6 +238,7 @@
 
 - (UIView *)tableHeaderView {
     UIView *headerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 30)];
+    headerview.backgroundColor = [UIColor orangeColor];
     UILabel *iplabel = [UILabel new];
     iplabel.text = @"client ip";
     [headerview addSubview:iplabel];
