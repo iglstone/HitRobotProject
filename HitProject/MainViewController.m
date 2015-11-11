@@ -18,6 +18,7 @@
 @property (nonatomic) UITableView *m_tableView;
 @property (nonatomic) NSMutableArray *m_modelsArray;
 @property (nonatomic) NSMutableArray *m_selecedModelsArray;
+@property (nonatomic) UIButton *stopBtn;
 
 @end
 
@@ -25,6 +26,7 @@
 @synthesize m_tableView;
 @synthesize m_modelsArray;
 @synthesize m_selecedModelsArray;
+@synthesize stopBtn;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -65,12 +67,35 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectSuccess:) name:NOTICE_CONNECTSUCCESS object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientDisconnect:) name:NOTICE_DISCONNECT object:nil];
+    
+    stopBtn = [UIButton new];
+    [self.view addSubview:stopBtn];
+    [self setStopBtnGray];
+    [stopBtn setTitle:@"断开连接" forState:UIControlStateNormal];
+    stopBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+    [stopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(m_tableView);
+        make.centerX.equalTo(m_tableView);
+    }];
+    [stopBtn addTarget:self action:@selector(stopBtnTaped:) forControlEvents:UIControlEventTouchUpInside];
+    [stopBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
+}
+
+- (void)stopBtnTaped :(UIButton *)btn {
+    NSLog(@"stopTaped");
+    for (ConnectModel *model in m_selecedModelsArray) {
+        [model.socket disconnect];
+//        if (m_selecedModelsArray.count == 0) {
+//            [self setStopBtnGray];
+//        }else
+//            [self setStopBtnRed];
+    }
 }
 
 - (void)clientDisconnect :(NSNotification *)noti {
     NSDictionary *dic = [noti userInfo];
     AsyncSocket *socket = (AsyncSocket *)[dic objectForKey:@"socket"];
-    for (ConnectModel *model in m_modelsArray) {
+    for (ConnectModel *model in m_selecedModelsArray) {
         if ([model.socket isEqual:socket]) {
             model.status = @"disconnect";
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -92,8 +117,17 @@
     model.hostIp = host;
     model.status = status;
     model.socket = sokect;
-    [m_modelsArray addObject:model];
     
+    for (ConnectModel *tmpModel in m_modelsArray) {
+        if ([model.hostIp isEqual:tmpModel.hostIp]) {
+            [m_modelsArray removeObject:tmpModel];
+            [m_modelsArray addObject:model];
+            [m_tableView reloadData];
+            return;
+        }
+    }
+    
+    [m_modelsArray addObject:model];
     dispatch_async(dispatch_get_main_queue(), ^{
         [m_tableView reloadData];
     });
@@ -127,11 +161,37 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     ConnectStatesCell *cell = (ConnectStatesCell *)[tableView cellForRowAtIndexPath:indexPath];
-    cell.isChecked = !cell.isChecked;
     ConnectModel *model = [m_modelsArray objectAtIndex:indexPath.row];
-    [m_selecedModelsArray addObject:model];
+
+    for (ConnectModel *tmpModel in m_selecedModelsArray) {//如果两个model一样，就给替换掉
+        if ([model isEqual:tmpModel]) {
+            [m_selecedModelsArray removeObject:tmpModel];
+            [m_selecedModelsArray addObject:model];
+            [self setStopBtnRed];
+        }
+    }
+    
+    cell.isChecked = !cell.isChecked;
+    if (cell.isChecked == YES) {
+        [m_selecedModelsArray addObject:model];
+        [self setStopBtnRed];
+    }else
+    {
+        [m_selecedModelsArray removeObject:model];
+        if (m_selecedModelsArray.count == 0) {
+            [self setStopBtnGray];
+        }else
+            [self setStopBtnRed];
+    }
 }
 
+- (void )setStopBtnRed {
+    [stopBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+}
+
+- (void )setStopBtnGray {
+    [stopBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+}
 
 - (UIView *)tableHeaderView {
     UIView *headerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 30)];

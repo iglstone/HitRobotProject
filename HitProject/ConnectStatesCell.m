@@ -92,10 +92,10 @@
 - (void)setIsChecked:(BOOL)check{
     if (check == YES) {
         isChecked = YES;
-        checkImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkbox1_checked.png"]];
+        [checkImg setImage:[UIImage imageNamed:@"checkbox1_checked.png"]];
     }else {
         isChecked = NO;
-        checkImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"checkbox1_unchecked.png"]];
+        [checkImg setImage:[UIImage imageNamed:@"checkbox1_unchecked.png"]];
     }
 }
 

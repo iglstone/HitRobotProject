@@ -16,11 +16,13 @@
 @property (nonatomic) ServerSocket *server;
 
 @property (nonatomic) HitControl *control;
+@property (nonatomic) BOOL isStart;
 
 @end
 
 @implementation FirstViewController
 @synthesize control;
+@synthesize isStart;
 
 - (instancetype)init {
     self = [super init];
@@ -34,6 +36,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
+    isStart = NO;
     
     UIImageView *robot1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"robot_1.png"]];
     [self.view addSubview:robot1];
@@ -102,17 +105,6 @@
     [startBtn addTarget:self action:@selector(playBtnTaped:) forControlEvents:UIControlEventTouchUpInside];
     [startBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
     
-    UIButton *stopBtn = [UIButton new];
-    [self.view addSubview:stopBtn];
-    [stopBtn setTitle:@"停止服务" forState:UIControlStateNormal];
-    stopBtn.titleLabel.font = [UIFont systemFontOfSize:12];
-    [stopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(startBtn);
-        make.left.equalTo(startBtn.mas_right).offset(20);
-    }];
-    [stopBtn addTarget:self action:@selector(stopBtnTaped:) forControlEvents:UIControlEventTouchUpInside];
-    [stopBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
-    
 }
 
 - (void)dealloc {
@@ -121,18 +113,24 @@
 
 - (void)playBtnTaped:(UIButton *)btn {
     NSLog(@"image taped");
-    [btn setBackgroundColor:[UIColor lightGrayColor]];
-    [control startListen];
-}
-
-- (void)stopBtnTaped :(UIButton *)btn {
-    NSLog(@"stopTaped");
-    [control stopListen];
+    
+    if (isStart == NO) {
+        isStart = YES;
+        [control startListen];
+        [btn setBackgroundColor:[UIColor lightGrayColor]];
+        [btn setTitle:@"停止服务" forState:UIControlStateNormal];
+    }else
+    {
+        isStart = NO;
+        [control stopListen];
+        [btn setBackgroundColor:[UIColor clearColor]];
+        [btn setTitle:@"开始服务" forState:UIControlStateNormal];
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (NSString *)deviceIPAdress {
