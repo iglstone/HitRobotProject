@@ -44,7 +44,7 @@
         make.top.equalTo(self.view).offset(20);
         make.left.equalTo(self.view).offset(10);
     }];
-
+    
     UIImageView *robot2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"robot_2.png"]];
     [self.view addSubview:robot2];
     [robot2 mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -55,7 +55,23 @@
     UIImageView *robot3 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"robot_3.png"]];
     [self.view addSubview:robot3];
     [robot3 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self.view);
+        make.centerX.equalTo(self.view);
+        make.centerY.equalTo(self.view).offset(80);
+    }];
+    
+    UIImageView *robot4 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo.png"]];
+    [self.view addSubview:robot4];
+    [robot4 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.view);
+        make.top.equalTo(self.view).offset(50);
+        make.size.mas_equalTo(CGSizeMake(100, 100));
+    }];
+    UILabel *hitLable = [UILabel new];
+    hitLable.text = @"芜湖哈特机器人研究院";
+    [self.view addSubview:hitLable];
+    [hitLable mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(robot4.mas_bottom).offset(5);
+        make.centerX.equalTo(robot4);
     }];
     
     UILabel *ipLabel= [UILabel new];

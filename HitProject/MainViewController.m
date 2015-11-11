@@ -21,6 +21,7 @@
 @property (nonatomic) UIButton *stopBtn;
 @property (nonatomic) UILabel *m_debugLabel;
 @property (nonatomic) NSString *tmpString;
+@property (nonatomic) ConnectStatesCell *tmpCell;
 
 @end
 
@@ -31,6 +32,7 @@
 @synthesize stopBtn;
 @synthesize m_debugLabel;
 @synthesize tmpString;
+@synthesize tmpCell;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -125,11 +127,14 @@
     NSLog(@"stopTaped");
     for (ConnectModel *model in m_selecedModelsArray) {
         [model.socket disconnect];
+        tmpCell.isChecked = NO;
+
 //        if (m_selecedModelsArray.count == 0) {
 //            [self setStopBtnGray];
 //        }else
 //            [self setStopBtnRed];
     }
+
 }
 
 
@@ -137,7 +142,7 @@
 - (void)clientDisconnect :(NSNotification *)noti {
     NSDictionary *dic = [noti userInfo];
     AsyncSocket *socket = (AsyncSocket *)[dic objectForKey:@"socket"];
-    for (ConnectModel *model in m_selecedModelsArray) {
+    for (ConnectModel *model in m_modelsArray) {
         if ([model.socket isEqual:socket]) {
             model.status = @"disconnect";
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -202,9 +207,14 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    ConnectStatesCell *cell = (ConnectStatesCell *)[tableView cellForRowAtIndexPath:indexPath];
+    tmpCell = (ConnectStatesCell *)[tableView cellForRowAtIndexPath:indexPath];
     ConnectModel *model = [m_modelsArray objectAtIndex:indexPath.row];
 
+    //
+    if ([model.status isEqualToString:@"disconnect"]) {
+        return;
+    }
+    
     for (ConnectModel *tmpModel in m_selecedModelsArray) {//如果两个model一样，就给替换掉
         if ([model isEqual:tmpModel]) {
             [m_selecedModelsArray removeObject:tmpModel];
@@ -213,8 +223,8 @@
         }
     }
     
-    cell.isChecked = !cell.isChecked;
-    if (cell.isChecked == YES) {
+    tmpCell.isChecked = !tmpCell.isChecked;
+    if (tmpCell.isChecked == YES) {
         [m_selecedModelsArray addObject:model];
         [self setStopBtnRed];
     }else
