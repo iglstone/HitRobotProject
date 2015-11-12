@@ -138,7 +138,7 @@
     }else
     {
         isStart = NO;
-        [control stopListen];
+        [control stopAll];
         [btn setBackgroundColor:[UIColor clearColor]];
         [btn setTitle:@"开始服务" forState:UIControlStateNormal];
     }

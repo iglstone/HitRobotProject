@@ -16,6 +16,8 @@
 
 - (void)startListen ;
 
+- (void)stopAll ;
+
 - (void)stopListen ;
 
 - (void)mealMode ;

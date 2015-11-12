@@ -51,7 +51,7 @@
     [rawView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 5, 250, 300+15));
     }];
-    rawView.contentSize = CGSizeMake(400, 1000);
+    rawView.contentSize = CGSizeMake(400, 500);
     
     DeskView *desk1 = [[DeskView alloc] init];//WithFrame:CGRectMake(0, 0, 150, 150)];
     desk1.backgroundColor = [UIColor redColor];
@@ -67,8 +67,13 @@
     
     int deskNum = 1;
     
+    NSInteger tt = 0;
     for (int i = 0; i <= 7; i++) {
         for (int j = 0; j < 7; j++) {
+            if (deskNum >= 16) {
+                tt = 1;
+                break;
+            }
             DeskView *deskview = [DeskView new];
             [deskview.img setImage:[UIImage imageNamed:@"music_unplay.png"]];
             deskview.deskName.text = [NSString stringWithFormat:@"歌曲%d",deskNum];
@@ -84,6 +89,11 @@
             [deskview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(songTaped:)]];
             [musicsArray addObject:deskview];
         }
+        
+        if (tt ==1 ) {
+            break;
+        }
+        
     }
     desk1.hidden = YES;
     
@@ -210,7 +220,7 @@
     
     NSArray *arr = @[@"单曲播放",@"顺序播放",@"随机播放",@"单曲循环",@"列表循环"];
     for (int i = 0; i < 5; i++) {
-        RadioButton *rb = [[RadioButton alloc] initWithGroupId:@"first group" index:i];
+        RadioButton *rb = [[RadioButton alloc] initWithGroupId:@"sencond group" index:i];
         rb.tag = i + 100;
         [container addSubview:rb];
         [rb mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -223,7 +233,7 @@
     
     RadioButton *rb = (RadioButton *)[self.view viewWithTag:100];
     [rb setChecked:YES];
-    [RadioButton addObserverForGroupId:@"first group" observer:self];
+    [RadioButton addObserverForGroupId:@"sencond group" observer:self];
 }
 
 -(void)radioButtonSelectedAtIndex:(NSUInteger)index inGroup:(NSString *)groupId{

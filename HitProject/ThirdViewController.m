@@ -41,7 +41,7 @@
     [rawView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, 400));
     }];
-    rawView.contentSize= CGSizeMake(400, 1000);//(500,500);
+    rawView.contentSize= CGSizeMake(400, 400);//(1000);
     
     DeskView *desk1 = [[DeskView alloc] init];//WithFrame:CGRectMake(0, 0, 150, 150)];
     desk1.backgroundColor = [UIColor redColor];
@@ -56,9 +56,13 @@
     NSInteger deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
     
     int deskNum = 1;
-    
+    NSInteger tt = 0;
     for (int i = 0; i <= 6; i++) {
         for (int j = 0; j < 7; j++) {
+            if (deskNum >= 6) {
+                tt = 1;
+                break;
+            }
             DeskView *deskview = [DeskView new];
             deskview.deskName.text = [NSString stringWithFormat:@"%d号桌",deskNum];//(NSInteger)((j+1)+(i)*(j+1))];
             deskNum ++;
@@ -72,6 +76,9 @@
             deskview.userInteractionEnabled = YES;
             [deskview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deskTaped:)]];
             [desksArray addObject: deskview];
+        }
+        if (tt == 1) {
+            break;
         }
     }
     desk1.hidden = YES;
@@ -118,11 +125,13 @@
 - (void)backToOrigin:(UIButton *)btn {
     NSLog(@"backToOrigin");
     [control backToOrigin];
+    [self setUnselectedDeskImage];
 }
 
 - (void)loopRun:(UIButton *)btn {
     NSLog(@"loopRun");
     [control loopRun];
+    [self setUnselectedDeskImage];
 }
 
 - (void)deskTaped:(UIGestureRecognizer *)gesture {

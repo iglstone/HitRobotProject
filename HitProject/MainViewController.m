@@ -22,6 +22,7 @@
 @property (nonatomic) UILabel *m_debugLabel;
 @property (nonatomic) NSString *tmpString;
 @property (nonatomic) ConnectStatesCell *tmpCell;
+@property (nonatomic) HitControl *control;
 
 @end
 
@@ -33,6 +34,7 @@
 @synthesize m_debugLabel;
 @synthesize tmpString;
 @synthesize tmpCell;
+@synthesize control;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -40,6 +42,7 @@
     tmpString = @"";
     m_modelsArray = [[NSMutableArray alloc] init];
     m_selecedModelsArray = [[NSMutableArray alloc] init];
+    control = [HitControl sharedControl];
     
     FirstViewController *first = [FirstViewController new];
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -128,13 +131,14 @@
     for (ConnectModel *model in m_selecedModelsArray) {
         [model.socket disconnect];
         tmpCell.isChecked = NO;
-
+        
 //        if (m_selecedModelsArray.count == 0) {
 //            [self setStopBtnGray];
 //        }else
 //            [self setStopBtnRed];
     }
 
+    [control stopAll];
 }
 
 
