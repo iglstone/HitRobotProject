@@ -36,8 +36,8 @@ static HitControl* _instance = nil;
 }
 
 - (void)stopAll {
-    [self stopMove];
-    [self stopSingSong];
+//    [self stopMove];
+//    [self stopSingSong];
     [self stopListen];
 }
 
