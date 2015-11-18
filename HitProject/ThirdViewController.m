@@ -59,7 +59,7 @@
     NSInteger tt = 0;
     for (int i = 0; i <= 6; i++) {
         for (int j = 0; j < 7; j++) {
-            if (deskNum >= 6) {
+            if (deskNum >= 29) {
                 tt = 1;
                 break;
             }
@@ -172,7 +172,7 @@
             if (self.deskNum <= 5) {
                 [control deskNumber:self.deskNum];
             }else {
-                [control deskNumber:3];
+                [control deskNumber:5];
             }
         
         }
