@@ -24,6 +24,7 @@
 @property (nonatomic) CHYSlider *steppedSlider;
 @property (nonatomic) UIView *radioContainer;
 @property (nonatomic) int direction;
+@property (nonatomic) UILabel *powerLabel;
 
 @end
 
@@ -32,6 +33,7 @@
 @synthesize server;
 @synthesize control;
 @synthesize radioContainer;
+@synthesize powerLabel;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -40,6 +42,7 @@
     self.server = [ServerSocket sharedSocket];
     control = [HitControl sharedControl];
     direction = 0;
+    [server addObserver:self forKeyPath:@"kvoPower" options:NSKeyValueObservingOptionNew context:nil];
     
     self.analogueLabel = [UILabel new];
     self.analogueLabel.text = @"0 , 0";
@@ -104,6 +107,18 @@
     
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
+    if ([keyPath isEqualToString:@"kvoPower"]) {
+        NSString *string = [change objectForKey:@"new"];
+        powerLabel.text = [NSString stringWithFormat:@"剩余电量： %@v",string];
+    }
+}
+
+- (void)dealloc{
+    [server removeObserver:self forKeyPath:@"kvoPower"];
+}
+
+
 - (void)addMessageContainner {
     UIView *messageContainer = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 300, 400)];
     messageContainer.backgroundColor = [CommonsFunc colorOfLight];
@@ -127,7 +142,7 @@
         make.left.equalTo(messageContainer);
     }];
     
-    UILabel *powerLabel = [UILabel new];
+    powerLabel = [UILabel new];
     powerLabel.text = @"剩余电量： 80%";
     powerLabel.textColor = [UIColor darkGrayColor];
     [self.view addSubview:powerLabel];

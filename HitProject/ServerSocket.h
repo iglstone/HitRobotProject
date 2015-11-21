@@ -19,6 +19,8 @@
 
 @property (nonatomic,retain) NSMutableString *result;
 
+@property (nonatomic,retain) NSString *kvoPower;//电量
+
 + (instancetype) sharedSocket;
 
 - (void)lock;

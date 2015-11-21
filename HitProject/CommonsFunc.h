@@ -10,6 +10,8 @@
 #import <UIKit/UIKit.h>
 
 @interface CommonsFunc : NSObject
++(BOOL)isDeviceIpad;
+
 //获得系统背景色
 +(UIColor *)colorOfSystemBackground;
 +(UIColor *)colorOfLight;

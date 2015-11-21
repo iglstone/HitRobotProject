@@ -137,13 +137,12 @@
 //        }else
 //            [self setStopBtnRed];
     }
-
-    [control stopAll];
 }
 
 
 
 - (void)clientDisconnect :(NSNotification *)noti {
+    NSLog(@"clientDisconnect notification");
     NSDictionary *dic = [noti userInfo];
     AsyncSocket *socket = (AsyncSocket *)[dic objectForKey:@"socket"];
     for (ConnectModel *model in m_modelsArray) {
@@ -157,6 +156,7 @@
 }
 
 - (void)connectSuccess:(NSNotification *)noti {
+    NSLog(@"connectSuccess notification");
     NSDictionary *dic = [noti userInfo];
     NSString *host = [dic objectForKey:@"host"];
     NSInteger port = [(NSNumber *)[dic objectForKey:@"port"] integerValue];
@@ -171,6 +171,13 @@
     
     for (ConnectModel *tmpModel in m_modelsArray) {
         if ([model.hostIp isEqual:tmpModel.hostIp]) {
+            
+//            for (ConnectModel *mo in m_selecedModelsArray) {
+//                if ([mo.hostIp isEqual:model.hostIp]) {
+//                    
+//                }
+//            }
+            
             [m_modelsArray removeObject:tmpModel];
             [m_modelsArray addObject:model];
             [m_tableView reloadData];

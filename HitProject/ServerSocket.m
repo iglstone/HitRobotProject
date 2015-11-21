@@ -48,7 +48,13 @@ static ServerSocket* _instance = nil;
     
     for (AsyncSocket * s in connectedSockets)
     {
-        [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
+        if (s.isConnected) {
+            NSLog(@"s is connected");
+            [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
+        }else
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
+        
+//        [s writeData:[ServerSocket stringToData:string] withTimeout:1.0 tag:0];
     }
 }
 
@@ -95,6 +101,7 @@ static ServerSocket* _instance = nil;
     if (self)
     {
         result = [[NSMutableString alloc] init];
+//        self.kvoPower = @"29.0";
         
         listenSocket = [[AsyncSocket alloc] initWithDelegate:self];
 //        connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
@@ -224,6 +231,12 @@ static ServerSocket* _instance = nil;
 {
     NSString *msg = [ServerSocket dataToString:data];
     NSLog(@"Server didReadData = %@",[ServerSocket dataToString:data]);
+    if ([msg hasPrefix:@"v"] && [msg hasSuffix:@"e"]) {
+        NSString *power = [msg substringWithRange:NSMakeRange(1, msg.length-2)];
+        self.kvoPower = power;
+    }
+    
+
 //    [result appendString:[ServerSocket dataToString:data]];
 //    [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(update) userInfo:nil repeats:YES];
     [result appendString:[NSString stringWithFormat:@"%@:%@\n",[sock connectedHost],[ServerSocket dataToString:data]]];
