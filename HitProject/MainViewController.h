@@ -7,12 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ServerSocket.h"
 
-@interface MainViewController : UITabBarController
+@interface MainViewController : UITabBarController {
+    ServerSocket *server;
+}
 
-//@property (nonatomic ,strong) UITableView *m_tableView;
 @property (nonatomic, strong) UIView *views;
+@property (nonatomic, strong) UILabel *m_debugLabel;
+@property (nonatomic, strong) NSMutableArray *m_selecedModelsArray;
 
-- (void)setDebugLabelText:(NSString *)string ;
-
+//mode :0 send
+//mode :1 recv
+- (void)setDebugLabelText:(NSString *)string mode:(int)mode;
 @end

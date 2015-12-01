@@ -12,14 +12,14 @@
 #import "ThirdViewController.h"
 #import "FourthViewController.h"
 #import "ConnectStatesCell.h"
+#import <Toast/UIView+Toast.h>
 
 @interface MainViewController () <UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic) UITableView *m_tableView;
 @property (nonatomic) NSMutableArray *m_modelsArray;
-@property (nonatomic) NSMutableArray *m_selecedModelsArray;
+//@property (nonatomic) NSMutableArray *m_selecedModelsArray;
 @property (nonatomic) UIButton *stopBtn;
-@property (nonatomic) UILabel *m_debugLabel;
 @property (nonatomic) NSString *tmpString;
 @property (nonatomic) ConnectStatesCell *tmpCell;
 @property (nonatomic) HitControl *control;
@@ -37,6 +37,7 @@
 @synthesize control;
 @synthesize views;
 
+#pragma mark - lifecicle
 - (void)viewDidLoad {
     [super viewDidLoad];
     UIImage *image = [UIImage imageNamed:@"me.png"];
@@ -44,6 +45,7 @@
     m_modelsArray = [[NSMutableArray alloc] init];
     m_selecedModelsArray = [[NSMutableArray alloc] init];
     control = [HitControl sharedControl];
+    server = [ServerSocket sharedSocket];
     
     FirstViewController *first = [FirstViewController new];
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -139,18 +141,33 @@
             make.bottom.equalTo(views);
             make.right.equalTo(m_tableView);
             make.height.mas_equalTo(@50);
-            make.left.equalTo(m_tableView).offset(20);
+            make.width.mas_equalTo(@150);
         }];
     }
-    
 }
 
-- (void)setDebugLabelText:(NSString *)string {
+#pragma mark - Actions
+- (void )setStopBtnRed {
+    [stopBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+}
+
+- (void )setStopBtnGray {
+    [stopBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+}
+
+//mode :0 send
+//mode :1 recv
+- (void)setDebugLabelText:(NSString *)string mode:(int)mode{
     m_debugLabel.text = nil;
-//    if (tmpString.length != 0)
-    m_debugLabel.text = [NSString stringWithFormat:@"send message: %@ \nsend message: %@",tmpString,string];
-    
-    tmpString = string;
+    NSString *str;
+    if ( !mode) {
+        str = [NSString stringWithFormat:@"send: %@",string];
+        m_debugLabel.text = [NSString stringWithFormat:@" %@ \n %@",tmpString,str];
+    }else{
+        str = [NSString stringWithFormat:@"recv: %@",string];
+        m_debugLabel.text = [NSString stringWithFormat:@"%@ \n %@",tmpString,str];
+    }
+    tmpString = str;
 }
 
 - (void)stopBtnTaped :(UIButton *)btn {
@@ -158,21 +175,28 @@
     for (ConnectModel *model in m_selecedModelsArray) {
         [model.socket disconnect];
         tmpCell.isChecked = NO;
-        
-//        if (m_selecedModelsArray.count == 0) {
-//            [self setStopBtnGray];
-//        }else
-//            [self setStopBtnRed];
+        //接下来会传到clientDisconnect方法里，具体操作在那里面进行。
     }
 }
 
+
+#pragma mark - Notification
 - (void)clientDisconnect :(NSNotification *)noti {
     NSLog(@"clientDisconnect notification");
     NSDictionary *dic = [noti userInfo];
     AsyncSocket *socket = (AsyncSocket *)[dic objectForKey:@"socket"];
+    
+    //去除选中的socket
+    for (AsyncSocket *S in server.selectedSocketArray) {
+        if ([socket isEqual:S]) {
+            [server.selectedSocketArray removeObject:S];
+        }
+    }
+    //设置disconnect连接标志
     for (ConnectModel *model in m_modelsArray) {
         if ([model.socket isEqual:socket]) {
             model.status = @"disconnect";
+            [self.view makeToast:[NSString stringWithFormat:@"失去%@连接", model.hostIp]];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [m_tableView reloadData];
             });
@@ -188,6 +212,8 @@
     NSString *status = [dic objectForKey:@"status"];
     AsyncSocket *sokect = (AsyncSocket *)[dic objectForKey:@"socket"];
     
+    [self.view makeToast:[NSString stringWithFormat:@"连接%@成功", host]];
+    
     ConnectModel *model = [ConnectModel new];
     model.port = port;
     model.hostIp = host;
@@ -196,13 +222,6 @@
     
     for (ConnectModel *tmpModel in m_modelsArray) {
         if ([model.hostIp isEqual:tmpModel.hostIp]) {
-            
-//            for (ConnectModel *mo in m_selecedModelsArray) {
-//                if ([mo.hostIp isEqual:model.hostIp]) {
-//                    
-//                }
-//            }
-            
             [m_modelsArray removeObject:tmpModel];
             [m_modelsArray addObject:model];
             [m_tableView reloadData];
@@ -220,7 +239,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - alert delegete
+#pragma mark - table delegete
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString * identity = @"ipsId";
     ConnectStatesCell *cell = [tableView dequeueReusableCellWithIdentifier:identity];
@@ -245,16 +264,18 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     tmpCell = (ConnectStatesCell *)[tableView cellForRowAtIndexPath:indexPath];
     ConnectModel *model = [m_modelsArray objectAtIndex:indexPath.row];
-
-    //
+    
     if ([model.status isEqualToString:@"disconnect"]) {
         return;
     }
     
+    //不知道这一步有没有用
     for (ConnectModel *tmpModel in m_selecedModelsArray) {//如果两个model一样，就给替换掉
         if ([model isEqual:tmpModel]) {
             [m_selecedModelsArray removeObject:tmpModel];
             [m_selecedModelsArray addObject:model];
+            [server.selectedSocketArray removeObject:tmpModel.socket];
+            [server.selectedSocketArray addObject:model.socket];
             [self setStopBtnRed];
         }
     }
@@ -262,10 +283,12 @@
     tmpCell.isChecked = !tmpCell.isChecked;
     if (tmpCell.isChecked == YES) {
         [m_selecedModelsArray addObject:model];
+        [server.selectedSocketArray addObject:model.socket];
         [self setStopBtnRed];
     }else
     {
         [m_selecedModelsArray removeObject:model];
+        [server.selectedSocketArray removeObject:model.socket];
         if (m_selecedModelsArray.count == 0) {
             [self setStopBtnGray];
         }else
@@ -273,15 +296,7 @@
     }
 }
 
-- (void )setStopBtnRed {
-    [stopBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-//    [stopBtn setBackgroundColor:[UIColor ]]
-}
-
-- (void )setStopBtnGray {
-    [stopBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-}
-
+#pragma mark - Add views
 - (UIView *)tableHeaderView {
     UIView *headerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 30)];
     headerview.backgroundColor = [UIColor orangeColor];

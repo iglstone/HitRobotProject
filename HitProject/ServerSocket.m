@@ -7,14 +7,12 @@
 //
 
 #import "ServerSocket.h"
-//#import "a"
 
 @implementation ServerSocket
 @synthesize result;
-//@synthesize selectA,selectB,selectC,selectD;
 
 static ServerSocket* _instance = nil;
-
+#pragma mark - Lifecycle
 + (instancetype) sharedSocket
 {
     static dispatch_once_t onceToken ;
@@ -25,37 +23,69 @@ static ServerSocket* _instance = nil;
     return _instance ;
 }
 
-#pragma mark - Private Methods
-- (void)lock
+- (id)init
 {
-    for (AsyncSocket * s in connectedSockets)
+    self = [super init];
+    if (self)
     {
-        [s writeData:[ServerSocket stringToData:@"9999"] withTimeout:-1 tag:0];
+        result = [[NSMutableString alloc] init];
+        listenSocket = [[AsyncSocket alloc] initWithDelegate:self];
+//        connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
+        connectedSockets = [[NSMutableArray alloc] init];
+        self.selectedSocketArray = [[NSMutableArray alloc] init];
+        [listenSocket setRunLoopModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
+        
+        isRunning = NO;
     }
-}
-- (void)unlock
-{
-    for (AsyncSocket * s in connectedSockets)
-    {
-        [s writeData:[ServerSocket stringToData:@"10000"] withTimeout:-1 tag:0];
-    }
+    return self;
 }
 
+- (void)dealloc
+{
+    [result release];
+    [listenSocket disconnect];
+    listenSocket.delegate = nil;
+    [listenSocket release];
+    
+    for (AsyncSocket *s in self.selectedSocketArray)
+    {
+        [s disconnect];
+    }
+    [self.selectedSocketArray release];
+    for (AsyncSocket *s in connectedSockets)
+    {
+        [s disconnect];
+    }
+    [connectedSockets release];
+    [super dealloc];
+}
+
+#pragma mark - Private Methods
 - (void)sendMessage :(NSString *)string
 {
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
-    [dele.main setDebugLabelText:string];
+    [dele.main setDebugLabelText:string mode:0];
     
-    for (AsyncSocket * s in connectedSockets)
+    for (AsyncSocket * s in self.selectedSocketArray)
     {
         if (s.isConnected) {
             NSLog(@"s is connected");
             [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
         }else
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
-        
-//        [s writeData:[ServerSocket stringToData:string] withTimeout:1.0 tag:0];
     }
+    
+//备份
+//    for (AsyncSocket * s in connectedSockets)
+//    {
+//        if (s.isConnected) {
+//            NSLog(@"s is connected");
+//            [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
+//        }else
+//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
+//        
+////        [s writeData:[ServerSocket stringToData:string] withTimeout:1.0 tag:0];
+//    }
 }
 
 - (void)startListen
@@ -94,38 +124,20 @@ static ServerSocket* _instance = nil;
 {
     return [string dataUsingEncoding:NSUTF8StringEncoding];
 }
-#pragma mark - Lifecycle
-- (id)init
-{
-    self = [super init];
-    if (self)
-    {
-        result = [[NSMutableString alloc] init];
-//        self.kvoPower = @"29.0";
-        
-        listenSocket = [[AsyncSocket alloc] initWithDelegate:self];
-//        connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
-        connectedSockets = [[NSMutableArray alloc] init];
-        [listenSocket setRunLoopModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
-        
-        isRunning = NO;
-    }
-    return self;
-}
 
-- (void)dealloc
+- (void)lock
 {
-    [result release];
-    [listenSocket disconnect];
-    listenSocket.delegate = nil;
-    [listenSocket release];
-    
-    for (AsyncSocket *s in connectedSockets)
+    for (AsyncSocket * s in connectedSockets)
     {
-        [s disconnect];
+        [s writeData:[ServerSocket stringToData:@"9999"] withTimeout:-1 tag:0];
     }
-    [connectedSockets release];
-    [super dealloc];
+}
+- (void)unlock
+{
+    for (AsyncSocket * s in connectedSockets)
+    {
+        [s writeData:[ServerSocket stringToData:@"10000"] withTimeout:-1 tag:0];
+    }
 }
 
 #pragma mark - AsyncSocketDelegate
@@ -231,37 +243,28 @@ static ServerSocket* _instance = nil;
 {
     NSString *msg = [ServerSocket dataToString:data];
     NSLog(@"Server didReadData = %@",[ServerSocket dataToString:data]);
+    AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
+    
+    //set debug recv
+    [dele.main setDebugLabelText:msg mode:1];
+    
     if ([msg hasPrefix:@"v"] && [msg hasSuffix:@"e"]) {
         NSString *power = [msg substringWithRange:NSMakeRange(1, msg.length-2)];
         self.kvoPower = power;
     }
     
-
 //    [result appendString:[ServerSocket dataToString:data]];
 //    [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(update) userInfo:nil repeats:YES];
     [result appendString:[NSString stringWithFormat:@"%@:%@\n",[sock connectedHost],[ServerSocket dataToString:data]]];
     if ([msg isEqualToString:@"中国"])
     {
-//        selectA++;
     }
     else if([msg isEqualToString:@"日本"])
     {
-//        selectB++;
     }
     else if([msg isEqualToString:@"英国"])
     {
-//        selectC++;
     }
-    else if([msg isEqualToString:@"美国"])
-    {
-//        selectD++;
-    }
-    
-    if ([msg isEqualToString:@"alowscreen"])
-    {
-//        [self startShareScreen];
-    }
-    
 //    [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_RESULT_NOTIFICATION object:nil];
     [sock readDataWithTimeout:-1 tag:0];
 }

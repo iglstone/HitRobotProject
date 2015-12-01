@@ -24,6 +24,7 @@
 @synthesize control;
 @synthesize isStart;
 
+#pragma mark - lifecicle
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -38,6 +39,7 @@
     MainViewController *main =(MainViewController *) self.tabBarController;
     if (![CommonsFunc isDeviceIpad]) {
         main.views.hidden = NO;
+        main.m_debugLabel.hidden = YES;
     }
 }
 
@@ -45,6 +47,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
     isStart = NO;
+    NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width;
     
     UIImageView *robot1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"robot_1.png"]];
     [self.view addSubview:robot1];
@@ -81,9 +84,8 @@
             make.centerX.equalTo(self.view);
             make.top.equalTo(self.view).offset(50);
         }else {
-            make.centerX.equalTo(self.view).offset(-50);
+            make.centerX.equalTo(self.view).offset(screenWidth/4);
             make.top.equalTo(self.view).offset(20);
-//            make.size.mas_equalTo(CGSizeMake(<#CGFloat width#>, <#CGFloat height#>))
         }
         
         make.size.mas_equalTo(CGSizeMake(100, 100));

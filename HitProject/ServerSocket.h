@@ -18,7 +18,7 @@
 }
 
 @property (nonatomic,retain) NSMutableString *result;
-
+@property (nonatomic,retain) NSMutableArray *selectedSocketArray;
 @property (nonatomic,retain) NSString *kvoPower;//电量
 
 + (instancetype) sharedSocket;

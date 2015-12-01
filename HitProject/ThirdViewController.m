@@ -29,6 +29,7 @@
     MainViewController *main =(MainViewController *) self.tabBarController;
     if (![CommonsFunc isDeviceIpad]) {
         main.views.hidden = YES;
+        main.m_debugLabel.hidden = NO;
     }
 }
 
@@ -38,6 +39,7 @@
     
     control = [HitControl sharedControl];
     desksArray = [[NSMutableArray alloc] init];
+    NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width;
     
     UIScrollView *rawView = [UIScrollView new];
     rawView.backgroundColor = [CommonsFunc colorOfLight];
@@ -50,17 +52,15 @@
         if ([CommonsFunc isDeviceIpad]) {
             make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, 400));
         }else
-            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, 150));
+            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, screenWidth/4));
         
     }];
     NSInteger contentWidth ;
     if ([CommonsFunc isDeviceIpad]) {
         contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
     }else
-        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 150;
-    rawView.contentSize = CGSizeMake(contentWidth, 300);
-
-//    rawView.contentSize= CGSizeMake(400, 400);//(1000);
+        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
+    rawView.contentSize = CGSizeMake(contentWidth, 350);
     
     DeskView *desk1 = [[DeskView alloc] init];//WithFrame:CGRectMake(0, 0, 150, 150)];
     desk1.backgroundColor = [UIColor redColor];
@@ -77,11 +77,9 @@
         deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
     }else {
         deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
-        deskWidth = (self.view.bounds.size.width - 150 -20)/7;
+        deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/7;
     }
 
-    
-    
     int deskNum = 1;
     NSInteger tt = 0;
     for (int i = 0; i <= 6; i++) {

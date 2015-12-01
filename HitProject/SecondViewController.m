@@ -41,6 +41,7 @@
     MainViewController *main =(MainViewController *) self.tabBarController;
     if (![CommonsFunc isDeviceIpad]) {
         main.views.hidden = YES;
+        main.m_debugLabel.hidden = NO;
     }
 }
 
