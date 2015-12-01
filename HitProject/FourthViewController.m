@@ -31,6 +31,14 @@
 @synthesize playLabel;
 @synthesize musicsArray;
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    MainViewController *main =(MainViewController *) self.tabBarController;
+    if (![CommonsFunc isDeviceIpad]) {
+        main.views.hidden = YES;
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
@@ -49,21 +57,38 @@
     rawView.backgroundColor = [CommonsFunc colorOfLight];
     [self.view addSubview:rawView];
     [rawView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 5, 250, 300+15));
+        if ([CommonsFunc isDeviceIpad]) {
+            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, 400));
+        }else
+            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 150, 150));
     }];
-    rawView.contentSize = CGSizeMake(400, 500);
+    NSInteger contentWidth ;
+    if ([CommonsFunc isDeviceIpad]) {
+        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
+    }else
+        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 150;
+    rawView.contentSize = CGSizeMake(contentWidth, 300);
     
     DeskView *desk1 = [[DeskView alloc] init];//WithFrame:CGRectMake(0, 0, 150, 150)];
     desk1.backgroundColor = [UIColor redColor];
     [rawView addSubview:desk1];
     [desk1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(rawView).offset(20);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.top.equalTo(rawView).offset(20);
+        }else
+            make.top.equalTo(rawView).offset(10);
         make.left.equalTo(rawView).offset(20);
         make.size.mas_equalTo(CGSizeMake(60, 60));
     }];
     
-    NSInteger deskWidth  = (self.view.bounds.size.width - 315 -5)/7;
-    NSInteger deskHeight = (self.view.bounds.size.height - 250 - 20 -40)/4;
+    NSInteger deskWidth,deskHeight;
+    if ([CommonsFunc isDeviceIpad]) {
+        deskWidth = (self.view.bounds.size.width - 315 -5)/7;
+        deskHeight = (self.view.bounds.size.height - 250 - 20 -40)/4;
+    }else {
+        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
+        deskWidth = (self.view.bounds.size.width - 150 -20)/7;
+    }
     
     int deskNum = 1;
     
@@ -77,6 +102,7 @@
             DeskView *deskview = [DeskView new];
             [deskview.img setImage:[UIImage imageNamed:@"music_unplay.png"]];
             deskview.deskName.text = [NSString stringWithFormat:@"歌曲%d",deskNum];
+            deskview.deskName.font = [UIFont systemFontOfSize:13];
             deskNum ++;
             deskview.tag = deskNum;
             [rawView addSubview:deskview];
@@ -104,7 +130,7 @@
     [self.voiceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(rawView).offset(50);
         make.width.mas_equalTo(@150);
-        make.top.equalTo(rawView.mas_bottom).offset(50);
+        make.top.equalTo(rawView.mas_bottom).offset(10);
     }];
     
     UISlider *slide = [[UISlider alloc]initWithFrame:CGRectMake(100, 100, 200, 100)];
@@ -125,7 +151,7 @@
     [self.view addSubview:voiceUpBtn];
     [voiceUpBtn setImage:[UIImage imageNamed:@"voiceUp.png"] forState:UIControlStateNormal];
     [voiceUpBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.voiceLabel.mas_bottom).offset(20);
+        make.top.equalTo(self.voiceLabel.mas_bottom).offset(10);
         make.left.equalTo(self.voiceLabel);
     }];
     [voiceUpBtn addTarget:self action:@selector(voiceUp:) forControlEvents:UIControlEventTouchUpInside];
@@ -134,7 +160,7 @@
     [self.view addSubview:voiceDownBtn];
     [voiceDownBtn setImage:[UIImage imageNamed:@"voiceDown.png"] forState:UIControlStateNormal];
     [voiceDownBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.voiceLabel.mas_bottom).offset(20);
+        make.top.equalTo(self.voiceLabel.mas_bottom).offset(10);
         make.right.equalTo(self.voiceLabel);
     }];
     [voiceDownBtn addTarget:self action:@selector(voiceDown:) forControlEvents:UIControlEventTouchUpInside];
@@ -204,8 +230,12 @@
     [self.view addSubview:container];
     [container mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(rawView);
-        make.left.equalTo(rawView.mas_right).offset(50);
-        make.right.equalTo(self.view.mas_right).offset(-50);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.left.equalTo(rawView.mas_right).offset(50);
+        }else
+            make.left.equalTo(rawView.mas_right).offset(10);
+        
+        make.right.equalTo(self.view.mas_right).offset(-5);
         make.height.mas_equalTo(@200);
     }];
     

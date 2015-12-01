@@ -33,6 +33,14 @@
     return self;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    MainViewController *main =(MainViewController *) self.tabBarController;
+    if (![CommonsFunc isDeviceIpad]) {
+        main.views.hidden = NO;
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
@@ -43,6 +51,9 @@
     [robot1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(20);
         make.left.equalTo(self.view).offset(10);
+        if (![CommonsFunc isDeviceIpad]) {
+            make.size.mas_equalTo(CGSizeMake(150, 220));
+        }
     }];
     
     UIImageView *robot2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"robot_2.png"]];
@@ -58,12 +69,23 @@
         make.centerX.equalTo(self.view);
         make.centerY.equalTo(self.view).offset(80);
     }];
+    if (![CommonsFunc isDeviceIpad]) {
+        robot2.hidden = YES;
+        robot3.hidden = YES;
+    }
     
     UIImageView *robot4 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo.png"]];
     [self.view addSubview:robot4];
     [robot4 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.view);
-        make.top.equalTo(self.view).offset(50);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.centerX.equalTo(self.view);
+            make.top.equalTo(self.view).offset(50);
+        }else {
+            make.centerX.equalTo(self.view).offset(-50);
+            make.top.equalTo(self.view).offset(20);
+//            make.size.mas_equalTo(CGSizeMake(<#CGFloat width#>, <#CGFloat height#>))
+        }
+        
         make.size.mas_equalTo(CGSizeMake(100, 100));
     }];
     UILabel *hitLable = [UILabel new];
@@ -79,7 +101,10 @@
     [self.view addSubview:ipLabel];
     [ipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self.view).offset(-100);
-        make.left.equalTo(self.view).offset(150);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.left.equalTo(self.view).offset(150);
+        }else
+            make.left.equalTo (self.view).offset(20);
     }];
     
     UITextField *ipTextField = [UITextField new];

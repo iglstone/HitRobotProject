@@ -35,6 +35,7 @@
 @synthesize tmpString;
 @synthesize tmpCell;
 @synthesize control;
+@synthesize views;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -60,24 +61,41 @@
     
     self.viewControllers = @[first, second, third, fourth];
     
+    views = [UIView new];
+    [self.view addSubview:views];
+    views.backgroundColor = [UIColor lightGrayColor];
+    [views mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.view).offset(-5);
+        make.width.mas_equalTo(@300);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.height.mas_equalTo(@(250+30));
+            make.bottom.equalTo(self.view).offset(-50-5);
+        }else{
+            make.bottom.equalTo(self.view).offset(-50);
+            make.height.mas_equalTo(@(100+30));
+        }
+    }];
+    
     m_tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, 100, 40) style:UITableViewStylePlain];
     [m_tableView setBackgroundColor:[CommonsFunc colorOfLight]];
     m_tableView.delegate = self;
     m_tableView.dataSource = self;
-    [self.view addSubview:m_tableView];
+    [views addSubview:m_tableView];
     [m_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.view).offset(-5);
-        make.width.mas_equalTo(@300);
-//        make.top.equalTo(self.view).offset(300);
-        make.bottom.equalTo(self.view).offset(-50-5);
-        make.height.mas_equalTo(@250);
+        make.right.equalTo(views);
+        make.width.equalTo(views);
+        make.bottom.equalTo(views);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.height.mas_equalTo(@250);
+        }else
+            make.height.mas_equalTo(@100);
     }];
     m_tableView.tableFooterView =[[UIView alloc] initWithFrame:CGRectZero];
-//    m_tableView.tableHeaderView = [self tableHeaderView];
+    
     UIView *header = [self tableHeaderView];
-    [self.view addSubview:header];
+    [views addSubview:header];
     [header mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(m_tableView.mas_top);
+        make.top.equalTo(views);
         make.left.equalTo(m_tableView);
         make.width.equalTo(m_tableView);
         make.height.mas_equalTo(@30);
@@ -87,7 +105,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientDisconnect:) name:NOTICE_DISCONNECT object:nil];
     
     stopBtn = [UIButton new];
-    [self.view addSubview:stopBtn];
+    [views addSubview:stopBtn];
+    [stopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(views);
+        make.centerX.equalTo(views);
+        make.width.mas_equalTo(@110);
+    }];
     stopBtn.backgroundColor = [UIColor lightGrayColor];
     stopBtn.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     stopBtn.layer.borderWidth = 1.0;
@@ -96,32 +119,36 @@
     [self setStopBtnGray];
     [stopBtn setTitle:@"断开连接" forState:UIControlStateNormal];
     stopBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-    [stopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(m_tableView);
-        make.centerX.equalTo(m_tableView);
-        make.width.mas_equalTo(@110);
-        
-    }];
     [stopBtn addTarget:self action:@selector(stopBtnTaped:) forControlEvents:UIControlEventTouchUpInside];
     
     m_debugLabel = [UILabel new];
-    m_debugLabel.textColor = [UIColor lightGrayColor];
+//    m_debugLabel.textColor = [UIColor lightGrayColor];
+    m_debugLabel.backgroundColor = [UIColor lightGrayColor];
     [self.view addSubview:m_debugLabel];
     m_debugLabel.numberOfLines = 0;
-    m_debugLabel.backgroundColor = [CommonsFunc colorOfLight];
-    [m_debugLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(header.mas_top).offset(-10);
-        make.width.equalTo(m_tableView);
-        make.height.mas_equalTo(@50);
-        make.left.equalTo(m_tableView);
-    }];
+//    m_debugLabel.backgroundColor = [CommonsFunc colorOfLight];
+    if ([CommonsFunc isDeviceIpad]) {
+        [m_debugLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(header.mas_top).offset(-10);
+            make.width.equalTo(m_tableView);
+            make.height.mas_equalTo(@50);
+            make.left.equalTo(m_tableView);
+        }];
+    }else{
+        [m_debugLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(views);
+            make.right.equalTo(m_tableView);
+            make.height.mas_equalTo(@50);
+            make.left.equalTo(m_tableView).offset(20);
+        }];
+    }
     
 }
 
 - (void)setDebugLabelText:(NSString *)string {
     m_debugLabel.text = nil;
 //    if (tmpString.length != 0)
-        m_debugLabel.text = [NSString stringWithFormat:@"send message: %@ \nsend message: %@",tmpString,string];
+    m_debugLabel.text = [NSString stringWithFormat:@"send message: %@ \nsend message: %@",tmpString,string];
     
     tmpString = string;
 }
@@ -138,8 +165,6 @@
 //            [self setStopBtnRed];
     }
 }
-
-
 
 - (void)clientDisconnect :(NSNotification *)noti {
     NSLog(@"clientDisconnect notification");

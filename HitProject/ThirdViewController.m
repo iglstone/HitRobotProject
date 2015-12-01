@@ -24,6 +24,14 @@
 @synthesize tmpDeskView;
 @synthesize desksArray;
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    MainViewController *main =(MainViewController *) self.tabBarController;
+    if (![CommonsFunc isDeviceIpad]) {
+        main.views.hidden = YES;
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
@@ -39,9 +47,20 @@
     rawView.layer.masksToBounds = YES;
     [self.view addSubview:rawView];
     [rawView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, 400));
+        if ([CommonsFunc isDeviceIpad]) {
+            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, 400));
+        }else
+            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, 150));
+        
     }];
-    rawView.contentSize= CGSizeMake(400, 400);//(1000);
+    NSInteger contentWidth ;
+    if ([CommonsFunc isDeviceIpad]) {
+        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
+    }else
+        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 150;
+    rawView.contentSize = CGSizeMake(contentWidth, 300);
+
+//    rawView.contentSize= CGSizeMake(400, 400);//(1000);
     
     DeskView *desk1 = [[DeskView alloc] init];//WithFrame:CGRectMake(0, 0, 150, 150)];
     desk1.backgroundColor = [UIColor redColor];
@@ -52,8 +71,16 @@
         make.size.mas_equalTo(CGSizeMake(60, 60));
     }];
     
-    NSInteger deskWidth  = (self.view.bounds.size.width - 400 -20)/7;
-    NSInteger deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
+    NSInteger deskWidth,deskHeight;
+    if ([CommonsFunc isDeviceIpad]) {
+        deskWidth = (self.view.bounds.size.width - 400 -20)/7;
+        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
+    }else {
+        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
+        deskWidth = (self.view.bounds.size.width - 150 -20)/7;
+    }
+
+    
     
     int deskNum = 1;
     NSInteger tt = 0;
@@ -65,13 +92,19 @@
             }
             DeskView *deskview = [DeskView new];
             deskview.deskName.text = [NSString stringWithFormat:@"%d号桌",deskNum];//(NSInteger)((j+1)+(i)*(j+1))];
+            deskview.deskName.font = [UIFont systemFontOfSize:13];
             deskNum ++;
             deskview.tag = deskNum;
             [rawView addSubview:deskview];
             [deskview mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(desk1).offset((deskWidth)*j);
                 make.top.equalTo(desk1).offset((deskHeight + 10)*i);
-                make.size.mas_equalTo(CGSizeMake(60, 60));
+                if ([CommonsFunc isDeviceIpad]) {
+                    make.size.mas_equalTo(CGSizeMake(60, 60));
+                }
+                else
+                    make.size.mas_equalTo(CGSizeMake(40, 40));
+                
             }];
             deskview.userInteractionEnabled = YES;
             [deskview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deskTaped:)]];

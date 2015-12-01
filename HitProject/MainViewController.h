@@ -10,6 +10,9 @@
 
 @interface MainViewController : UITabBarController
 
+//@property (nonatomic ,strong) UITableView *m_tableView;
+@property (nonatomic, strong) UIView *views;
+
 - (void)setDebugLabelText:(NSString *)string ;
 
 @end

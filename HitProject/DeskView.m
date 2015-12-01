@@ -30,7 +30,10 @@
         [img mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self);
             make.left.equalTo(self);
-            make.size.mas_equalTo(CGSizeMake(60, 60));
+            if ([CommonsFunc isDeviceIpad]) {
+                make.size.mas_equalTo(CGSizeMake(60, 60));
+            }else
+                make.size.mas_equalTo(CGSizeMake(40, 40));
         }];
         
         deskName = [UILabel new];

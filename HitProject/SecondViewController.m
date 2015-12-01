@@ -11,6 +11,7 @@
 #import <math.h>
 #import "CHYSlider.h"
 #import "RadioButton.h"
+#import "MainViewController.h"
 
 @interface SecondViewController ()<JSAnalogueStickDelegate>{
     
@@ -35,6 +36,14 @@
 @synthesize radioContainer;
 @synthesize powerLabel;
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    MainViewController *main =(MainViewController *) self.tabBarController;
+    if (![CommonsFunc isDeviceIpad]) {
+        main.views.hidden = YES;
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
@@ -49,11 +58,20 @@
     self.analogueLabel.textAlignment = NSTextAlignmentCenter;
     self.analogueLabel.numberOfLines = 0;
     [self.view addSubview:self.analogueLabel];
-    [self.analogueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).offset(100);
-        make.centerX.equalTo(self.view);
-        make.size.mas_equalTo(CGSizeMake(120, 80));
-    }];
+    if ([CommonsFunc isDeviceIpad]) {
+        [self.analogueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.view).offset(100);
+            make.centerX.equalTo(self.view);
+            make.size.mas_equalTo(CGSizeMake(120, 80));
+        }];
+    }else {
+        [self.analogueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.view).offset(30);
+            make.centerX.equalTo(self.view);
+            make.size.mas_equalTo(CGSizeMake(120, 80));
+        }];
+    }
+    
     
     self.analogueStick = [[JSAnalogueStick alloc] initWithFrame:CGRectMake(100, 100, 120, 120)];
     [self.view addSubview:self.analogueStick];
@@ -68,10 +86,16 @@
     self.velocityLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.velocityLabel];
     [self.velocityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.analogueLabel);
-        make.left.equalTo(self.analogueLabel.mas_right).offset(200);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.centerY.equalTo(self.analogueLabel);
+            make.left.equalTo(self.analogueLabel.mas_right).offset(200);
+        } else {
+            make.centerY.equalTo(self.analogueLabel).offset(-20);
+            make.right.equalTo(self.view).offset(-50);
+        }
         make.width.mas_equalTo(@150);
     }];
+    
     
     _steppedSlider = [[CHYSlider alloc] init];//WithFrame:CGRectMake(0, 0, 250, 30)];
     _steppedSlider.stepped = YES;
@@ -84,8 +108,13 @@
     [_steppedSlider mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.velocityLabel);
         make.top.equalTo(self.velocityLabel.mas_bottom).offset(30);
-        make.size.mas_equalTo(CGSizeMake(250, 30));
+        if ([CommonsFunc isDeviceIpad]) {
+            make.size.mas_equalTo(CGSizeMake(250, 30));
+        }else
+            make.size.mas_equalTo(CGSizeMake(220, 30));
+        
     }];
+    
     [_steppedSlider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     
     //添加单选模式
@@ -100,8 +129,15 @@
     [stopBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
     [self.view addSubview:stopBtn];
     [stopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self.analogueStick);
-        make.bottom.equalTo(self.view).offset(-40-40);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.centerX.equalTo(self.analogueStick);
+            make.bottom.equalTo(self.view).offset(-40-40);
+        } else
+        {
+            make.right.equalTo(self.view).offset(-20);
+            make.bottom.equalTo(self.view).offset(-40-40-30);
+        }
+        
     }];
     [stopBtn addTarget:self action:@selector(stopRun:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -129,8 +165,11 @@
     [messageContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(radioContainer.mas_bottom).offset(20);
         make.left.equalTo(radioContainer);
-        make.width.mas_equalTo(@200);
-        make.height.mas_equalTo(@200);
+        make.width.equalTo(radioContainer);
+        if (![CommonsFunc isDeviceIpad]) {
+            make.height.mas_equalTo(@150);
+        }else
+            make.height.mas_equalTo(@200);
     }];
     
     UILabel *questionText = [[UILabel alloc] initWithFrame:CGRectMake(0,0,280,20)];
@@ -178,10 +217,18 @@
     radioContainer.layer.borderWidth = 1.0;
     [self.view addSubview:radioContainer];
     [radioContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).offset(50);
-        make.left.equalTo(self.view).offset(50);
-        make.width.mas_equalTo(@200);
-        make.height.mas_equalTo(@150);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.top.equalTo(self.view).offset(50);
+            make.left.equalTo(self.view).offset(50);
+            make.width.mas_equalTo(@200);
+            make.height.mas_equalTo(@150);
+        }else {
+            make.top.equalTo(self.view).offset(10);
+            make.left.equalTo(self.view).offset(10);
+            make.width.mas_equalTo(@180);
+            make.height.mas_equalTo(@120);
+        }
+        
     }];
     
     UILabel *questionText = [[UILabel alloc] initWithFrame:CGRectMake(0,0,280,20)];

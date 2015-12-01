@@ -14,7 +14,7 @@
 +(BOOL)isDeviceIpad
 {
     NSString* deviceType = [UIDevice currentDevice].model;
-    NSLog(@"deviceType = %@", deviceType);
+//    NSLog(@"deviceType = %@", deviceType);
     NSRange range = [deviceType rangeOfString:@"iPad"];
     return range.location != NSNotFound;
 }
