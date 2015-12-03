@@ -7,6 +7,7 @@
 //
 
 #import "ResetSecurityViewController.h"
+#import <UIView+Toast.h>
 
 @interface ResetSecurityViewController ()
 
@@ -77,10 +78,48 @@
 }
 
 - (void)done:(id)sender {
+    UITextField *tx1 = [self.view viewWithTag:100];
+    UITextField *tx2 = [self.view viewWithTag:101];
+    UITextField *tx3 = [self.view viewWithTag:102];
+    if (!tx1 || !tx2 || !tx3) {
+        [self toastShow:@"请填写完整"];
+        return;
+    }
+    
+    NSString *username= (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:NSDEFAULT_USERNAME];
+    if (!username) {
+        username = @"Admin";
+    }
+    
+    NSString *code = [[NSUserDefaults standardUserDefaults] objectForKey:username];
+    if (!code) {
+        code = @"123456";
+    }
+    if (![tx1.text isEqualToString:code]) {
+        [self toastShow:@"密码不对"];
+        return;
+    }
+    if (![tx2.text isEqualToString:tx3.text]) {
+        [self toastShow:@"两次输入密码不同,请重新输入"];
+        tx2.text = nil;tx3.text = nil;
+        return;
+    }
+    if (tx2.text.length < 4) {
+        [self toastShow:@"密码长度不能小于4位"];
+        return;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_RESETPASSWORD object:nil];
+    [[NSUserDefaults standardUserDefaults] setObject:tx2.text forKey:username];
+//    NSString *st = [[NSUserDefaults standardUserDefaults] objectForKey:username];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
 - (void)cancel:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)toastShow :(NSString *)msg{
+    [self.view makeToast:msg duration:1.0 position:CSToastPositionCenter];
 }
 
 - (UIView *)customView :(NSString *)labelText textFieldTag :(NSInteger )tag {

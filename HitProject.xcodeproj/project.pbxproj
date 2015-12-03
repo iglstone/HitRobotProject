@@ -16,6 +16,7 @@
 		E33DD38D1BF20DE40028FCBD /* SocketClientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E33DD38B1BF20DE40028FCBD /* SocketClientViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E33DD38E1BF20DE40028FCBD /* SocketClientViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33DD38C1BF20DE40028FCBD /* SocketClientViewController_iPhone.xib */; };
 		E33DD3901BF20DED0028FCBD /* SocketClientViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33DD38F1BF20DED0028FCBD /* SocketClientViewController_iPad.xib */; };
+		E353A2C41C0FD4180058BC6A /* DataCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = E353A2C31C0FD4180058BC6A /* DataCenter.m */; };
 		E357F6101BE20F6500AE9454 /* ThirdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E357F60F1BE20F6500AE9454 /* ThirdViewController.m */; };
 		E357F6131BE20F8100AE9454 /* FourthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E357F6121BE20F8100AE9454 /* FourthViewController.m */; };
 		E35D11A81C0ECAA3009AF0BB /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11A71C0ECAA3009AF0BB /* SettingViewController.m */; };
@@ -84,6 +85,8 @@
 		E33DD38B1BF20DE40028FCBD /* SocketClientViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocketClientViewController.m; sourceTree = "<group>"; };
 		E33DD38C1BF20DE40028FCBD /* SocketClientViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SocketClientViewController_iPhone.xib; sourceTree = "<group>"; };
 		E33DD38F1BF20DED0028FCBD /* SocketClientViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SocketClientViewController_iPad.xib; sourceTree = "<group>"; };
+		E353A2C21C0FD4180058BC6A /* DataCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataCenter.h; sourceTree = "<group>"; };
+		E353A2C31C0FD4180058BC6A /* DataCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataCenter.m; sourceTree = "<group>"; };
 		E357F60E1BE20F6500AE9454 /* ThirdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThirdViewController.h; sourceTree = "<group>"; };
 		E357F60F1BE20F6500AE9454 /* ThirdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThirdViewController.m; sourceTree = "<group>"; };
 		E357F6111BE20F8100AE9454 /* FourthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FourthViewController.h; sourceTree = "<group>"; };
@@ -248,6 +251,8 @@
 				E3B146BD1BED9CB100963FA8 /* PrefixHeader.pch */,
 				E3C0B5251BE1EAA5004437EC /* AppDelegate.h */,
 				E3C0B5261BE1EAA5004437EC /* AppDelegate.m */,
+				E353A2C21C0FD4180058BC6A /* DataCenter.h */,
+				E353A2C31C0FD4180058BC6A /* DataCenter.m */,
 				E3E0F8A11C0E779C001CC06F /* Login */,
 				E31636761BF05607002EB100 /* MainViewController.h */,
 				E31636771BF05607002EB100 /* MainViewController.m */,
@@ -501,6 +506,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E357F6131BE20F8100AE9454 /* FourthViewController.m in Sources */,
+				E353A2C41C0FD4180058BC6A /* DataCenter.m in Sources */,
 				E3E91FCC1BEC8117003AE247 /* HitControl.m in Sources */,
 				E3C0B52D1BE1EAA5004437EC /* SecondViewController.m in Sources */,
 				E35D11B21C0F1CC0009AF0BB /* PickDeskNumViewController.m in Sources */,

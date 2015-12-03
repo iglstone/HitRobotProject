@@ -12,6 +12,8 @@
 //监听端口
 #define LISTEN_PORT 1234;
 
+
+//notification
 //连接成功
 #define NOTICE_CONNECTSUCCESS               @"NOTICE_CONNECTSUCCESS"
 
@@ -21,6 +23,9 @@
 //连接失败
 #define NOTICE_CONNECTFAIL                  @"NOTICE_CONNECTFAIL"
 
+//连接失败
+#define NOTICE_RESETPASSWORD                @"NOTICE_RESETPASSWORD"
+
 //失去连接
 #define NOTICE_DISCONNECT                   @"NOTICE_DISCONNECT"
 
@@ -28,5 +33,8 @@
 
 #define NOTICE_CLOSE_WEBVIEW                @"NOTICE_CLOSE_WEBVIEW"
 
+//nsdefaut KEY
+#define NSDEFAULT_REMEMBERCODE              @"NSDEFAULT_REMEMBERCODE"
+#define NSDEFAULT_USERNAME                  @"NSDEFAULT_USERNAME"
 
 #endif

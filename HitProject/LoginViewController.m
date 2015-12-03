@@ -11,6 +11,7 @@
 #import "ResetSecurityViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "WebViewController.h"
+#import <UIView+Toast.h>
 
 #define ANIMATION_DURATION 0.3f
 
@@ -19,19 +20,22 @@
     UIImageView *userNumberBackImg;
     UITextField *userNumberTf;
     UILabel *numberLabel;
-    
+    BOOL isResetPW;
 }
 @property (strong, nonatomic) IBOutlet UIButton *m_settingBtn;
 @property (strong, nonatomic) IBOutlet UIButton *m_securitySetting;
 @property (strong, nonatomic) IBOutlet UIView *countGroup;
 @property (strong, nonatomic) IBOutlet UIImageView *passWordBg;
 @property (nonatomic) BOOL isremmber;
+@property (nonatomic) UIButton *rembtn;
 
 @end
 
 @implementation LoginViewController
 @synthesize countGroup;
 @synthesize isremmber;
+@synthesize userNamesArray;
+@synthesize rembtn;
 
 - (void)viewDidLoad
 {
@@ -60,8 +64,10 @@
     userNumberTf = [UITextField new];
     userNumberTf.font = [UIFont systemFontOfSize:15];
     userNumberTf.textColor = [UIColor darkGrayColor];
-//    userNumberTf.textAlignment = NSTextAlignmentCenter;
-    userNumberTf.text = @"Admin";
+    userNumberTf.text = (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:NSDEFAULT_USERNAME];//@"Admin";
+    if (userNumberTf.text.length == 0 || !userNumberTf.text) {
+        userNumberTf.text = @"Admin";
+    }
     [self.view addSubview:userNumberTf];
     [userNumberTf mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.userPassword);
@@ -70,7 +76,7 @@
     }];
     
 //    moveDownGroup
-    UIButton *rembtn = [UIButton new];
+    rembtn = [UIButton new];
     rembtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [rembtn setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
     [self.view addSubview:rembtn];
@@ -107,6 +113,32 @@
         }else
             make.size.mas_equalTo(CGSizeMake(45, 45));
     }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resetNoti:) name:NOTICE_RESETPASSWORD object:nil];
+    
+
+}
+
+- (void)resetNoti :(id)sender {
+    isResetPW = YES;
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"origionPW"];
+}
+
+
+- (void)viewWillAppear:(BOOL)animated {
+    isremmber = [[NSUserDefaults standardUserDefaults] boolForKey:NSDEFAULT_REMEMBERCODE];
+    if (isremmber) {
+        [rembtn setImage:[UIImage imageNamed:@"checkbox1_checked"] forState:UIControlStateNormal];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:NSDEFAULT_REMEMBERCODE];
+        if (isResetPW) {
+            self.userPassword.text = nil;
+        }else
+            self.userPassword.text = [[NSUserDefaults standardUserDefaults] objectForKey:userNumberTf.text];
+    }else {
+        [rembtn setImage:[UIImage imageNamed:@"checkbox1_unchecked"] forState:UIControlStateNormal];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:NSDEFAULT_REMEMBERCODE];
+        self.userPassword.text = nil;
+    }
 }
 
 #pragma mark - actions
@@ -114,8 +146,10 @@
     isremmber = !isremmber;
     if (isremmber) {
         [sender setImage:[UIImage imageNamed:@"checkbox1_checked"] forState:UIControlStateNormal];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:NSDEFAULT_REMEMBERCODE];
     }else {
         [sender setImage:[UIImage imageNamed:@"checkbox1_unchecked"] forState:UIControlStateNormal];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:NSDEFAULT_REMEMBERCODE];
     }
 }
 
@@ -132,12 +166,58 @@
 }
 
 - (IBAction)login:(id)sender {
-    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    // 在delegate中初始化新的controller
-    // 修改rootViewController
-    [delegate.window addSubview:delegate.main.view];
-    [self.view removeFromSuperview];
-    delegate.window.rootViewController = delegate.main;
+    
+    NSString *tmpName = userNumberTf.text;
+    NSString *tmpPassword = self.userPassword.text;
+    NSString *defaultPs = (NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:tmpName];
+    if (!tmpName || tmpName.length == 0) {
+        [self toastShow:@"请输入用户名"];
+        return;
+    }
+    if (!tmpPassword || tmpPassword.length == 0 ) {
+        [self toastShow:@"请输入密码"];
+        return;
+    }
+    //不管什么情况都记录输入的用户名
+    [[NSUserDefaults standardUserDefaults] setObject:tmpName forKey:NSDEFAULT_USERNAME];
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"origionPW"]) {
+        //表示没修改过了密码，使用初始密码
+        if ([tmpName isEqualToString:@"Admin"] && [tmpPassword isEqualToString:@"123456"]) {
+//            [self remmenber:isremmber name:tmpName password:tmpPassword];
+            AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            // 在delegate中初始化新的controller // 修改rootViewController
+            [delegate.window addSubview:delegate.main.view];
+            [self.view removeFromSuperview];
+            delegate.window.rootViewController = delegate.main;
+        }else {
+            [self toastShow:@"用户名或密码错误"];
+        }
+    }else{
+        //修改过密码，初始密码失效
+        if ([tmpPassword isEqualToString:defaultPs]) {
+//            [self remmenber:isremmber name:tmpName password:tmpPassword];
+            AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            // 在delegate中初始化新的controller // 修改rootViewController
+            [delegate.window addSubview:delegate.main.view];
+            [self.view removeFromSuperview];
+            delegate.window.rootViewController = delegate.main;
+        }else {
+            [self toastShow:@"用户名或密码错误"];
+        }
+    }
+}
+
+- (void)toastShow :(NSString *)msg{
+    [self.view makeToast:msg duration:1.0 position:CSToastPositionCenter];
+}
+
+- (void)remmenber :(BOOL)yesno name:(NSString *)name password:(NSString *)pw {
+//    if (yesno) {
+//        [[NSUserDefaults standardUserDefaults] setObject:pw forKey:name];
+//    }else {
+//        [[NSUserDefaults standardUserDefaults] removeObjectForKey: name];
+//    }
 }
 
 - (void)didReceiveMemoryWarning

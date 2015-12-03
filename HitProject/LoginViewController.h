@@ -19,6 +19,8 @@
 @property (retain, nonatomic) IBOutlet UILabel *passwordLabel;
 
 @property (retain, nonatomic) IBOutlet UIImageView *userLargeHead;
+
+@property (retain, nonatomic) NSMutableArray *userNamesArray;
 - (IBAction)login:(id)sender;
 
 @end
