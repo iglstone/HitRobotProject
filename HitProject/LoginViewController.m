@@ -184,28 +184,29 @@
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"origionPW"]) {
         //表示没修改过了密码，使用初始密码
         if ([tmpName isEqualToString:@"Admin"] && [tmpPassword isEqualToString:@"123456"]) {
-//            [self remmenber:isremmber name:tmpName password:tmpPassword];
-            AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            // 在delegate中初始化新的controller // 修改rootViewController
-            [delegate.window addSubview:delegate.main.view];
-            [self.view removeFromSuperview];
-            delegate.window.rootViewController = delegate.main;
+            [[NSUserDefaults standardUserDefaults] setObject:tmpPassword forKey:tmpName];
+            [self changeViewController];
         }else {
             [self toastShow:@"用户名或密码错误"];
         }
     }else{
         //修改过密码，初始密码失效
         if ([tmpPassword isEqualToString:defaultPs]) {
-//            [self remmenber:isremmber name:tmpName password:tmpPassword];
-            AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            // 在delegate中初始化新的controller // 修改rootViewController
-            [delegate.window addSubview:delegate.main.view];
-            [self.view removeFromSuperview];
-            delegate.window.rootViewController = delegate.main;
+            [[NSUserDefaults standardUserDefaults] setObject:tmpPassword forKey:tmpName];
+            [self changeViewController];
         }else {
             [self toastShow:@"用户名或密码错误"];
         }
     }
+}
+
+- (void)changeViewController {
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    // 在delegate中初始化新的controller // 修改rootViewController
+    delegate.main = [MainViewController new];
+//    [delegate.window addSubview:delegate.main.view];
+    [self.view removeFromSuperview];
+    delegate.window.rootViewController = delegate.main;
 }
 
 - (void)toastShow :(NSString *)msg{

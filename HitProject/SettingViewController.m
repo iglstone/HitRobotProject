@@ -59,7 +59,6 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *CellIdentifier = @"cellofMybillss";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -70,12 +69,10 @@
     if (indexPath.row == 0) {
         cell.textLabel.text =@"设置桌数";
     }
-    
-    if (indexPath.row == 2) {
-        cell.textLabel.text =@"添加账户";
-    }
-    
-    if (indexPath.row == 5) {
+//    if (indexPath.row == 1) {
+//        cell.textLabel.text =@"添加账户";
+//    }
+    if (indexPath.row == 1) {
         cell.textLabel.text =@"退出登陆";
     }
     cell.backgroundColor = [CommonsFunc colorOfSystemBackground];
@@ -87,7 +84,7 @@
     if (indexPath.row == 0) {
         [self.navigationController pushViewController:[PickDeskNumViewController new] animated:YES];
     }
-    if (indexPath.row == 5) {
+    if (indexPath.row == 1) {
         UIAlertView *alet = [[UIAlertView alloc] initWithTitle:@"确定退出登录？" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
         [alet show];
     }
@@ -104,23 +101,25 @@
     AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     // 在delegate中初始化新的controller
     // 修改rootViewController
-    //    [delegate.window addSubview:delegate.main.view];
+    // [delegate.window addSubview:delegate.main.view];
     [main.view removeFromSuperview];
     delegate.window.rootViewController = [LoginViewController new];
     
     [self dismissViewControllerAnimated:YES completion:^{
-        //            MainViewController *main =(MainViewController *) self.tabBarController;
-        //            AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        //            // 在delegate中初始化新的controller
-        //            // 修改rootViewController
-        //            //    [delegate.window addSubview:delegate.main.view];
-        //            [main.view removeFromSuperview];
-        //            delegate.window.rootViewController = [LoginViewController new];
+        HitControl *cont = [HitControl sharedControl];
+        [cont stopAll];
+//            MainViewController *main =(MainViewController *) self.tabBarController;
+//            AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//            // 在delegate中初始化新的controller
+//            // 修改rootViewController
+//            //    [delegate.window addSubview:delegate.main.view];
+//            [main.view removeFromSuperview];
+//            delegate.window.rootViewController = [LoginViewController new];
     }];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 6;
+    return 2;
 }
 
 - (void)didReceiveMemoryWarning {
