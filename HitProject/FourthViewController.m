@@ -60,14 +60,12 @@
     rawView.backgroundColor = [CommonsFunc colorOfLight];
     [self.view addSubview:rawView];
     
-    
     [rawView mas_makeConstraints:^(MASConstraintMaker *make) {
         if ([CommonsFunc isDeviceIpad]) {
             make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, 400));
         }else {
             make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 150, screenWidth/4));
         }
-        
     }];
     NSInteger contentWidth ;
     if ([CommonsFunc isDeviceIpad]) {
@@ -128,7 +126,6 @@
         if (tt ==1 ) {
             break;
         }
-        
     }
     desk1.hidden = YES;
     

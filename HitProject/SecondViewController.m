@@ -176,6 +176,9 @@
     UILabel *questionText = [[UILabel alloc] initWithFrame:CGRectMake(0,0,280,20)];
     questionText.backgroundColor = [UIColor clearColor];
     questionText.text = @"信息显示：";
+    if (![CommonsFunc isDeviceIpad]) {
+        questionText.font = [UIFont systemFontOfSize:15];
+    }
     [messageContainer addSubview:questionText];
     [questionText mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(messageContainer);
@@ -185,6 +188,9 @@
     powerLabel = [UILabel new];
     powerLabel.text = @"剩余电量： 80%";
     powerLabel.textColor = [UIColor darkGrayColor];
+    if (![CommonsFunc isDeviceIpad]) {
+        powerLabel.font = [UIFont systemFontOfSize:14];
+    }
     [self.view addSubview:powerLabel];
     [powerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(questionText).offset(20);
@@ -193,6 +199,9 @@
     
     UILabel *speedLabel = [UILabel new];
     speedLabel.text = @"当前速度： 0.7 m/s";
+    if (![CommonsFunc isDeviceIpad]) {
+        speedLabel.font = [UIFont systemFontOfSize:14];
+    }
     speedLabel.textColor = [UIColor darkGrayColor];
     [self.view addSubview:speedLabel];
     [speedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -202,6 +211,9 @@
     
     UILabel *voiceLable = [UILabel new];
     voiceLable.text = @"当前音量： 70";
+    if (![CommonsFunc isDeviceIpad]) {
+        voiceLable.font = [UIFont systemFontOfSize:14];
+    }
     voiceLable.textColor = [UIColor darkGrayColor];
     [self.view addSubview:voiceLable];
     [voiceLable mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -226,7 +238,7 @@
         }else {
             make.top.equalTo(self.view).offset(10);
             make.left.equalTo(self.view).offset(10);
-            make.width.mas_equalTo(@180);
+            make.width.mas_equalTo(@165);
             make.height.mas_equalTo(@120);
         }
         
@@ -235,6 +247,9 @@
     UILabel *questionText = [[UILabel alloc] initWithFrame:CGRectMake(0,0,280,20)];
     questionText.backgroundColor = [UIColor clearColor];
     questionText.text = @"选择服务模式：";
+    if (![CommonsFunc isDeviceIpad]) {
+        questionText.font = [UIFont systemFontOfSize:15];
+    }
     [radioContainer addSubview:questionText];
     [questionText mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(radioContainer);
@@ -247,7 +262,10 @@
         rb.tag = i + 100;
         [radioContainer addSubview:rb];
         [rb mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(radioContainer).offset(40 + 50*i);
+            if ([CommonsFunc isDeviceIpad]) {
+                make.top.equalTo(radioContainer).offset(40 + 50*i);
+            }else
+                make.top.equalTo(radioContainer).offset(40 + 35*i);
             make.left.equalTo(radioContainer).offset(10);
             make.size.mas_equalTo(CGSizeMake(100, 22));
         }];

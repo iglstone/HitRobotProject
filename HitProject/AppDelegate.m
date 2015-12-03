@@ -11,6 +11,7 @@
 #import "SecondViewController.h"
 #import "ThirdViewController.h"
 #import "FourthViewController.h"
+#import "LoginViewController.h"
 
 @interface AppDelegate ()
 
@@ -45,7 +46,10 @@
 //    UITabBarController *tb = [[UITabBarController alloc]init];
 //    tb.viewControllers = @[first, second, third, fourth];
     
-    self.window.rootViewController = _main;//tb;
+    self.window.rootViewController = [LoginViewController new];//_main;//tb;
+    
+//    [self.window.rootViewController presentViewController:[LoginViewController new] animated:YES completion:nil];
+    
     [self.window makeKeyAndVisible];
     return YES;
 }

@@ -13,6 +13,7 @@
 #import "FourthViewController.h"
 #import "ConnectStatesCell.h"
 #import <Toast/UIView+Toast.h>
+//#import "LoginViewController.h"
 
 @interface MainViewController () <UITableViewDataSource,UITableViewDelegate>
 
@@ -38,6 +39,11 @@
 @synthesize views;
 
 #pragma mark - lifecicle
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+//    [self presentViewController:[LoginViewController new] animated:YES completion:nil];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     UIImage *image = [UIImage imageNamed:@"me.png"];

@@ -153,7 +153,9 @@ static NSMutableDictionary *rb_observers=nil;
     [_button addTarget:self action:@selector(handleButtonTap:) forControlEvents:UIControlEventTouchUpInside];
     
     [_button setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-    
+    if (![CommonsFunc isDeviceIpad]) {
+        _button.titleLabel.font = [UIFont systemFontOfSize:14];
+    }
     [self addSubview:_button];
     [_button mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self);

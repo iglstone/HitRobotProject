@@ -18,6 +18,10 @@
 		E33DD3901BF20DED0028FCBD /* SocketClientViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33DD38F1BF20DED0028FCBD /* SocketClientViewController_iPad.xib */; };
 		E357F6101BE20F6500AE9454 /* ThirdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E357F60F1BE20F6500AE9454 /* ThirdViewController.m */; };
 		E357F6131BE20F8100AE9454 /* FourthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E357F6121BE20F8100AE9454 /* FourthViewController.m */; };
+		E35D11A81C0ECAA3009AF0BB /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11A71C0ECAA3009AF0BB /* SettingViewController.m */; };
+		E35D11AB1C0ECAD2009AF0BB /* ResetSecurityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11AA1C0ECAD2009AF0BB /* ResetSecurityViewController.m */; };
+		E35D11AE1C0EE0B8009AF0BB /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11AD1C0EE0B8009AF0BB /* WebViewController.m */; };
+		E35D11B21C0F1CC0009AF0BB /* PickDeskNumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11B11C0F1CC0009AF0BB /* PickDeskNumViewController.m */; };
 		E37BA5031BE462C700DB7A96 /* JSAnalogueStick.m in Sources */ = {isa = PBXBuildFile; fileRef = E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */; };
 		E37BA50A1BE7162500DB7A96 /* DeskView.m in Sources */ = {isa = PBXBuildFile; fileRef = E37BA5091BE7162500DB7A96 /* DeskView.m */; };
 		E3C0B5241BE1EAA5004437EC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E3C0B5231BE1EAA5004437EC /* main.m */; };
@@ -27,6 +31,21 @@
 		E3C0B5321BE1EAA5004437EC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3C0B5311BE1EAA5004437EC /* Images.xcassets */; };
 		E3C0B5351BE1EAA5004437EC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3C0B5331BE1EAA5004437EC /* LaunchScreen.xib */; };
 		E3C0B5411BE1EAA6004437EC /* HitProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3C0B5401BE1EAA6004437EC /* HitProjectTests.m */; };
+		E3E0F8A51C0E77C1001CC06F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E0F8A31C0E77C1001CC06F /* LoginViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		E3E0F8A61C0E77C1001CC06F /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8A41C0E77C1001CC06F /* LoginViewController.xib */; };
+		E3E0F8A81C0E7982001CC06F /* login_textfield_mid.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8A71C0E7982001CC06F /* login_textfield_mid.png */; };
+		E3E0F8AB1C0E79BB001CC06F /* login_textfield_bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8A91C0E79BB001CC06F /* login_textfield_bottom.png */; };
+		E3E0F8AC1C0E79BB001CC06F /* login_textfield_bottom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8AA1C0E79BB001CC06F /* login_textfield_bottom@2x.png */; };
+		E3E0F8AF1C0E79CC001CC06F /* login_avatar.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8AD1C0E79CC001CC06F /* login_avatar.png */; };
+		E3E0F8B01C0E79CC001CC06F /* login_avatar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8AE1C0E79CC001CC06F /* login_avatar@2x.png */; };
+		E3E0F8B31C0E7A7A001CC06F /* login_textfield_top.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8B11C0E7A7A001CC06F /* login_textfield_top.png */; };
+		E3E0F8B41C0E7A7A001CC06F /* login_textfield_top@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8B21C0E7A7A001CC06F /* login_textfield_top@2x.png */; };
+		E3E0F8B91C0E7ABA001CC06F /* login_btn_blue_nor.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8B51C0E7ABA001CC06F /* login_btn_blue_nor.png */; };
+		E3E0F8BA1C0E7ABA001CC06F /* login_btn_blue_nor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8B61C0E7ABA001CC06F /* login_btn_blue_nor@2x.png */; };
+		E3E0F8BB1C0E7ABA001CC06F /* login_btn_blue_press.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8B71C0E7ABA001CC06F /* login_btn_blue_press.png */; };
+		E3E0F8BC1C0E7ABA001CC06F /* login_btn_blue_press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8B81C0E7ABA001CC06F /* login_btn_blue_press@2x.png */; };
+		E3E0F8BF1C0E7B60001CC06F /* login_avatar_default.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8BD1C0E7B60001CC06F /* login_avatar_default.png */; };
+		E3E0F8C01C0E7B60001CC06F /* login_avatar_default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8BE1C0E7B60001CC06F /* login_avatar_default@2x.png */; };
 		E3E91FC21BEC318F003AE247 /* ServerSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FC11BEC318F003AE247 /* ServerSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FC61BEC32C6003AE247 /* AsyncUdpSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E3E91FCC1BEC8117003AE247 /* HitControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FCB1BEC8117003AE247 /* HitControl.m */; };
@@ -69,6 +88,14 @@
 		E357F60F1BE20F6500AE9454 /* ThirdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThirdViewController.m; sourceTree = "<group>"; };
 		E357F6111BE20F8100AE9454 /* FourthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FourthViewController.h; sourceTree = "<group>"; };
 		E357F6121BE20F8100AE9454 /* FourthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FourthViewController.m; sourceTree = "<group>"; };
+		E35D11A61C0ECAA3009AF0BB /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
+		E35D11A71C0ECAA3009AF0BB /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
+		E35D11A91C0ECAD2009AF0BB /* ResetSecurityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetSecurityViewController.h; sourceTree = "<group>"; };
+		E35D11AA1C0ECAD2009AF0BB /* ResetSecurityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResetSecurityViewController.m; sourceTree = "<group>"; };
+		E35D11AC1C0EE0B8009AF0BB /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		E35D11AD1C0EE0B8009AF0BB /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		E35D11B01C0F1CC0009AF0BB /* PickDeskNumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickDeskNumViewController.h; sourceTree = "<group>"; };
+		E35D11B11C0F1CC0009AF0BB /* PickDeskNumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickDeskNumViewController.m; sourceTree = "<group>"; };
 		E37BA5011BE462C700DB7A96 /* JSAnalogueStick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSAnalogueStick.h; sourceTree = "<group>"; };
 		E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSAnalogueStick.m; sourceTree = "<group>"; };
 		E37BA5081BE7162500DB7A96 /* DeskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeskView.h; sourceTree = "<group>"; };
@@ -88,6 +115,22 @@
 		E3C0B53A1BE1EAA6004437EC /* HitProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HitProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3C0B53F1BE1EAA6004437EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3C0B5401BE1EAA6004437EC /* HitProjectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HitProjectTests.m; sourceTree = "<group>"; };
+		E3E0F8A21C0E77C1001CC06F /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		E3E0F8A31C0E77C1001CC06F /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		E3E0F8A41C0E77C1001CC06F /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
+		E3E0F8A71C0E7982001CC06F /* login_textfield_mid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_textfield_mid.png; sourceTree = "<group>"; };
+		E3E0F8A91C0E79BB001CC06F /* login_textfield_bottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_textfield_bottom.png; sourceTree = "<group>"; };
+		E3E0F8AA1C0E79BB001CC06F /* login_textfield_bottom@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_textfield_bottom@2x.png"; sourceTree = "<group>"; };
+		E3E0F8AD1C0E79CC001CC06F /* login_avatar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_avatar.png; sourceTree = "<group>"; };
+		E3E0F8AE1C0E79CC001CC06F /* login_avatar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_avatar@2x.png"; sourceTree = "<group>"; };
+		E3E0F8B11C0E7A7A001CC06F /* login_textfield_top.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_textfield_top.png; sourceTree = "<group>"; };
+		E3E0F8B21C0E7A7A001CC06F /* login_textfield_top@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_textfield_top@2x.png"; sourceTree = "<group>"; };
+		E3E0F8B51C0E7ABA001CC06F /* login_btn_blue_nor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_btn_blue_nor.png; sourceTree = "<group>"; };
+		E3E0F8B61C0E7ABA001CC06F /* login_btn_blue_nor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_btn_blue_nor@2x.png"; sourceTree = "<group>"; };
+		E3E0F8B71C0E7ABA001CC06F /* login_btn_blue_press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_btn_blue_press.png; sourceTree = "<group>"; };
+		E3E0F8B81C0E7ABA001CC06F /* login_btn_blue_press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_btn_blue_press@2x.png"; sourceTree = "<group>"; };
+		E3E0F8BD1C0E7B60001CC06F /* login_avatar_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_avatar_default.png; sourceTree = "<group>"; };
+		E3E0F8BE1C0E7B60001CC06F /* login_avatar_default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_avatar_default@2x.png"; sourceTree = "<group>"; };
 		E3E91FC01BEC318F003AE247 /* ServerSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerSocket.h; sourceTree = "<group>"; };
 		E3E91FC11BEC318F003AE247 /* ServerSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerSocket.m; sourceTree = "<group>"; };
 		E3E91FC51BEC32C6003AE247 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncUdpSocket.h; sourceTree = "<group>"; };
@@ -165,6 +208,17 @@
 			name = Tools;
 			sourceTree = "<group>";
 		};
+		E35D11AF1C0F1C91009AF0BB /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				E35D11A61C0ECAA3009AF0BB /* SettingViewController.h */,
+				E35D11A71C0ECAA3009AF0BB /* SettingViewController.m */,
+				E35D11B01C0F1CC0009AF0BB /* PickDeskNumViewController.h */,
+				E35D11B11C0F1CC0009AF0BB /* PickDeskNumViewController.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
 		E3C0B5151BE1EAA5004437EC = {
 			isa = PBXGroup;
 			children = (
@@ -194,12 +248,14 @@
 				E3B146BD1BED9CB100963FA8 /* PrefixHeader.pch */,
 				E3C0B5251BE1EAA5004437EC /* AppDelegate.h */,
 				E3C0B5261BE1EAA5004437EC /* AppDelegate.m */,
+				E3E0F8A11C0E779C001CC06F /* Login */,
 				E31636761BF05607002EB100 /* MainViewController.h */,
 				E31636771BF05607002EB100 /* MainViewController.m */,
 				E316366D1BEDA80A002EB100 /* ConnectStatesCell.h */,
 				E316366E1BEDA80A002EB100 /* ConnectStatesCell.m */,
 				E3C0B5281BE1EAA5004437EC /* FirstViewController.h */,
 				E3C0B5291BE1EAA5004437EC /* FirstViewController.m */,
+				E35D11AF1C0F1C91009AF0BB /* Settings */,
 				E3C0B52B1BE1EAA5004437EC /* SecondViewController.h */,
 				E3C0B52C1BE1EAA5004437EC /* SecondViewController.m */,
 				E357F60E1BE20F6500AE9454 /* ThirdViewController.h */,
@@ -237,6 +293,41 @@
 				E3C0B53F1BE1EAA6004437EC /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E3E0F8A11C0E779C001CC06F /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				E3E0F8A21C0E77C1001CC06F /* LoginViewController.h */,
+				E3E0F8A31C0E77C1001CC06F /* LoginViewController.m */,
+				E3E0F8A41C0E77C1001CC06F /* LoginViewController.xib */,
+				E35D11AC1C0EE0B8009AF0BB /* WebViewController.h */,
+				E35D11AD1C0EE0B8009AF0BB /* WebViewController.m */,
+				E35D11A91C0ECAD2009AF0BB /* ResetSecurityViewController.h */,
+				E35D11AA1C0ECAD2009AF0BB /* ResetSecurityViewController.m */,
+				E3E0F8C11C0E9224001CC06F /* loginImages */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
+		E3E0F8C11C0E9224001CC06F /* loginImages */ = {
+			isa = PBXGroup;
+			children = (
+				E3E0F8B51C0E7ABA001CC06F /* login_btn_blue_nor.png */,
+				E3E0F8B61C0E7ABA001CC06F /* login_btn_blue_nor@2x.png */,
+				E3E0F8B71C0E7ABA001CC06F /* login_btn_blue_press.png */,
+				E3E0F8B81C0E7ABA001CC06F /* login_btn_blue_press@2x.png */,
+				E3E0F8B11C0E7A7A001CC06F /* login_textfield_top.png */,
+				E3E0F8B21C0E7A7A001CC06F /* login_textfield_top@2x.png */,
+				E3E0F8BD1C0E7B60001CC06F /* login_avatar_default.png */,
+				E3E0F8BE1C0E7B60001CC06F /* login_avatar_default@2x.png */,
+				E3E0F8AD1C0E79CC001CC06F /* login_avatar.png */,
+				E3E0F8AE1C0E79CC001CC06F /* login_avatar@2x.png */,
+				E3E0F8A91C0E79BB001CC06F /* login_textfield_bottom.png */,
+				E3E0F8AA1C0E79BB001CC06F /* login_textfield_bottom@2x.png */,
+				E3E0F8A71C0E7982001CC06F /* login_textfield_mid.png */,
+			);
+			name = loginImages;
 			sourceTree = "<group>";
 		};
 		E3FC888E1BEB52EE0016376D /* AsyncSocket */ = {
@@ -341,10 +432,24 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3E0F8BB1C0E7ABA001CC06F /* login_btn_blue_press.png in Resources */,
 				E33DD3901BF20DED0028FCBD /* SocketClientViewController_iPad.xib in Resources */,
 				E33DD38E1BF20DE40028FCBD /* SocketClientViewController_iPhone.xib in Resources */,
+				E3E0F8C01C0E7B60001CC06F /* login_avatar_default@2x.png in Resources */,
+				E3E0F8A81C0E7982001CC06F /* login_textfield_mid.png in Resources */,
 				E3C0B5351BE1EAA5004437EC /* LaunchScreen.xib in Resources */,
+				E3E0F8B31C0E7A7A001CC06F /* login_textfield_top.png in Resources */,
+				E3E0F8AB1C0E79BB001CC06F /* login_textfield_bottom.png in Resources */,
+				E3E0F8BC1C0E7ABA001CC06F /* login_btn_blue_press@2x.png in Resources */,
+				E3E0F8BF1C0E7B60001CC06F /* login_avatar_default.png in Resources */,
+				E3E0F8AF1C0E79CC001CC06F /* login_avatar.png in Resources */,
+				E3E0F8A61C0E77C1001CC06F /* LoginViewController.xib in Resources */,
 				E3C0B5321BE1EAA5004437EC /* Images.xcassets in Resources */,
+				E3E0F8B91C0E7ABA001CC06F /* login_btn_blue_nor.png in Resources */,
+				E3E0F8AC1C0E79BB001CC06F /* login_textfield_bottom@2x.png in Resources */,
+				E3E0F8B41C0E7A7A001CC06F /* login_textfield_top@2x.png in Resources */,
+				E3E0F8B01C0E79CC001CC06F /* login_avatar@2x.png in Resources */,
+				E3E0F8BA1C0E7ABA001CC06F /* login_btn_blue_nor@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,6 +503,7 @@
 				E357F6131BE20F8100AE9454 /* FourthViewController.m in Sources */,
 				E3E91FCC1BEC8117003AE247 /* HitControl.m in Sources */,
 				E3C0B52D1BE1EAA5004437EC /* SecondViewController.m in Sources */,
+				E35D11B21C0F1CC0009AF0BB /* PickDeskNumViewController.m in Sources */,
 				E31636781BF05607002EB100 /* MainViewController.m in Sources */,
 				E357F6101BE20F6500AE9454 /* ThirdViewController.m in Sources */,
 				E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */,
@@ -412,7 +518,11 @@
 				E3C0B5241BE1EAA5004437EC /* main.m in Sources */,
 				E316367C1BF07AE4002EB100 /* CHYSlider.m in Sources */,
 				E31636721BEDAA5D002EB100 /* CommonsFunc.m in Sources */,
+				E35D11A81C0ECAA3009AF0BB /* SettingViewController.m in Sources */,
+				E3E0F8A51C0E77C1001CC06F /* LoginViewController.m in Sources */,
+				E35D11AE1C0EE0B8009AF0BB /* WebViewController.m in Sources */,
 				E37BA50A1BE7162500DB7A96 /* DeskView.m in Sources */,
+				E35D11AB1C0ECAD2009AF0BB /* ResetSecurityViewController.m in Sources */,
 				E33DD38D1BF20DE40028FCBD /* SocketClientViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

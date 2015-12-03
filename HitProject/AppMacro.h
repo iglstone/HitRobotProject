@@ -15,6 +15,9 @@
 //连接成功
 #define NOTICE_CONNECTSUCCESS               @"NOTICE_CONNECTSUCCESS"
 
+//连接成功
+#define NOTICE_LOGOUTSUCCESS               @"NOTICE_LOGOUTSUCCESS"
+
 //连接失败
 #define NOTICE_CONNECTFAIL                  @"NOTICE_CONNECTFAIL"
 
