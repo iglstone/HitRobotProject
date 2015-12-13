@@ -62,7 +62,7 @@
     
     [rawView mas_makeConstraints:^(MASConstraintMaker *make) {
         if ([CommonsFunc isDeviceIpad]) {
-            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, 400));
+            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 250, 400));
         }else {
             make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 150, screenWidth/4));
         }
@@ -70,11 +70,11 @@
     NSInteger contentWidth ;
     if ([CommonsFunc isDeviceIpad]) {
         contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
+        rawView.contentSize = CGSizeMake(contentWidth, 600);
     }else {
         contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
+        rawView.contentSize = CGSizeMake(contentWidth, 300);
     }
-    
-    rawView.contentSize = CGSizeMake(contentWidth, 300);
     
     DeskView *desk1 = [[DeskView alloc] init];
     desk1.backgroundColor = [UIColor redColor];

@@ -172,9 +172,58 @@ static HitControl* _instance = nil;
         case 5:
             [server sendMessage:@"H"];
             break;
+        case 6:
+            [server sendMessage:@"Q"];
+            break;
+        case 7:
+            [server sendMessage:@"R"];
+            break;
+        case 8:
+            [server sendMessage:@"S"];
+            break;
+        case 9:
+            [server sendMessage:@"T"];
+            break;
+        case 10:
+            [server sendMessage:@"U"];
+            break;
+        case 11:
+            [server sendMessage:@"V"];
+            break;
+        case 12:
+            [server sendMessage:@"W"];
+            break;
+        case 13:
+            [server sendMessage:@"X"];
+            break;
+        case 14:
+            [server sendMessage:@"Y"];
+            break;
+        case 15:
+            [server sendMessage:@"Z"];
+            break;
+        case 16:
+            [server sendMessage:@":"];
+            break;
+        case 17:
+            [server sendMessage:@"<"];
+            break;
+        case 18:
+            [server sendMessage:@"="];
+            break;
+        case 19:
+            [server sendMessage:@">"];
+            break;
+        case 20:
+            [server sendMessage:@"?"];
+            break;
         default:
             break;
     }
+}
+
+- (void)cancelSendMeal {
+    [server sendMessage:@"@"];
 }
 
 - (void)backToOrigin {

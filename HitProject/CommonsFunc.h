@@ -17,7 +17,7 @@
 +(UIColor *)colorOfLight;
 +(UIColor *)colorOfMiddle;
 +(UIColor *)colorOfDark;
-
++(NSString*)getIPAddressByHostName:(NSString*)strHostName;
 
 //+(void)GetJsonWithUrl:(NSString *)url parameters:(id)parameter success:(void(^)(id responseObjec))succes faild:(void (^)(AFHTTPRequestOperation *operation))faildd;
 ////post 也是带token的

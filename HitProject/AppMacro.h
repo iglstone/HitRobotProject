@@ -12,13 +12,12 @@
 //监听端口
 #define LISTEN_PORT 1234;
 
-
 //notification
 //连接成功
 #define NOTICE_CONNECTSUCCESS               @"NOTICE_CONNECTSUCCESS"
 
 //连接成功
-#define NOTICE_LOGOUTSUCCESS               @"NOTICE_LOGOUTSUCCESS"
+#define NOTICE_LOGOUTSUCCESS                @"NOTICE_LOGOUTSUCCESS"
 
 //连接失败
 #define NOTICE_CONNECTFAIL                  @"NOTICE_CONNECTFAIL"
@@ -28,6 +27,11 @@
 
 //失去连接
 #define NOTICE_DISCONNECT                   @"NOTICE_DISCONNECT"
+
+//选择桌数
+#define NOTICE_PICKDESKNUM                  @"NOTICE_PICKDESKNUM"
+
+
 
 #define NOTICE_OPEN_LOCAL_VIEW              @"NOTICE_OPEN_LOCAL_VIEW"
 

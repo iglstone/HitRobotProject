@@ -109,7 +109,7 @@
     [logoView2 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(logoView);
         if ([CommonsFunc isDeviceIpad]) {
-            make.size.mas_equalTo(CGSizeMake(65, 65));
+            make.size.mas_equalTo(CGSizeMake(60, 60));
         }else
             make.size.mas_equalTo(CGSizeMake(45, 45));
     }];

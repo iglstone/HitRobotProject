@@ -13,6 +13,7 @@
 #import "FourthViewController.h"
 #import "LoginViewController.h"
 
+#import "SocketClientViewController.h"
 @interface AppDelegate ()
 
 @end
@@ -27,28 +28,8 @@
     
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
     _main = [MainViewController new];
-    
-//    UIImage *image = [UIImage imageNamed:@"me.png"];
-//    FirstViewController *first = [FirstViewController new];
-//    image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-//    UITabBarItem *itm = [[UITabBarItem alloc]initWithTitle:@"欢迎界面" image:image selectedImage:nil];
-//    first.tabBarItem = itm;
-//    
-//    SecondViewController *second = [SecondViewController new];
-//    second.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"操作界面" image:image selectedImage:nil];
-//    
-//    ThirdViewController *third = [ThirdViewController new];
-//    third.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"送餐界面" image:image selectedImage:nil];
-//    
-//    FourthViewController *fourth = [FourthViewController new];
-//    fourth.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"语音界面" image:image selectedImage:nil];
-//    
-//    UITabBarController *tb = [[UITabBarController alloc]init];
-//    tb.viewControllers = @[first, second, third, fourth];
-    
-    self.window.rootViewController = [LoginViewController new];//_main;//tb;
-    
-//    [self.window.rootViewController presentViewController:[LoginViewController new] animated:YES completion:nil];
+    self.window.rootViewController = [LoginViewController new];
+//    self.window.rootViewController = [SocketClientViewController new];
     
     [self.window makeKeyAndVisible];
     return YES;

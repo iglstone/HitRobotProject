@@ -7,6 +7,10 @@
 //
 
 #import "CommonsFunc.h"
+#include <netinet/in.h>  //定义数据结构sockaddr_in
+#include <sys/socket.h>  //提供socket函数及数据结构
+#import <arpa/inet.h>
+#import <netdb.h>
 // positions
 
 @implementation CommonsFunc
@@ -38,6 +42,31 @@
     UIColor *color = [UIColor colorWithHexString:@"#666666"];//  ecececgu
     return color;
 }
+
+
++(NSString*)getIPAddressByHostName:(NSString*)strHostName
+{
+    const char* szname = [strHostName UTF8String];
+    struct hostent* phot ;
+    @try
+    {
+        phot = gethostbyname(szname);
+    }
+    @catch (NSException * e)
+    {
+        return nil;
+    }
+    
+    struct in_addr ip_addr;
+    memcpy(&ip_addr,phot->h_addr_list[0],4);///h_addr_list[0]里4个字节,每个字节8位，此处为一个数组，一个域名对应多个ip地址或者本地时一个机器有多个网卡
+    
+    char ip[20] = {0};
+    inet_ntop(AF_INET, &ip_addr, ip, sizeof(ip));
+    
+    NSString* strIPAddress = [NSString stringWithUTF8String:ip];
+    return strIPAddress;
+}
+
 
 /*
 // 设置超时时间

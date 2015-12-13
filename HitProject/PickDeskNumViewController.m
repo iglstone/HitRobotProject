@@ -29,7 +29,7 @@
     NSInteger screenHeight = [[UIScreen mainScreen] bounds].size.height;
     
     pickerArray = [NSMutableArray new];
-    for (int i = 1; i <= 100 ;i++) {
+    for (int i = 1; i <= 60 ;i++) {
         NSString *st = [NSString stringWithFormat:@"%d 桌", i];
         [pickerArray addObject:st];
     }
@@ -60,13 +60,14 @@
     UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithTitle:@"确定" style:UIBarButtonItemStylePlain target:self action:@selector(done:)];
     self.navigationItem.rightBarButtonItem = right;
     right.tintColor = [UIColor darkGrayColor];
-    
 }
 
 - (void)done :(id)sender {
     NSInteger row = [pickView selectedRowInComponent:0];
     NSString *string = [pickerArray objectAtIndex:row];
-    NSLog(@"您选择的是 %@",string);
+    NSInteger desknum = [[string substringWithRange:NSMakeRange(0, [string length]-2)] integerValue];
+    NSLog(@"您选择的是 %@ ,,%ld",string,desknum);
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_PICKDESKNUM object:nil userInfo:@{@"desknum":@(desknum)}];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

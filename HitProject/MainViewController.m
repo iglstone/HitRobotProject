@@ -202,7 +202,7 @@
     for (ConnectModel *model in m_modelsArray) {
         if ([model.socket isEqual:socket]) {
             model.status = @"disconnect";
-            [self.view makeToast:[NSString stringWithFormat:@"失去%@连接", model.hostIp]];
+            [self.view makeToast:[NSString stringWithFormat:@"失去%@连接", model.hostIp] duration:1.0 position:CSToastPositionCenter];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [m_tableView reloadData];
             });
@@ -218,7 +218,7 @@
     NSString *status = [dic objectForKey:@"status"];
     AsyncSocket *sokect = (AsyncSocket *)[dic objectForKey:@"socket"];
     
-    [self.view makeToast:[NSString stringWithFormat:@"连接%@成功", host]];
+    [self.view makeToast:[NSString stringWithFormat:@"连接%@成功", host] duration:1.0 position:CSToastPositionCenter];
     
     ConnectModel *model = [ConnectModel new];
     model.port = port;

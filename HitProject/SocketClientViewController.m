@@ -43,7 +43,7 @@
 }
 - (void)downKeyboard:(UITextField *)textField
 {
-
+    
 }
 
 - (void)writeData:(NSString *)string
@@ -95,42 +95,56 @@
 {
     [super viewDidLoad];
     
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-    {
-        keyboradHeight = 216;
-        screenHeight = 480;
-        downHeight = 373;
-    }
-    else
-    {
-        keyboradHeight = 264;
-        screenHeight = 1024;
-        downHeight = 373 +543;
-    }
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+//    {
+//        keyboradHeight = 216;
+//        screenHeight = 480;
+//        downHeight = 373;
+//    }
+//    else
+//    {
+//        keyboradHeight = 264;
+//        screenHeight = 1024;
+//        downHeight = 373 +543;
+//    }
+//    
+//    [self.ipField becomeFirstResponder];
+//    self.ipField.keyboardType = UIKeyboardTypeNumberPad;
+//    self.portField.keyboardType = UIKeyboardTypeNumberPad;
+//    self.ipField.returnKeyType = UIReturnKeyDone;
+//    self.portField.returnKeyType = UIReturnKeyDone;
+//    [self.portField addTarget:self action:@selector(downKeyboard:) forControlEvents:UIControlEventEditingDidEndOnExit];
+//    [self.ipField addTarget:self action:@selector(downKeyboard:) forControlEvents:UIControlEventEditingDidEndOnExit];
+//    
+//    
+//    self.chatTableView.dataSource = self;
+//    self.chatTableView.delegate = self;
+//    
+//    self.textField.delegate = self;
+//    self.textField.returnKeyType = UIReturnKeyDone;
+//    [self.textField addTarget:self action:@selector(moveDownTextFieldAndButton) forControlEvents:UIControlEventEditingDidEndOnExit];
+//
+//    imageData = [[NSMutableData alloc] init];
     
-    [self.ipField becomeFirstResponder];
-    self.ipField.keyboardType = UIKeyboardTypeNumberPad;
-    self.portField.keyboardType = UIKeyboardTypeNumberPad;
-    self.ipField.returnKeyType = UIReturnKeyDone;
-    self.portField.returnKeyType = UIReturnKeyDone;
-    [self.portField addTarget:self action:@selector(downKeyboard:) forControlEvents:UIControlEventEditingDidEndOnExit];
-    [self.ipField addTarget:self action:@selector(downKeyboard:) forControlEvents:UIControlEventEditingDidEndOnExit];
+    self.view.backgroundColor = [UIColor whiteColor];
     
+    UIButton *btn =[UIButton new];
+    [self.view addSubview:btn];
+    btn.backgroundColor = [UIColor orangeColor];
+    [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.view);
+    }];
+    [btn setTitle:@"llianjie" forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(sele:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.chatTableView.dataSource = self;
-    self.chatTableView.delegate = self;
-    
-    self.textField.delegate = self;
-    self.textField.returnKeyType = UIReturnKeyDone;
-    [self.textField addTarget:self action:@selector(moveDownTextFieldAndButton) forControlEvents:UIControlEventEditingDidEndOnExit];
-
-    imageData = [[NSMutableData alloc] init];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
+- (void) sele :(id)sender {
+    NSString *serverip = [CommonsFunc getIPAddressByHostName:@"guolongios.imwork.net"];//http://guolongios.imwork.net:20935/
+    NSLog(@"serverip: %@",serverip);
+    [self connectHost:serverip port:20935];
 }
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -141,6 +155,7 @@
 - (IBAction)connect:(id)sender
 {
     [self connectHost:self.ipField.text port:self.portField.text.integerValue];
+    
 }
 - (void)moveDownTextFieldAndButton
 {

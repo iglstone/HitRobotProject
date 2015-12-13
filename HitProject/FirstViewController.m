@@ -153,14 +153,18 @@
     [startBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
     
     UIButton *settingBtn = [UIButton new];
-//    settingBtn.backgroundColor = [UIColor blueColor];
     [settingBtn setTitle:@"设置" forState:UIControlStateNormal];
     [settingBtn setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [settingBtn setImage:[UIImage imageNamed:@"setting"] forState:UIControlStateNormal];
     [self.view addSubview:settingBtn];
     [settingBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).offset(15);
-        make.right.equalTo(self.view).offset(-15);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.bottom.equalTo(self.view).offset(-60);
+            make.left.equalTo(self.view).offset(20);
+        } else {
+            make.top.equalTo(self.view).offset(15);
+            make.right.equalTo(self.view).offset(-15);
+        }
     }];
     [settingBtn addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -173,10 +177,9 @@
     AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     // 在delegate中初始化新的controller
     // 修改rootViewController
-//    [delegate.window addSubview:delegate.main.view];
+    // [delegate.window addSubview:delegate.main.view];
     [main.view removeFromSuperview];
     delegate.window.rootViewController = [LoginViewController new];
-    
 }
 
 - (void)setting :(id) sender {
@@ -203,7 +206,6 @@
         [btn setBackgroundColor:[UIColor clearColor]];
         [btn setTitle:@"开始服务" forState:UIControlStateNormal];
     }
-    
 }
 
 - (void)didReceiveMemoryWarning {

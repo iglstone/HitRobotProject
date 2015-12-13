@@ -44,6 +44,8 @@
 
 - (void)deskNumber:(NSInteger)numeber ;
 
+- (void)cancelSendMeal ;
+
 - (void)backToOrigin ;
 
 - (void)loopRun ;
