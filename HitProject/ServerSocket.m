@@ -258,12 +258,18 @@ static ServerSocket* _instance = nil;
     [result appendString:[NSString stringWithFormat:@"%@:%@\n",[sock connectedHost],[ServerSocket dataToString:data]]];
     if ([msg isEqualToString:@"中国"])
     {
+        
+        
     }
     else if([msg isEqualToString:@"日本"])
     {
+        
+        
     }
     else if([msg isEqualToString:@"英国"])
     {
+        
+        
     }
 //    [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_RESULT_NOTIFICATION object:nil];
     [sock readDataWithTimeout:-1 tag:0];
