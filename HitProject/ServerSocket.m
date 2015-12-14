@@ -255,6 +255,9 @@ static ServerSocket* _instance = nil;
     
 //    [result appendString:[ServerSocket dataToString:data]];
 //    [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(update) userInfo:nil repeats:YES];
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(update) userInfo:nil repeats:YES];
+    
+    
     [result appendString:[NSString stringWithFormat:@"%@:%@\n",[sock connectedHost],[ServerSocket dataToString:data]]];
     if ([msg isEqualToString:@"中国"])
     {
