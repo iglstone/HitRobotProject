@@ -13,6 +13,7 @@
 @synthesize port;
 @synthesize status;
 @synthesize socket;
+@synthesize isCheck;
 
 - (instancetype)init {
     self = [super init];
@@ -39,6 +40,7 @@
     hostIpLabel.text = model.hostIp;
     portLabel.text = [NSString stringWithFormat:@"%ld",(long)model.port];
     statusLabel.text = model.status;
+    [self setIsChecked:model.isCheck];
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
@@ -55,7 +57,6 @@
         
         hostIpLabel= [[UILabel alloc]init];
         hostIpLabel.text = @"192.168.100.100";
-//        hostIpLabel.backgroundColor = [UIColor redColor];
         [CommonsFunc com_custumLabel:hostIpLabel fontSize:12 color:[UIColor darkGrayColor] numberOfLines:1 alignment:NSTextAlignmentLeft];
         [self.contentView addSubview:hostIpLabel];
         [hostIpLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -65,7 +66,7 @@
         }];
         
         statusLabel = [UILabel new];
-        statusLabel.text = @"disconnected";
+        statusLabel.text = @"未连接";
         [self.contentView addSubview:statusLabel];
         [CommonsFunc com_custumLabel:statusLabel fontSize:12 color:[UIColor darkGrayColor] numberOfLines:1 alignment:NSTextAlignmentCenter];
         [statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {

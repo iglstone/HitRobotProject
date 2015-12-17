@@ -150,6 +150,21 @@ static HitControl* _instance = nil;
         case 15:
             [server sendMessage:@"C"];
             break;
+        case 16:
+            [server sendMessage:@"("];
+            break;
+        case 17:
+            [server sendMessage:@")"];
+            break;
+        case 18:
+            [server sendMessage:@"*"];
+            break;
+        case 19:
+            [server sendMessage:@"+"];
+            break;
+        case 20:
+            [server sendMessage:@"-"];
+            break;
         default:
             break;
     }
@@ -216,6 +231,36 @@ static HitControl* _instance = nil;
             break;
         case 20:
             [server sendMessage:@"?"];
+            break;
+        case 21:
+            [server sendMessage:@"0"];
+            break;
+        case 22:
+            [server sendMessage:@"1"];
+            break;
+        case 23:
+            [server sendMessage:@"2"];
+            break;
+        case 24:
+            [server sendMessage:@"3"];
+            break;
+        case 25:
+            [server sendMessage:@"4"];
+            break;
+        case 26:
+            [server sendMessage:@"5"];
+            break;
+        case 27:
+            [server sendMessage:@"6"];
+            break;
+        case 28:
+            [server sendMessage:@"7"];
+            break;
+        case 29:
+            [server sendMessage:@"8"];
+            break;
+        case 30:
+            [server sendMessage:@"9"];
             break;
         default:
             break;

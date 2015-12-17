@@ -32,6 +32,7 @@
     if (self) {
         self  = [super init];
         control = [HitControl sharedControl];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backToForground:) name:NOTICE_FORGRAOUND object:nil];
     }
     return self;
 }
@@ -170,6 +171,11 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(logout:) name:NOTICE_LOGOUTSUCCESS object:nil];
     
+}
+
+- (void)backToForground :(NSNotification *)noti {
+    NSLog(@"backToForground noti");
+    [control startListen];
 }
 
 - (void)logout:(id)sender {

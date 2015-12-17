@@ -14,7 +14,10 @@
 #import "ConnectStatesCell.h"
 #import <Toast/UIView+Toast.h>
 
-@interface MainViewController () <UITableViewDataSource,UITableViewDelegate>
+@interface MainViewController () <UITableViewDataSource,UITableViewDelegate> {
+
+    NSMutableArray *m_cellsArray;
+}
 
 @property (nonatomic) UITableView *m_tableView;
 @property (nonatomic) NSMutableArray *m_modelsArray;
@@ -51,6 +54,7 @@
     m_selecedModelsArray = [[NSMutableArray alloc] init];
     control = [HitControl sharedControl];
     server = [ServerSocket sharedSocket];
+    m_cellsArray = [[NSMutableArray alloc] init];
     
     FirstViewController *first = [FirstViewController new];
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -110,6 +114,7 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectSuccess:) name:NOTICE_CONNECTSUCCESS object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientDisconnect:) name:NOTICE_DISCONNECT object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryAgain:) name:NOTICE_TRYAGIAN object:nil];
     
     stopBtn = [UIButton new];
     [views addSubview:stopBtn];
@@ -129,11 +134,9 @@
     [stopBtn addTarget:self action:@selector(stopBtnTaped:) forControlEvents:UIControlEventTouchUpInside];
     
     m_debugLabel = [UILabel new];
-//    m_debugLabel.textColor = [UIColor lightGrayColor];
     m_debugLabel.backgroundColor = [UIColor lightGrayColor];
     [self.view addSubview:m_debugLabel];
     m_debugLabel.numberOfLines = 0;
-//    m_debugLabel.backgroundColor = [CommonsFunc colorOfLight];
     if ([CommonsFunc isDeviceIpad]) {
         [m_debugLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(header.mas_top).offset(-10);
@@ -177,36 +180,66 @@
 
 - (void)stopBtnTaped :(UIButton *)btn {
     NSLog(@"stopTaped");
-    for (ConnectModel *model in m_selecedModelsArray) {
+//    tmpCell.isChecked = NO;
+    [m_selecedModelsArray enumerateObjectsUsingBlock:^(ConnectModel *model, NSUInteger idx, BOOL *stop) {
         [model.socket disconnect];
-        tmpCell.isChecked = NO;
-        //接下来会传到clientDisconnect方法里，具体操作在那里面进行。
-    }
+    }];
+    
+//    for (ConnectModel *model in m_selecedModelsArray) {
+//        [model.socket disconnect];
+//        tmpCell.isChecked = NO;
+//        //接下来会传到clientDisconnect方法里，具体操作在那里面进行。
+//    }
 }
 
 
 #pragma mark - Notification
+- (void)tryAgain :(NSNotification *)noti {
+    [self.view makeToast:@"指令发送失败，请重新发送" duration:1.2f position:CSToastPositionCenter];
+}
+
 - (void)clientDisconnect :(NSNotification *)noti {
     NSLog(@"clientDisconnect notification");
     NSDictionary *dic = [noti userInfo];
     AsyncSocket *socket = (AsyncSocket *)[dic objectForKey:@"socket"];
     
+//    for (ConnectStatesCell *cell in m_cellsArray) {
+//            cell.isChecked = NO;
+//    }
+    
     //去除选中的socket
-    for (AsyncSocket *S in server.selectedSocketArray) {
+    [server.selectedSocketArray enumerateObjectsUsingBlock:^(AsyncSocket *S, NSUInteger idx, BOOL *stop) {
         if ([socket isEqual:S]) {
             [server.selectedSocketArray removeObject:S];
+//            *stop = YES;
         }
-    }
+    }];
+    
     //设置disconnect连接标志
-    for (ConnectModel *model in m_modelsArray) {
+    [m_modelsArray enumerateObjectsUsingBlock:^(ConnectModel *model, NSUInteger idx, BOOL *stop) {
         if ([model.socket isEqual:socket]) {
-            model.status = @"disconnect";
-            [self.view makeToast:[NSString stringWithFormat:@"失去%@连接", model.hostIp] duration:1.0 position:CSToastPositionCenter];
+            *stop = YES;
+            model.status = @"未连接";
+            model.isCheck = NO;
+            [m_modelsArray removeObject:model];
+            [m_selecedModelsArray removeObject:model];
+            [self.view makeToast:[NSString stringWithFormat:@"失去%@连接", model.hostIp] duration:1.5 position:CSToastPositionCenter];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [m_tableView reloadData];
             });
         }
-    }
+    }];
+    
+//    for (ConnectModel *model in m_modelsArray) {
+//        if ([model.socket isEqual:socket]) {
+//            model.status = @"未连接";
+//            [self.view makeToast:[NSString stringWithFormat:@"失去%@连接", model.hostIp] duration:1.5 position:CSToastPositionCenter];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [m_tableView reloadData];
+//            });
+//        }
+//    }
+    
 }
 
 - (void)connectSuccess:(NSNotification *)noti {
@@ -217,23 +250,21 @@
     NSString *status = [dic objectForKey:@"status"];
     AsyncSocket *sokect = (AsyncSocket *)[dic objectForKey:@"socket"];
     
-    [self.view makeToast:[NSString stringWithFormat:@"连接%@成功", host] duration:1.0 position:CSToastPositionCenter];
+    [self.view makeToast:[NSString stringWithFormat:@"连接%@成功", host] duration:1.5 position:CSToastPositionCenter];
     
     ConnectModel *model = [ConnectModel new];
     model.port = port;
     model.hostIp = host;
     model.status = status;
     model.socket = sokect;
+    model.isCheck = NO;
     
-    for (ConnectModel *tmpModel in m_modelsArray) {
+    [m_modelsArray enumerateObjectsUsingBlock:^(ConnectModel *tmpModel, NSUInteger idx, BOOL *stop) {
         if ([model.hostIp isEqual:tmpModel.hostIp]) {
             [m_modelsArray removeObject:tmpModel];
             [m_modelsArray addObject:model];
-            [m_tableView reloadData];
-            return;
         }
-    }
-    
+    }];
     [m_modelsArray addObject:model];
     dispatch_async(dispatch_get_main_queue(), ^{
         [m_tableView reloadData];
@@ -254,6 +285,7 @@
     
     ConnectModel *model = [m_modelsArray objectAtIndex:indexPath.row];
     [cell configModel:model];
+    [m_cellsArray addObject:cell];
     
     return cell;
 }
@@ -270,30 +302,36 @@
     tmpCell = (ConnectStatesCell *)[tableView cellForRowAtIndexPath:indexPath];
     ConnectModel *model = [m_modelsArray objectAtIndex:indexPath.row];
     
-    if ([model.status isEqualToString:@"disconnect"]) {
-        return;
-    }
+//    if ([model.status isEqualToString:@"未连接"]) {
+//        return;
+//    }
     
-    //不知道这一步有没有用
-    for (ConnectModel *tmpModel in m_selecedModelsArray) {//如果两个model一样，就给替换掉
-        if ([model isEqual:tmpModel]) {
-            [m_selecedModelsArray removeObject:tmpModel];
-            [m_selecedModelsArray addObject:model];
-            [server.selectedSocketArray removeObject:tmpModel.socket];
-            [server.selectedSocketArray addObject:model.socket];
-            [self setStopBtnRed];
-        }
-    }
+//    //不知道这一步有没有用
+//    [m_selecedModelsArray enumerateObjectsUsingBlock:^(ConnectModel *tmpModel, NSUInteger idx, BOOL *stop) {
+//        if ([model isEqual:tmpModel]) {
+//            *stop = YES;
+//            [m_selecedModelsArray removeObject:tmpModel];
+//            [m_selecedModelsArray addObject:model];
+//            [server.selectedSocketArray removeObject:tmpModel.socket];
+//            [server.selectedSocketArray addObject:model.socket];
+//            [self setStopBtnRed];
+//        }  
+//    }];
     
+    NSLog(@"isCkecked before %d",tmpCell.isChecked);
     tmpCell.isChecked = !tmpCell.isChecked;
+    NSLog(@"isCkecked after  %d",tmpCell.isChecked);
     if (tmpCell.isChecked == YES) {
         [m_selecedModelsArray addObject:model];
         [server.selectedSocketArray addObject:model.socket];
         [self setStopBtnRed];
-    }else
+        model.isCheck = YES;
+    }
+    else
     {
         [m_selecedModelsArray removeObject:model];
         [server.selectedSocketArray removeObject:model.socket];
+        model.isCheck = NO;
         if (m_selecedModelsArray.count == 0) {
             [self setStopBtnGray];
         }else
@@ -306,7 +344,7 @@
     UIView *headerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 30)];
     headerview.backgroundColor = [UIColor orangeColor];
     UILabel *iplabel = [UILabel new];
-    iplabel.text = @"client ip";
+    iplabel.text = @"机器人ip";
     [headerview addSubview:iplabel];
     [iplabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(headerview);
@@ -314,14 +352,14 @@
     }];
     
     UILabel *portLable = [UILabel new];
-    [portLable setText:@"port"];
+    [portLable setText:@"端口"];
     [headerview addSubview:portLable];
     [portLable mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(headerview);
     }];
     
     UILabel *status = [UILabel new];
-    status.text = @"status";
+    status.text = @"状态";
     status.textAlignment = NSTextAlignmentCenter;
     [headerview addSubview:status];
     [status mas_makeConstraints:^(MASConstraintMaker *make) {

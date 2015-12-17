@@ -29,7 +29,7 @@
     NSInteger screenHeight = [[UIScreen mainScreen] bounds].size.height;
     
     pickerArray = [NSMutableArray new];
-    for (int i = 1; i <= 60 ;i++) {
+    for (int i = 1; i <= 40 ;i++) {
         NSString *st = [NSString stringWithFormat:@"%d 桌", i];
         [pickerArray addObject:st];
     }

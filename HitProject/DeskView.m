@@ -38,9 +38,11 @@
         
         deskName = [UILabel new];
         [self addSubview:deskName];
+        deskName.textAlignment = NSTextAlignmentCenter;
         [deskName mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(img.mas_bottom).offset(5);
             make.centerX.equalTo(img);
+            make.width.mas_equalTo(CGSizeMake(100, 30));
         }];
         self.userInteractionEnabled = YES;
     }

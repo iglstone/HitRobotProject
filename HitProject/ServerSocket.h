@@ -20,11 +20,12 @@
 @property (nonatomic,retain) NSMutableString *result;
 @property (nonatomic,retain) NSMutableArray *selectedSocketArray;
 @property (nonatomic,retain) NSString *kvoPower;//电量
+@property (nonatomic,retain) NSString *receiveMessage;
 
 + (instancetype) sharedSocket;
 
-- (void)lock;
-- (void)unlock;
+//- (void)lock;
+//- (void)unlock;
 - (void)sendMessage:(NSString *)string;
 
 - (void)startListen;

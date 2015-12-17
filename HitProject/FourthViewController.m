@@ -99,16 +99,61 @@
     
     int deskNum = 1;
     
+//    NSArray *musics = @[@"铃儿响叮当",
+//                        @"生日歌",
+//                        @"熊出没",
+//                        @"恭喜发财",
+//                        @"初雪",
+//                        @"红豆",
+//                        @"滴答",
+//                        @"飘雪",
+//                        @"As long As U Love Me",
+//                        @"Angel",
+//                        @"Whatever will be",
+//                        @"Traveling Light",
+//                        @"End of Way",
+//                        @"The Show",
+//                        @"My Destiny",
+//                        @"Pretty Boy",
+//                        @"Black Black Heart",
+//                        @"Only Love",
+//                        @"My Love",
+//                        @"See You Again"
+//                        ];
+    
+
+    NSArray *musics = @[@"铃儿响叮当",
+                        @"生日歌",
+                        @"熊出没",
+                        @"恭喜发财",
+                        @"My Soul",
+                        @"The Truth That U Leave",
+                        @"Not going anyway",
+                        @"Annie's Wonderland",
+                        @"Kiss The Rain",
+                        @"卡农",
+                        @"红豆",
+                        @"滴答",
+                        @"飘雪",
+                        @"Angel",
+                        @"Whatever will be",
+                        @"The Show",
+                        @"Black Black Heart",
+                        @"Only Love",
+                        @"Right Now Right Here",
+                        @"See You Again"
+                        ];
+    
     NSInteger tt = 0;
-    for (int i = 0; i <= 7; i++) {
-        for (int j = 0; j < 7; j++) {
-            if (deskNum >= 16) {
+    for (int i = 0; i <= 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            if (deskNum >= 21) {
                 tt = 1;
                 break;
             }
             DeskView *deskview = [DeskView new];
             [deskview.img setImage:[UIImage imageNamed:@"music_unplay.png"]];
-            deskview.deskName.text = [NSString stringWithFormat:@"歌曲%d",deskNum];
+            deskview.deskName.text = musics[deskNum-1];//[NSString stringWithFormat:@"歌曲%d",deskNum];
             deskview.deskName.font = [UIFont systemFontOfSize:13];
             deskNum ++;
             deskview.tag = deskNum;
@@ -169,6 +214,7 @@
     NSLog(@"voice up");
     if (voice <= 90) {
         voice += 10;
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_VOICECHANGE object:nil userInfo:@{@"voice":@(voice)}];
         self.voiceLabel.text = [NSString stringWithFormat:@"音量设置：%ld",(long)voice];
     }
     [control voiceUp];
@@ -178,6 +224,7 @@
     NSLog(@"voice down");
     if (voice >= 10) {
         voice -= 10;
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_VOICECHANGE object:nil userInfo:@{@"voice":@(voice)}];
         self.voiceLabel.text = [NSString stringWithFormat:@"音量设置：%ld",(long)voice];
     }
     [control voiceDown];
@@ -191,7 +238,7 @@
 
 
 - (void)play:(UIButton *)btn {
-    if (self.deskNum <= 15) {
+    if (self.deskNum <= 20) {
         [control singSong:(self.deskNum)];
     }else
         [control singSong:5];
@@ -234,7 +281,7 @@
     self.deskNum = deskview.tag - 1;
     NSLog(@"song num ;%ld",(long)self.deskNum);
     if (![CommonsFunc isDeviceIpad]) {
-        if (self.deskNum <= 15) {
+        if (self.deskNum <= 20) {
             [control singSong:(self.deskNum)];
         }else
             [control singSong:5];

@@ -14,6 +14,7 @@
 @property (nonatomic) NSString *hostIp;
 @property (nonatomic) NSString *status;
 @property (nonatomic) AsyncSocket *socket;
+@property (nonatomic) BOOL isCheck;
 
 @end
 

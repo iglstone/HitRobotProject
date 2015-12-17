@@ -7,9 +7,18 @@
 //
 
 #import "ServerSocket.h"
+@interface ServerSocket (){
+    NSString *sendedMessage;
+//    NSString *receiveMessage;
+//    NSTimer *timer;
+    NSInteger times;
+    AsyncSocket *tmpSocket;
+}
+@end
 
 @implementation ServerSocket
 @synthesize result;
+@synthesize receiveMessage;
 
 static ServerSocket* _instance = nil;
 #pragma mark - Lifecycle
@@ -34,8 +43,11 @@ static ServerSocket* _instance = nil;
         connectedSockets = [[NSMutableArray alloc] init];
         self.selectedSocketArray = [[NSMutableArray alloc] init];
         [listenSocket setRunLoopModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
-        
+        receiveMessage = nil;
         isRunning = NO;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toBackGround:) name:NOTICE_BACKGROUND object:nil];
+        
+        times = 0;
     }
     return self;
 }
@@ -65,27 +77,72 @@ static ServerSocket* _instance = nil;
 {
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
     [dele.main setDebugLabelText:string mode:0];
-    
+    NSLog(@"selected sockets array num: %lu",(unsigned long)self.selectedSocketArray.count);
     for (AsyncSocket * s in self.selectedSocketArray)
     {
+        sendedMessage = string;
+        receiveMessage = nil;
+        
+//        for (<#initialization#>; <#condition#>; <#increment#>) {
+//            //
+//        }
+        
+        NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
+//        timer = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(compareMessage) userInfo:nil repeats:YES];
+        
         if (s.isConnected) {
-            NSLog(@"s is connected");
             [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
+            [timer fire];
         }else
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
     }
+}
+
+- (void)sendMessageAgain{
+    for (AsyncSocket * s in self.selectedSocketArray)
+    {
+        if (receiveMessage) {
+            NSLog(@"开玩笑吗？有数据怎么还来玩 receive :%@",receiveMessage);
+            return;
+        }
+        [s writeData:[ServerSocket stringToData:sendedMessage] withTimeout:-1 tag:0];
+        NSLog(@"send message again");
+    }
+}
+
+- (void)compareMessage :(NSTimer  *) timer{
+    AsyncSocket *S = (AsyncSocket *)[[timer userInfo] objectForKey:@"sock"];
+    if (!receiveMessage) {//为空，没有读取到
+        NSLog(@"has not receive");
+        [self sendMessageAgain];
+        times ++;
+        if (times == 20) {
+            NSLog(@"20 times return");
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_TRYAGIAN object:nil];
+            times = 0;
+            [timer invalidate];
+            timer = nil;
+            return;
+        }
+        return;
+    }
     
-//备份
-//    for (AsyncSocket * s in connectedSockets)
-//    {
-//        if (s.isConnected) {
-//            NSLog(@"s is connected");
-//            [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
-//        }else
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
-//        
-////        [s writeData:[ServerSocket stringToData:string] withTimeout:1.0 tag:0];
-//    }
+    if ([receiveMessage isEqualToString:@"o"] && [S isEqual:tmpSocket]) {
+        times = 0;
+        NSLog(@"socket the same ");
+        [timer invalidate];
+        timer = nil;
+        return;
+    }
+    
+    NSLog(@"receive others :%@",S);
+    
+}
+
+- (void)toBackGround:(NSNotification *)noti {
+    NSLog(@"toBackGround noti");
+    [self stopListen];
+    
 }
 
 - (void)startListen
@@ -125,20 +182,21 @@ static ServerSocket* _instance = nil;
     return [string dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-- (void)lock
-{
-    for (AsyncSocket * s in connectedSockets)
-    {
-        [s writeData:[ServerSocket stringToData:@"9999"] withTimeout:-1 tag:0];
-    }
-}
-- (void)unlock
-{
-    for (AsyncSocket * s in connectedSockets)
-    {
-        [s writeData:[ServerSocket stringToData:@"10000"] withTimeout:-1 tag:0];
-    }
-}
+//- (void)lock
+//{
+//    for (AsyncSocket * s in connectedSockets)
+//    {
+//        [s writeData:[ServerSocket stringToData:@"9999"] withTimeout:-1 tag:0];
+//    }
+//}
+//
+//- (void)unlock
+//{
+//    for (AsyncSocket * s in connectedSockets)
+//    {
+//        [s writeData:[ServerSocket stringToData:@"10000"] withTimeout:-1 tag:0];
+//    }
+//}
 
 #pragma mark - AsyncSocketDelegate
 /**
@@ -167,7 +225,7 @@ static ServerSocket* _instance = nil;
 {
     NSLog(@"Server onSocketDidDisconnect");
     [connectedSockets removeObject:sock];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
 }
 
 /**
@@ -219,13 +277,14 @@ static ServerSocket* _instance = nil;
     NSLog(@"主机 %@ 已连接上服务器",host);
     NSLog(@"端口:%hu",port);
     
-    [sock writeData:[ServerSocket stringToData:@"connect success!"] withTimeout:-1 tag:0];//返回
+    [sock writeData:[ServerSocket stringToData:@"连接成功 !"] withTimeout:-1 tag:0];//返回
     [sock readDataWithTimeout:-1 tag:0];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONNECTSUCCESS object:nil userInfo:@{@"port":@(port),
                                                                                                            @"host":host,
-                                                                                                           @"status":@"connected",
+                                                                                                           @"status":@"已连接",
                                                                                                            @"socket":sock}];
+    
 }
 
 /**
@@ -242,6 +301,8 @@ static ServerSocket* _instance = nil;
 - (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
     NSString *msg = [ServerSocket dataToString:data];
+    NSString *msg2 = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
     NSLog(@"Server didReadData = %@",[ServerSocket dataToString:data]);
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
     
@@ -251,29 +312,15 @@ static ServerSocket* _instance = nil;
     if ([msg hasPrefix:@"v"] && [msg hasSuffix:@"e"]) {
         NSString *power = [msg substringWithRange:NSMakeRange(1, msg.length-2)];
         self.kvoPower = power;
+    }else{
+        receiveMessage = msg2;
+        tmpSocket = sock;
     }
     
 //    [result appendString:[ServerSocket dataToString:data]];
 //    [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(update) userInfo:nil repeats:YES];
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(update) userInfo:nil repeats:YES];
-    
-    
     [result appendString:[NSString stringWithFormat:@"%@:%@\n",[sock connectedHost],[ServerSocket dataToString:data]]];
-    if ([msg isEqualToString:@"中国"])
-    {
-        
-        
-    }
-    else if([msg isEqualToString:@"日本"])
-    {
-        
-        
-    }
-    else if([msg isEqualToString:@"英国"])
-    {
-        
-        
-    }
+
 //    [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_RESULT_NOTIFICATION object:nil];
     [sock readDataWithTimeout:-1 tag:0];
 }

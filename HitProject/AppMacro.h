@@ -31,6 +31,20 @@
 //选择桌数
 #define NOTICE_PICKDESKNUM                  @"NOTICE_PICKDESKNUM"
 
+//提示再发一次
+#define NOTICE_TRYAGIAN                     @"NOTICE_TRYAGIAN"
+
+//声音变化
+#define NOTICE_VOICECHANGE                  @"NOTICE_VOICECHANGE"
+
+//进入前台
+#define NOTICE_FORGRAOUND                   @"NOTICE_FORGRAOUND"
+
+//进入后台
+#define NOTICE_BACKGROUND                   @"NOTICE_BACKGROUND"
+
+
+
 
 
 #define NOTICE_OPEN_LOCAL_VIEW              @"NOTICE_OPEN_LOCAL_VIEW"

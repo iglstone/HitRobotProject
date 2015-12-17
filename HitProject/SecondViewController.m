@@ -13,8 +13,9 @@
 #import "RadioButton.h"
 #import "MainViewController.h"
 
-@interface SecondViewController ()<JSAnalogueStickDelegate>{
-    
+@interface SecondViewController ()<JSAnalogueStickDelegate> {
+    UILabel *voiceLable;
+    UILabel *speedLabel;
 }
 
 @property (nonatomic) UILabel *analogueLabel;
@@ -35,6 +36,14 @@
 @synthesize control;
 @synthesize radioContainer;
 @synthesize powerLabel;
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(voiceChange:) name:NOTICE_VOICECHANGE object:nil];
+    }
+    return self;
+}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -72,7 +81,6 @@
             make.size.mas_equalTo(CGSizeMake(120, 80));
         }];
     }
-    
     
     self.analogueStick = [[JSAnalogueStick alloc] initWithFrame:CGRectMake(100, 100, 120, 120)];
     [self.view addSubview:self.analogueStick];
@@ -147,12 +155,30 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
     if ([keyPath isEqualToString:@"kvoPower"]) {
         NSString *string = [change objectForKey:@"new"];
-        powerLabel.text = [NSString stringWithFormat:@"剩余电量： %@v",string];
+        float Powerfloat = [string floatValue];
+        float ele=(float) ((Powerfloat-22)/7.4)*100;
+        powerLabel.text = [NSString stringWithFormat:@"剩余电量： %.1f%%",ele];
+        if (ele < 0) {
+            powerLabel.text = [NSString stringWithFormat:@"剩余电量： 20%%"];
+            powerLabel.textColor = [UIColor darkGrayColor];
+        }else {
+            if (ele <= 15) {
+                powerLabel.textColor = [UIColor redColor];
+            }else {
+                powerLabel.textColor = [UIColor darkGrayColor];
+            }
+        }
     }
+}
+
+- (void)voiceChange :(NSNotification *)noti {
+    NSString *voice = [[noti userInfo] objectForKey:@"voice"];
+    voiceLable.text = [NSString stringWithFormat:@"当前音量：%@",voice];  //@"当前音量： 50";
 }
 
 - (void)dealloc{
     [server removeObserver:self forKeyPath:@"kvoPower"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -186,7 +212,7 @@
     }];
     
     powerLabel = [UILabel new];
-    powerLabel.text = @"剩余电量： 80%";
+    powerLabel.text = @"剩余电量： 50%";
     powerLabel.textColor = [UIColor darkGrayColor];
     if (![CommonsFunc isDeviceIpad]) {
         powerLabel.font = [UIFont systemFontOfSize:14];
@@ -197,8 +223,8 @@
         make.top.equalTo(questionText.mas_bottom).offset(20);
     }];
     
-    UILabel *speedLabel = [UILabel new];
-    speedLabel.text = @"当前速度： 0.7 m/s";
+    speedLabel = [UILabel new];
+    speedLabel.text = @"当前速度： 0.3 m/s";
     if (![CommonsFunc isDeviceIpad]) {
         speedLabel.font = [UIFont systemFontOfSize:14];
     }
@@ -209,8 +235,8 @@
         make.top.equalTo(powerLabel.mas_bottom).offset(20);
     }];
     
-    UILabel *voiceLable = [UILabel new];
-    voiceLable.text = @"当前音量： 70";
+    voiceLable = [UILabel new];
+    voiceLable.text = @"当前音量： 50";
     if (![CommonsFunc isDeviceIpad]) {
         voiceLable.font = [UIFont systemFontOfSize:14];
     }
@@ -293,6 +319,7 @@
 - (void)sliderValueChanged :(CHYSlider *)slider {
     NSLog(@"change %f",slider.value);
     self.velocityLabel.text = [NSString stringWithFormat:@"速度设置：%.0f",slider.value];
+    speedLabel.text = [NSString stringWithFormat:@"当前速度： 0.%.0f m/s",slider.value];//当前速度： 0.3 m/s
     if (slider.value == 0) {
         [control stopMove];
         [self updateAnalogueLabel:@"停止"];
@@ -345,29 +372,29 @@
         
         switch (direction) {
             case 1:
-                NSLog(@"向上");
-                turn = @"向上";
+                NSLog(@"前进");
+                turn = @"前进";
                 [control forward];
                 direction = 0;
                 break;
             
             case 2:
-                NSLog(@"向下");
-                turn = @"向下";
+                NSLog(@"后退");
+                turn = @"后退";
                 [control backward];
                 direction = 0;
                 break;
             
             case 3:
-                NSLog(@"向右");
-                turn = @"向右";
+                NSLog(@"右转");
+                turn = @"右转";
                 [control turnRight];
                 direction = 0;
                 break;
                 
             case 4:
-                NSLog(@"向左");
-                turn = @"向左";
+                NSLog(@"左转");
+                turn = @"左转";
                 [control turnLeft];
                 direction = 0;
                 break;

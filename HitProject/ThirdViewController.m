@@ -73,7 +73,7 @@
     [self.view addSubview:rawView];
     [rawView mas_makeConstraints:^(MASConstraintMaker *make) {
         if ([CommonsFunc isDeviceIpad]) {
-            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 200, 400));
+            make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 185, 400));
         }else
             make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, screenWidth/4));
     }];
@@ -153,7 +153,7 @@
     NSInteger deskWidth,deskHeight;
     NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width;
     if ([CommonsFunc isDeviceIpad]) {
-        deskWidth = (self.view.bounds.size.width - 400 -20)/7;
+        deskWidth = (self.view.bounds.size.width - 400 -20)/6;
         deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
     }else {
         deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
@@ -163,16 +163,16 @@
     NSInteger contentWidth ;
     if ([CommonsFunc isDeviceIpad]) {
         contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
-        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/7) +1) + 10);
+        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/6) +1) + 10);
     }else {
         contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
-        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/7) +1) + 10);
+        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/6) +1) + 10);
     }
     
     int deskNum = 1;
     NSInteger tt = 0;
-    for (int i = 0; i <= 9; i++) {
-        for (int j = 0; j < 7; j++) {
+    for (int i = 0; i <= 10; i++) {
+        for (int j = 0; j < 6; j++) {
             if (deskNum > self.TotaldeskNum) {
                 tt = 1;
                 break;
@@ -240,7 +240,6 @@
     }
 }
 
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -259,10 +258,10 @@
             [self setUnselectedDeskImage];
             tmpDeskView.selected = YES;
             [tmpDeskView.img setImage:[UIImage imageNamed:@"desk_red.png"]];
-            if (self.deskNum <= 20) {
+            if (self.deskNum <= 30) {
                 [control deskNumber:self.deskNum];
             }else {
-                NSLog(@"目前最多支持20桌");
+                NSLog(@"目前最多支持30桌");
             }
         }
     }
