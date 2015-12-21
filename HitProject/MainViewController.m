@@ -20,7 +20,6 @@
 }
 
 @property (nonatomic) UITableView *m_tableView;
-@property (nonatomic) NSMutableArray *m_modelsArray;
 //@property (nonatomic) NSMutableArray *m_selecedModelsArray;
 @property (nonatomic) UIButton *stopBtn;
 @property (nonatomic) NSString *tmpString;
@@ -115,6 +114,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectSuccess:) name:NOTICE_CONNECTSUCCESS object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientDisconnect:) name:NOTICE_DISCONNECT object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryAgain:) name:NOTICE_TRYAGIAN object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeName:) name:NOTICE_CHANGEROBOTNAME object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noRobotToast:) name:NOTICE_NOROBOT object:nil];
     
     stopBtn = [UIButton new];
     [views addSubview:stopBtn];
@@ -163,27 +164,35 @@
     [stopBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
 }
 
+- (void)noRobotToast :(NSNotification *)noti {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请选择机器人" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+    [alert show];
+}
+
 //mode :0 send
 //mode :1 recv
 - (void)setDebugLabelText:(NSString *)string mode:(int)mode{
     m_debugLabel.text = nil;
     NSString *str;
     if ( !mode) {
-        str = [NSString stringWithFormat:@"send: %@",string];
-        m_debugLabel.text = [NSString stringWithFormat:@" %@ \n %@",tmpString,str];
+        str = [NSString stringWithFormat:@"发送: %@",string];
+        m_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
     }else{
-        str = [NSString stringWithFormat:@"recv: %@",string];
-        m_debugLabel.text = [NSString stringWithFormat:@"%@ \n %@",tmpString,str];
+        str = [NSString stringWithFormat:@"接收: %@",string];
+        m_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
     }
     tmpString = str;
 }
 
 - (void)stopBtnTaped :(UIButton *)btn {
     NSLog(@"stopTaped");
-//    tmpCell.isChecked = NO;
-    [m_selecedModelsArray enumerateObjectsUsingBlock:^(ConnectModel *model, NSUInteger idx, BOOL *stop) {
+//    [m_selecedModelsArray enumerateObjectsUsingBlock:^(ConnectModel *model, NSUInteger idx, BOOL *stop) {
+//        [model.socket disconnect];
+//        NSLog(@"socket disconect");
+//    }];
+    for (ConnectModel *model in m_selecedModelsArray) {
         [model.socket disconnect];
-    }];
+    }
     
 //    for (ConnectModel *model in m_selecedModelsArray) {
 //        [model.socket disconnect];
@@ -202,10 +211,6 @@
     NSLog(@"clientDisconnect notification");
     NSDictionary *dic = [noti userInfo];
     AsyncSocket *socket = (AsyncSocket *)[dic objectForKey:@"socket"];
-    
-//    for (ConnectStatesCell *cell in m_cellsArray) {
-//            cell.isChecked = NO;
-//    }
     
     //去除选中的socket
     [server.selectedSocketArray enumerateObjectsUsingBlock:^(AsyncSocket *S, NSUInteger idx, BOOL *stop) {
@@ -242,6 +247,19 @@
     
 }
 
+- (void)changeName :(NSNotification *)noti {
+    NSString *ipaddr = (NSString *) [[noti userInfo] objectForKey:@"ipAddr"];
+    [m_modelsArray enumerateObjectsUsingBlock:^(ConnectModel *tmpModel, NSUInteger idx, BOOL *stop) {
+        if ([ipaddr isEqualToString:tmpModel.hostIp]) {
+            NSString *name = [ServerSocket getRobotNameByIp:ipaddr];
+            tmpModel.robotName = name;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [m_tableView reloadData];
+        });
+    }];
+}
+
 - (void)connectSuccess:(NSNotification *)noti {
     NSLog(@"connectSuccess notification");
     NSDictionary *dic = [noti userInfo];
@@ -258,11 +276,12 @@
     model.status = status;
     model.socket = sokect;
     model.isCheck = NO;
+    model.robotName = [ServerSocket getRobotNameByIp:host];
     
     [m_modelsArray enumerateObjectsUsingBlock:^(ConnectModel *tmpModel, NSUInteger idx, BOOL *stop) {
         if ([model.hostIp isEqual:tmpModel.hostIp]) {
             [m_modelsArray removeObject:tmpModel];
-            [m_modelsArray addObject:model];
+//            [m_modelsArray addObject:model];
         }
     }];
     [m_modelsArray addObject:model];

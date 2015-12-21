@@ -12,10 +12,19 @@
 #import "CHYSlider.h"
 #import "RadioButton.h"
 #import "MainViewController.h"
+#import "ConnectStatesCell.h"
 
 @interface SecondViewController ()<JSAnalogueStickDelegate> {
-    UILabel *voiceLable;
-    UILabel *speedLabel;
+    UILabel *redVoiceLable;
+    UILabel *redSpeedLabel;
+    
+    UILabel *bluePowerLabel;
+    UILabel *blueVoiceLable;
+    UILabel *blueSpeedLabel;
+    
+    UIView *redMessageContainer;
+    NSMutableArray *eleMutArray;
+    int times;
 }
 
 @property (nonatomic) UILabel *analogueLabel;
@@ -26,7 +35,7 @@
 @property (nonatomic) CHYSlider *steppedSlider;
 @property (nonatomic) UIView *radioContainer;
 @property (nonatomic) int direction;
-@property (nonatomic) UILabel *powerLabel;
+@property (nonatomic) UILabel *redPowerLabel;
 
 @end
 
@@ -35,12 +44,14 @@
 @synthesize server;
 @synthesize control;
 @synthesize radioContainer;
-@synthesize powerLabel;
+@synthesize redPowerLabel;
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(voiceChange:) name:NOTICE_VOICECHANGE object:nil];
+        eleMutArray = [[NSMutableArray alloc] initWithCapacity:10];
+        times = 0;
     }
     return self;
 }
@@ -62,6 +73,7 @@
     control = [HitControl sharedControl];
     direction = 0;
     [server addObserver:self forKeyPath:@"kvoPower" options:NSKeyValueObservingOptionNew context:nil];
+    [server addObserver:self forKeyPath:@"bluekvoPower" options:NSKeyValueObservingOptionNew context:nil];
     
     self.analogueLabel = [UILabel new];
     self.analogueLabel.text = @"0 , 0";
@@ -130,7 +142,8 @@
     [self addRadioBtn];
     
     //添加信息显示模式
-    [self addMessageContainner];
+    [self addRedRobotMessageContainner];
+    [self addBlueRobotMessageContainer];
     
     UIButton *stopBtn = [UIButton new];
     [stopBtn setTitle:@"STOP" forState:UIControlStateNormal];
@@ -146,34 +159,97 @@
             make.right.equalTo(self.view).offset(-20);
             make.bottom.equalTo(self.view).offset(-40-40-30);
         }
-        
     }];
     [stopBtn addTarget:self action:@selector(stopRun:) forControlEvents:UIControlEventTouchUpInside];
     
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
-    if ([keyPath isEqualToString:@"kvoPower"]) {
-        NSString *string = [change objectForKey:@"new"];
-        float Powerfloat = [string floatValue];
-        float ele=(float) ((Powerfloat-22)/7.4)*100;
-        powerLabel.text = [NSString stringWithFormat:@"剩余电量： %.1f%%",ele];
-        if (ele < 0) {
-            powerLabel.text = [NSString stringWithFormat:@"剩余电量： 20%%"];
-            powerLabel.textColor = [UIColor darkGrayColor];
+//平均十次显示电量
+- (void)lvbo:(float)ele robot:(NSString *)robot{
+    if (times < 10) {
+        if (times == 1) {//第二次显示电量
+            [self disPlayPower:robot power:ele];
+        }
+        times ++;
+        [eleMutArray addObject:@(ele)];
+        
+    } else {
+        eleMutArray = nil;
+        times = 0;
+        float sums = 0;
+        
+        for (id obj in eleMutArray) {
+            float tpm =[obj floatValue];
+            sums += tpm;
+        }
+        float average = sums/times;
+        [self disPlayPower:robot power:average];
+    }
+}
+
+//显示电量
+- (void)disPlayPower :(NSString *)robot  power:(float )average {
+    if ([robot isEqualToString:@"red"]) {
+        redPowerLabel.text = [NSString stringWithFormat:@"剩余电量： %.1f%%",average];
+        if (average < 0) {
+            redPowerLabel.text = [NSString stringWithFormat:@"剩余电量： 20%%"];
+            redPowerLabel.textColor = [UIColor darkGrayColor];
         }else {
-            if (ele <= 15) {
-                powerLabel.textColor = [UIColor redColor];
+            if (average <= 15) {
+                redPowerLabel.textColor = [UIColor redColor];
             }else {
-                powerLabel.textColor = [UIColor darkGrayColor];
+                redPowerLabel.textColor = [UIColor darkGrayColor];
+            }
+        }
+        
+    } else {
+        
+        bluePowerLabel.text = [NSString stringWithFormat:@"剩余电量： %.1f%%",average];
+        if (average < 0) {
+            bluePowerLabel.text = [NSString stringWithFormat:@"剩余电量： 20%%"];
+            bluePowerLabel.textColor = [UIColor darkGrayColor];
+        } else {
+            if (average <= 15) {
+                bluePowerLabel.textColor = [UIColor redColor];
+            }else {
+                bluePowerLabel.textColor = [UIColor darkGrayColor];
             }
         }
     }
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
+    //bluekvoPower
+    if ([keyPath isEqualToString:@"kvoPower"]) {
+        NSString *string = [change objectForKey:@"new"];
+        float Powerfloat = [string floatValue];
+        float ele=(float) ((Powerfloat-22)/7.4)*100;
+        [self lvbo:ele robot:@"red"];
+    }
+    
+    if ([keyPath isEqualToString:@"bluekvoPower"]) {
+        NSString *string = [change objectForKey:@"new"];
+        float Powerfloat = [string floatValue];
+        float ele=(float) ((Powerfloat-22)/7.4)*100;
+        [self lvbo:ele robot:@"blue"];
+    }
+}
+
 - (void)voiceChange :(NSNotification *)noti {
     NSString *voice = [[noti userInfo] objectForKey:@"voice"];
-    voiceLable.text = [NSString stringWithFormat:@"当前音量：%@",voice];  //@"当前音量： 50";
+    MainViewController *main =(MainViewController *) self.tabBarController;
+    NSArray *arr = main.m_modelsArray;
+    if (arr.count<=0) {
+        return;
+    }
+    for (ConnectModel *model in arr) {
+        if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
+            redVoiceLable.text = [NSString stringWithFormat:@"当前音量：%@",voice];  //@"当前音量： 50";
+        }else {
+            blueVoiceLable.text = [NSString stringWithFormat:@"当前音量：%@",voice];  //@"当前音量： 50";
+        }
+    }
+//    redVoiceLable.text = [NSString stringWithFormat:@"当前音量：%@",voice];  //@"当前音量： 50";
 }
 
 - (void)dealloc{
@@ -182,7 +258,7 @@
 }
 
 
-- (void)addMessageContainner {
+- (void)addBlueRobotMessageContainer {
     UIView *messageContainer = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 300, 400)];
     messageContainer.backgroundColor = [CommonsFunc colorOfLight];
     messageContainer.layer.cornerRadius = 4;
@@ -190,18 +266,14 @@
     messageContainer.layer.borderWidth = 1.0;
     [self.view addSubview:messageContainer];
     [messageContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(radioContainer.mas_bottom).offset(20);
-        make.left.equalTo(radioContainer);
-        make.width.equalTo(radioContainer);
-        if (![CommonsFunc isDeviceIpad]) {
-            make.height.mas_equalTo(@150);
-        }else
-            make.height.mas_equalTo(@200);
+        make.top.equalTo(redMessageContainer.mas_bottom).offset(20);
+        make.left.equalTo(redMessageContainer);
+        make.size.equalTo(redMessageContainer);
     }];
     
     UILabel *questionText = [[UILabel alloc] initWithFrame:CGRectMake(0,0,280,20)];
     questionText.backgroundColor = [UIColor clearColor];
-    questionText.text = @"信息显示：";
+    questionText.text = @"机器人小蓝：";
     if (![CommonsFunc isDeviceIpad]) {
         questionText.font = [UIFont systemFontOfSize:15];
     }
@@ -211,40 +283,111 @@
         make.left.equalTo(messageContainer);
     }];
     
-    powerLabel = [UILabel new];
-    powerLabel.text = @"剩余电量： 50%";
-    powerLabel.textColor = [UIColor darkGrayColor];
+    bluePowerLabel = [UILabel new];
+    bluePowerLabel.text = @"剩余电量： 50%";
+    bluePowerLabel.textColor = [UIColor darkGrayColor];
     if (![CommonsFunc isDeviceIpad]) {
-        powerLabel.font = [UIFont systemFontOfSize:14];
+        bluePowerLabel.font = [UIFont systemFontOfSize:14];
     }
-    [self.view addSubview:powerLabel];
-    [powerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:bluePowerLabel];
+    [bluePowerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(questionText).offset(20);
-        make.top.equalTo(questionText.mas_bottom).offset(20);
+//        make.top.equalTo(questionText.mas_bottom).offset(20);//后期电量不显示
+        make.top.equalTo(questionText.mas_bottom).offset(0);
+    }];
+    bluePowerLabel.hidden = YES;//后期电量不显示
+    
+    blueSpeedLabel = [UILabel new];
+    blueSpeedLabel.text = @"当前速度： 0.3 m/s";
+    if (![CommonsFunc isDeviceIpad]) {
+        blueSpeedLabel.font = [UIFont systemFontOfSize:14];
+    }
+    blueSpeedLabel.textColor = [UIColor darkGrayColor];
+    [self.view addSubview:blueSpeedLabel];
+    [blueSpeedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(bluePowerLabel);
+        make.top.equalTo(bluePowerLabel.mas_bottom).offset(20);
     }];
     
-    speedLabel = [UILabel new];
-    speedLabel.text = @"当前速度： 0.3 m/s";
+    blueVoiceLable = [UILabel new];
+    blueVoiceLable.text = @"当前音量： 50";
     if (![CommonsFunc isDeviceIpad]) {
-        speedLabel.font = [UIFont systemFontOfSize:14];
+        blueVoiceLable.font = [UIFont systemFontOfSize:14];
     }
-    speedLabel.textColor = [UIColor darkGrayColor];
-    [self.view addSubview:speedLabel];
-    [speedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(powerLabel);
-        make.top.equalTo(powerLabel.mas_bottom).offset(20);
+    blueVoiceLable.textColor = [UIColor darkGrayColor];
+    [self.view addSubview:blueVoiceLable];
+    [blueVoiceLable mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(blueSpeedLabel);
+        make.top.equalTo(blueSpeedLabel.mas_bottom).offset(20);
+    }];
+}
+
+
+- (void)addRedRobotMessageContainner {
+    redMessageContainer = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 300, 400)];
+    redMessageContainer.backgroundColor = [CommonsFunc colorOfLight];
+    redMessageContainer.layer.cornerRadius = 4;
+    redMessageContainer.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    redMessageContainer.layer.borderWidth = 1.0;
+    [self.view addSubview:redMessageContainer];
+    [redMessageContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(radioContainer.mas_bottom).offset(20);
+        make.left.equalTo(radioContainer);
+        make.width.equalTo(radioContainer);
+        if (![CommonsFunc isDeviceIpad]) {
+            make.height.mas_equalTo(@150);
+        }else
+            make.height.mas_equalTo(@180);
     }];
     
-    voiceLable = [UILabel new];
-    voiceLable.text = @"当前音量： 50";
+    UILabel *questionText = [[UILabel alloc] initWithFrame:CGRectMake(0,0,280,20)];
+    questionText.backgroundColor = [UIColor clearColor];
+    questionText.text = @"机器人小红：";
     if (![CommonsFunc isDeviceIpad]) {
-        voiceLable.font = [UIFont systemFontOfSize:14];
+        questionText.font = [UIFont systemFontOfSize:15];
     }
-    voiceLable.textColor = [UIColor darkGrayColor];
-    [self.view addSubview:voiceLable];
-    [voiceLable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(speedLabel);
-        make.top.equalTo(speedLabel.mas_bottom).offset(20);
+    [redMessageContainer addSubview:questionText];
+    [questionText mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(redMessageContainer);
+        make.left.equalTo(redMessageContainer);
+    }];
+    
+    redPowerLabel = [UILabel new];
+    redPowerLabel.text = @"剩余电量： 50%";
+    redPowerLabel.textColor = [UIColor darkGrayColor];
+    if (![CommonsFunc isDeviceIpad]) {
+        redPowerLabel.font = [UIFont systemFontOfSize:14];
+    }
+    [self.view addSubview:redPowerLabel];
+    [redPowerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(questionText).offset(20);
+//        make.top.equalTo(questionText.mas_bottom).offset(20);//后期电量不显示
+        make.top.equalTo(questionText.mas_bottom).offset(0);
+    }];
+    redPowerLabel.hidden = YES;//后期电量不显示
+    
+    redSpeedLabel = [UILabel new];
+    redSpeedLabel.text = @"当前速度： 0.3 m/s";
+    if (![CommonsFunc isDeviceIpad]) {
+        redSpeedLabel.font = [UIFont systemFontOfSize:14];
+    }
+    redSpeedLabel.textColor = [UIColor darkGrayColor];
+    [self.view addSubview:redSpeedLabel];
+    [redSpeedLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(redPowerLabel);
+        make.top.equalTo(redPowerLabel.mas_bottom).offset(20);
+    }];
+    
+    redVoiceLable = [UILabel new];
+    redVoiceLable.text = @"当前音量： 50";
+    if (![CommonsFunc isDeviceIpad]) {
+        redVoiceLable.font = [UIFont systemFontOfSize:14];
+    }
+    redVoiceLable.textColor = [UIColor darkGrayColor];
+    [self.view addSubview:redVoiceLable];
+    [redVoiceLable mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(redSpeedLabel);
+        make.top.equalTo(redSpeedLabel.mas_bottom).offset(20);
     }];
 }
 
@@ -319,7 +462,21 @@
 - (void)sliderValueChanged :(CHYSlider *)slider {
     NSLog(@"change %f",slider.value);
     self.velocityLabel.text = [NSString stringWithFormat:@"速度设置：%.0f",slider.value];
-    speedLabel.text = [NSString stringWithFormat:@"当前速度： 0.%.0f m/s",slider.value];//当前速度： 0.3 m/s
+    
+    MainViewController *main =(MainViewController *) self.tabBarController;
+    NSArray *arr = main.m_selecedModelsArray;
+    if (arr.count<=0) {
+        return;
+    }
+    for (ConnectModel *model in arr) {
+        if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
+            redSpeedLabel.text = [NSString stringWithFormat:@"当前速度： 0.%.0f m/s",slider.value];//当前速度： 0.3 m/s
+        }else {
+            blueSpeedLabel.text = [NSString stringWithFormat:@"当前速度： 0.%.0f m/s",slider.value];//当前速度： 0.3 m/s
+        }
+    }
+
+//    redSpeedLabel.text = [NSString stringWithFormat:@"当前速度： 0.%.0f m/s",slider.value];//当前速度： 0.3 m/s
     if (slider.value == 0) {
         [control stopMove];
         [self updateAnalogueLabel:@"停止"];

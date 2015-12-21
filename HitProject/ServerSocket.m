@@ -7,12 +7,15 @@
 //
 
 #import "ServerSocket.h"
+#import "SocketMessageModel.h"
+
 @interface ServerSocket (){
     NSString *sendedMessage;
 //    NSString *receiveMessage;
 //    NSTimer *timer;
     NSInteger times;
     AsyncSocket *tmpSocket;
+    NSMutableArray *socketMessageModlesArray;
 }
 @end
 
@@ -46,7 +49,7 @@ static ServerSocket* _instance = nil;
         receiveMessage = nil;
         isRunning = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toBackGround:) name:NOTICE_BACKGROUND object:nil];
-        
+        socketMessageModlesArray = [[NSMutableArray alloc] init];
         times = 0;
     }
     return self;
@@ -73,22 +76,21 @@ static ServerSocket* _instance = nil;
 }
 
 #pragma mark - Private Methods
-- (void)sendMessage :(NSString *)string
+- (void)sendMessage :(NSString *)string debugstring:(NSString *)debugs
 {
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
-    [dele.main setDebugLabelText:string mode:0];
     NSLog(@"selected sockets array num: %lu",(unsigned long)self.selectedSocketArray.count);
+    if (self.selectedSocketArray.count == 0) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_NOROBOT object:nil];//通知到主界面去提示没有连接
+        return;
+    }
+    [dele.main setDebugLabelText:debugs mode:0];
     for (AsyncSocket * s in self.selectedSocketArray)
     {
         sendedMessage = string;
         receiveMessage = nil;
         
-//        for (<#initialization#>; <#condition#>; <#increment#>) {
-//            //
-//        }
-        
-        NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
-//        timer = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(compareMessage) userInfo:nil repeats:YES];
+        NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.23 target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
         
         if (s.isConnected) {
             [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
@@ -118,7 +120,7 @@ static ServerSocket* _instance = nil;
         times ++;
         if (times == 20) {
             NSLog(@"20 times return");
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_TRYAGIAN object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_TRYAGIAN object:nil];//显示toast
             times = 0;
             [timer invalidate];
             timer = nil;
@@ -225,7 +227,7 @@ static ServerSocket* _instance = nil;
 {
     NSLog(@"Server onSocketDidDisconnect");
     [connectedSockets removeObject:sock];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
 }
 
 /**
@@ -284,7 +286,28 @@ static ServerSocket* _instance = nil;
                                                                                                            @"host":host,
                                                                                                            @"status":@"已连接",
                                                                                                            @"socket":sock}];
+//    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:20 target:self selector:@selector(aliveKeep:) userInfo:@{@"socket":sock} repeats:YES];
+//    [timer fire];
+}
+
+//心跳包执行函数  十秒重联的话这个好像就没什么用了。。
+- (void) aliveKeep :(NSTimer *)timer {
+    AsyncSocket *socket = (AsyncSocket *)[[timer userInfo] objectForKey:@"socket"];
     
+    for (SocketMessageModel *model in socketMessageModlesArray) {
+        if ([model.socket isEqual:socket]) {//s
+            if ([model.message hasPrefix:@"v"] && [model.message hasSuffix:@"e"]) {//控制model 的msg 来判断是否断开
+                NSLog(@"socket alive");
+                model.message = nil;
+            } else {
+                NSLog(@"socket die");
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":socket}];
+//                [socketMessageModlesArray removeObject:model];
+                [timer invalidate];
+                timer = nil;
+            }
+        }
+    }
 }
 
 /**
@@ -306,23 +329,96 @@ static ServerSocket* _instance = nil;
     NSLog(@"Server didReadData = %@",[ServerSocket dataToString:data]);
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
     
-    //set debug recv
-    [dele.main setDebugLabelText:msg mode:1];
+    BOOL isShow = YES;
     
-    if ([msg hasPrefix:@"v"] && [msg hasSuffix:@"e"]) {
+    if ([msg isEqualToString:@"RED"] || [msg isEqualToString:@"BLUE"]) {
+        NSLog(@"sock.connect host is: %@", sock.connectedHost);
+        if ([msg isEqualToString:@"RED"]) {
+            [[NSUserDefaults standardUserDefaults] setObject:sock.connectedHost forKey:NSDEFAULT_REDROBOTIP];
+        }else
+            [[NSUserDefaults standardUserDefaults] setObject:sock.connectedHost forKey:NSDEFAULT_BLUEROBOTIP];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CHANGEROBOTNAME object:nil userInfo:@{@"ipAddr":sock.connectedHost}];
+        isShow = NO;
+    }
+    else if ([msg hasPrefix:@"v"] && [msg hasSuffix:@"e"]) {
         NSString *power = [msg substringWithRange:NSMakeRange(1, msg.length-2)];
-        self.kvoPower = power;
-    }else{
+        if ([[ServerSocket getRobotName:sock] isEqualToString:ROBOTNAME_RED]) {
+            self.kvoPower = power;
+        }
+        if ([[ServerSocket getRobotName:sock] isEqualToString:ROBOTNAME_BLUE]) {
+            self.bluekvoPower = power;
+        }
+        
+//        //当成心跳包来测试
+//        SocketMessageModel *model = [SocketMessageModel new];
+//        model.socket = sock;
+//        model.message = msg2;
+//        BOOL ischange = NO;
+//        for (SocketMessageModel *tmpModel in socketMessageModlesArray) {
+//            if ([tmpModel.socket isEqual:sock]) {//如果socket存在，message置空
+////                [socketMessageModlesArray removeObject:tmpModel];
+////                [socketMessageModlesArray addObject:model];
+//                tmpModel.message = nil;
+//                ischange = YES;
+//            }
+//        }
+//        if (ischange == NO) {//socket 不存在
+//            [socketMessageModlesArray addObject:model];
+//        }
+//        NSLog(@"socketMessageModlesArray nums :%lu",(unsigned long)socketMessageModlesArray.count);
+        
+        isShow = NO;
+    } else if ([msg hasPrefix:@"CARD"] || [msg hasPrefix:@"AT"] || [msg isEqualToString:@"A"]){//返回的card就不补充了。
+        isShow = NO;
+    }
+    else
+    {
+        //用来检测信息是否发送过去了，即检测发送的信号是否是msg2 == o;
         receiveMessage = msg2;
         tmpSocket = sock;
+    }
+    if (isShow) {
+        if ([msg isEqualToString:@"o"]) {
+            msg = @"完成";
+        }
+        [dele.main setDebugLabelText:msg mode:1];
     }
     
 //    [result appendString:[ServerSocket dataToString:data]];
 //    [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(update) userInfo:nil repeats:YES];
     [result appendString:[NSString stringWithFormat:@"%@:%@\n",[sock connectedHost],[ServerSocket dataToString:data]]];
-
+    
 //    [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_RESULT_NOTIFICATION object:nil];
     [sock readDataWithTimeout:-1 tag:0];
+}
+
++ (NSString *)getRobotName :(AsyncSocket *)sock {
+    if (!sock.isConnected) {
+        NSLog(@"sock 断连了");
+        return nil;
+    }
+    NSString *conectedip = sock.connectedHost;
+    NSString *string = [ServerSocket getRobotNameByIp:conectedip];
+    return string;
+}
+
++ (NSString *)getRobotNameByIp :(NSString *)ipaddr {
+    NSString *conectedip = ipaddr;
+    NSString *redrobotip = [[NSUserDefaults standardUserDefaults] objectForKey:NSDEFAULT_REDROBOTIP];
+    NSString *bluerobotip = [[NSUserDefaults standardUserDefaults] objectForKey:NSDEFAULT_BLUEROBOTIP];
+    if (!conectedip) {
+        NSLog(@"connected ip is 空");
+        return nil;
+    }
+    if ([conectedip isEqualToString:redrobotip]) {
+        NSString *RED = ROBOTNAME_RED;
+        return  RED;
+    } else if ([conectedip isEqualToString:bluerobotip])  {
+        NSString *Blue = ROBOTNAME_BLUE;
+        return  Blue;
+    }else {
+        return conectedip;
+    }
 }
 
 /**

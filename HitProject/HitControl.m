@@ -46,57 +46,57 @@ static HitControl* _instance = nil;
 }
 
 - (void)mealMode {
-    [server sendMessage:@"a"];
+    [server sendMessage:@"a" debugstring:@"送餐模式"];
 }
 
 - (void)controlMode {
-    [server sendMessage:@"b"];
+    [server sendMessage:@"b" debugstring:@"控制模式"];
 }
 
 - (void)forward {
-    [server sendMessage:@"c"];
+    [server sendMessage:@"c" debugstring:@"前进"];
 }
 
 - (void)backward {
-    [server sendMessage:@"d"];
+    [server sendMessage:@"d" debugstring:@"后退"];
 }
 
 - (void)turnLeft {
-    [server sendMessage:@"e"];
+    [server sendMessage:@"e" debugstring:@"左转"];
 }
 
 - (void)turnRight {
-    [server sendMessage:@"f"];
+    [server sendMessage:@"f" debugstring:@"右转"];
 }
 
 - (void)stopMove {
-    [server sendMessage:@"g"];
+    [server sendMessage:@"g" debugstring:@"停止"];
 }
 
 - (void)voiceUp {
-    [server sendMessage:@"h"];
+    [server sendMessage:@"h" debugstring:@"音量+"];
 }
 
 - (void)voiceDown {
-    [server sendMessage:@"i"];
+    [server sendMessage:@"i" debugstring:@"音量-"];
 }
 
 - (void)speed:(NSInteger)dang {
     switch (dang) {
         case 1:
-            [server sendMessage:@"j"];
+            [server sendMessage:@"j" debugstring:@"1档"];
             break;
         case 2:
-            [server sendMessage:@"k"];
+            [server sendMessage:@"k" debugstring:@"2档"];
             break;
         case 3:
-            [server sendMessage:@"l"];
+            [server sendMessage:@"l" debugstring:@"3档"];
             break;
         case 4:
-            [server sendMessage:@"m"];
+            [server sendMessage:@"m" debugstring:@"4档"];
             break;
         case 5:
-            [server sendMessage:@"n"];
+            [server sendMessage:@"n" debugstring:@"5档"];
             break;
         default:
             break;
@@ -104,66 +104,92 @@ static HitControl* _instance = nil;
 }
 
 - (void)singSong:(NSInteger)numeber {
+    NSArray *musics = @[@"铃儿响叮当",
+                        @"生日歌",
+                        @"熊出没",
+                        @"恭喜发财",
+                        @"My Soul",
+                        @"The Truth That U Leave",
+                        @"Not going anyway",
+                        @"Annie's Wonderland",
+                        @"Kiss The Rain",
+                        @"卡农",
+                        @"红豆",
+                        @"滴答",
+                        @"飘雪",
+                        @"Angel",
+                        @"Whatever will be",
+                        @"The Show",
+                        @"Black Black Heart",
+                        @"Only Love",
+                        @"Right Now Right Here",
+                        @"See You Again"
+                        ];
+    NSString *songname = musics[numeber-1];
+    NSArray *messageArray = @[@"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z", @"A", @"B", @"C", @"(", @")", @"*", @"+", @"-"];
+    NSString *msg = messageArray[numeber -1];
+    [server sendMessage:msg debugstring:songname];
+    
     switch (numeber) {
         case 1:
-            [server sendMessage:@"o"];
+            [server sendMessage:@"o" debugstring:songname];
             break;
         case 2:
-            [server sendMessage:@"p"];
+            [server sendMessage:@"p" debugstring:songname];
             break;
         case 3:
-            [server sendMessage:@"q"];
+            [server sendMessage:@"q" debugstring:songname];
             break;
         case 4:
-            [server sendMessage:@"r"];
+            [server sendMessage:@"r" debugstring:songname];
             break;
         case 5:
-            [server sendMessage:@"s"];
+            [server sendMessage:@"s" debugstring:songname];
             break;
         case 6:
-            [server sendMessage:@"t"];
+            [server sendMessage:@"t" debugstring:songname];
             break;
         case 7:
-            [server sendMessage:@"u"];
+            [server sendMessage:@"u" debugstring:songname];
             break;
         case 8:
-            [server sendMessage:@"v"];
+            [server sendMessage:@"v" debugstring:songname];
             break;
         case 9:
-            [server sendMessage:@"w"];
+            [server sendMessage:@"w" debugstring:songname];
             break;
         case 10:
-            [server sendMessage:@"x"];
+            [server sendMessage:@"x" debugstring:songname];
             break;
         case 11:
-            [server sendMessage:@"y"];
+            [server sendMessage:@"y" debugstring:songname];
             break;
         case 12:
-            [server sendMessage:@"z"];
+            [server sendMessage:@"z" debugstring:songname];
             break;
         case 13:
-            [server sendMessage:@"A"];
+            [server sendMessage:@"A" debugstring:songname];
             break;
         case 14:
-            [server sendMessage:@"B"];
+            [server sendMessage:@"B" debugstring:songname];
             break;
         case 15:
-            [server sendMessage:@"C"];
+            [server sendMessage:@"C" debugstring:songname];
             break;
         case 16:
-            [server sendMessage:@"("];
+            [server sendMessage:@"(" debugstring:songname];
             break;
         case 17:
-            [server sendMessage:@")"];
+            [server sendMessage:@")" debugstring:songname];
             break;
         case 18:
-            [server sendMessage:@"*"];
+            [server sendMessage:@"*" debugstring:songname];
             break;
         case 19:
-            [server sendMessage:@"+"];
+            [server sendMessage:@"+" debugstring:songname];
             break;
         case 20:
-            [server sendMessage:@"-"];
+            [server sendMessage:@"-" debugstring:songname];
             break;
         default:
             break;
@@ -171,130 +197,180 @@ static HitControl* _instance = nil;
 }
 
 - (void)deskNumber:(NSInteger)numeber {
+    NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
+    NSArray *messageArray = @[@"E", @"F", @"G", @"H", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y"];
+    if (deskNumArray.count >= numeber) {
+        [server sendMessage:messageArray[numeber - 1] debugstring:[NSString stringWithFormat:@"%@桌",deskNumArray[numeber - 1]]];
+    }else {
+        NSLog(@"desk num is less than input num");
+        return;
+    }
+    
+    /*
     switch (numeber) {
         case 1:
-            [server sendMessage:@"D"];
+            [server sendMessage:@"E" debugstring:<#(NSString *)#>];
             break;
         case 2:
-            [server sendMessage:@"E"];
+            [server sendMessage:@"F"];//13卡
             break;
         case 3:
-            [server sendMessage:@"F"];
+            [server sendMessage:@"G"];//14卡
             break;
         case 4:
-            [server sendMessage:@"G"];
-            break;
-        case 5:
             [server sendMessage:@"H"];
             break;
-        case 6:
+        case 5:
             [server sendMessage:@"Q"];
             break;
-        case 7:
+        case 6:
             [server sendMessage:@"R"];
             break;
-        case 8:
+        case 7:
             [server sendMessage:@"S"];
             break;
-        case 9:
+        case 8:
             [server sendMessage:@"T"];
             break;
-        case 10:
+        case 9:
             [server sendMessage:@"U"];
             break;
-        case 11:
+        case 10:
             [server sendMessage:@"V"];
             break;
-        case 12:
+        case 11:
             [server sendMessage:@"W"];
             break;
-        case 13:
+        case 12:
             [server sendMessage:@"X"];
             break;
-        case 14:
+        case 13:
             [server sendMessage:@"Y"];
             break;
-        case 15:
-            [server sendMessage:@"Z"];
-            break;
-        case 16:
-            [server sendMessage:@":"];
-            break;
-        case 17:
-            [server sendMessage:@"<"];
-            break;
-        case 18:
-            [server sendMessage:@"="];
-            break;
-        case 19:
-            [server sendMessage:@">"];
-            break;
-        case 20:
-            [server sendMessage:@"?"];
-            break;
-        case 21:
-            [server sendMessage:@"0"];
-            break;
-        case 22:
-            [server sendMessage:@"1"];
-            break;
-        case 23:
-            [server sendMessage:@"2"];
-            break;
-        case 24:
-            [server sendMessage:@"3"];
-            break;
-        case 25:
-            [server sendMessage:@"4"];
-            break;
-        case 26:
-            [server sendMessage:@"5"];
-            break;
-        case 27:
-            [server sendMessage:@"6"];
-            break;
-        case 28:
-            [server sendMessage:@"7"];
-            break;
-        case 29:
-            [server sendMessage:@"8"];
-            break;
-        case 30:
-            [server sendMessage:@"9"];
-            break;
+//        case 1:
+//            [server sendMessage:@"D"];
+//            break;
+//        case 2:
+//            [server sendMessage:@"E"];//12卡
+//            break;
+//        case 3:
+//            [server sendMessage:@"F"];//13卡
+//            break;
+//        case 4:
+//            [server sendMessage:@"G"];//14卡
+//            break;
+//        case 5:
+//            [server sendMessage:@"H"];
+//            break;
+//        case 6:
+//            [server sendMessage:@"Q"];
+//            break;
+//        case 7:
+//            [server sendMessage:@"R"];
+//            break;
+//        case 8:
+//            [server sendMessage:@"S"];
+//            break;
+//        case 9:
+//            [server sendMessage:@"T"];
+//            break;
+//        case 10:
+//            [server sendMessage:@"U"];
+//            break;
+//        case 11:
+//            [server sendMessage:@"V"];
+//            break;
+//        case 12:
+//            [server sendMessage:@"W"];
+//            break;
+//        case 13:
+//            [server sendMessage:@"X"];
+//            break;
+//        case 14:
+//            [server sendMessage:@"Y"];
+//            break;
+//        case 15:
+//            [server sendMessage:@"Z"];
+//            break;
+//        case 16:
+//            [server sendMessage:@":"];
+//            break;
+//        case 17:
+//            [server sendMessage:@"<"];
+//            break;
+//        case 18:
+//            [server sendMessage:@"="];
+//            break;
+//        case 19:
+//            [server sendMessage:@">"];
+//            break;
+//        case 20:
+//            [server sendMessage:@"?"];
+//            break;
+//        case 21:
+//            [server sendMessage:@"0"];
+//            break;
+//        case 22:
+//            [server sendMessage:@"1"];
+//            break;
+//        case 23:
+//            [server sendMessage:@"2"];
+//            break;
+//        case 24:
+//            [server sendMessage:@"3"];
+//            break;
+//        case 25:
+//            [server sendMessage:@"4"];
+//            break;
+//        case 26:
+//            [server sendMessage:@"5"];
+//            break;
+//        case 27:
+//            [server sendMessage:@"6"];
+//            break;
+//        case 28:
+//            [server sendMessage:@"7"];
+//            break;
+//        case 29:
+//            [server sendMessage:@"8"];
+//            break;
+//        case 30:
+//            [server sendMessage:@"9"];
+//            break;
         default:
             break;
     }
+     */
 }
 
 - (void)cancelSendMeal {
-    [server sendMessage:@"@"];
+    [server sendMessage:@"@" debugstring:@"取消送餐"];
 }
 
 - (void)backToOrigin {
-    [server sendMessage:@"I"];
+    [server sendMessage:@"I" debugstring:@"回到初始点"];
 }
 
 - (void)loopRun {
-    [server sendMessage:@"J"];
+    [server sendMessage:@"J" debugstring:@"循环运行"];
 }
 
 - (void)songMode:(NSInteger)numeber {
     switch (numeber) {
         case 1:
-            [server sendMessage:@"K"];
+            [server sendMessage:@"K" debugstring:@"单曲播放"];
             break;
         case 2:
-            [server sendMessage:@"L"];
+            [server sendMessage:@"L" debugstring:@"顺序播放"];
             break;
         case 3:
-            [server sendMessage:@"M"];
+            [server sendMessage:@"M" debugstring:@"随机播放"];
             break;
         case 4:
-            [server sendMessage:@"N"];
+            [server sendMessage:@"N" debugstring:@"单曲循环"];
             break;
         case 5:
-            [server sendMessage:@"O"];
+            [server sendMessage:@"O" debugstring:@"列表循环"];
             break;
         default:
             break;
@@ -302,7 +378,7 @@ static HitControl* _instance = nil;
 }
 
 - (void)stopSingSong {
-    [server sendMessage:@"P"];
+    [server sendMessage:@"P" debugstring:@"停止播放"];
 }
 
 

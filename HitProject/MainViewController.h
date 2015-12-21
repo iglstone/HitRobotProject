@@ -16,6 +16,9 @@
 @property (nonatomic, strong) UIView *views;
 @property (nonatomic, strong) UILabel *m_debugLabel;
 @property (nonatomic, strong) NSMutableArray *m_selecedModelsArray;
+@property (nonatomic, strong) NSMutableArray *m_modelsArray;
+//red blue both
+//@property (nonatomic, strong) NSString *selectedNames;
 
 //mode :0 send
 //mode :1 recv

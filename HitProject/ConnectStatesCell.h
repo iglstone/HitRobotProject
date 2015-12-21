@@ -12,6 +12,7 @@
 
 @property (nonatomic) NSInteger port;
 @property (nonatomic) NSString *hostIp;
+@property (nonatomic) NSString *robotName;
 @property (nonatomic) NSString *status;
 @property (nonatomic) AsyncSocket *socket;
 @property (nonatomic) BOOL isCheck;

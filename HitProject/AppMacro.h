@@ -12,6 +12,13 @@
 //监听端口
 #define LISTEN_PORT 1234;
 
+//robotName
+//小红
+#define ROBOTNAME_RED                       @"小红"
+
+//小蓝
+#define ROBOTNAME_BLUE                      @"小蓝"
+
 //notification
 //连接成功
 #define NOTICE_CONNECTSUCCESS               @"NOTICE_CONNECTSUCCESS"
@@ -43,9 +50,11 @@
 //进入后台
 #define NOTICE_BACKGROUND                   @"NOTICE_BACKGROUND"
 
+//进入后台
+#define NOTICE_CHANGEROBOTNAME              @"NOTICE_CHANGEROBOTNAME"
 
-
-
+//没有robot的通知
+#define NOTICE_NOROBOT                      @"NOTICE_NOROBOT"
 
 #define NOTICE_OPEN_LOCAL_VIEW              @"NOTICE_OPEN_LOCAL_VIEW"
 
@@ -54,5 +63,16 @@
 //nsdefaut KEY
 #define NSDEFAULT_REMEMBERCODE              @"NSDEFAULT_REMEMBERCODE"
 #define NSDEFAULT_USERNAME                  @"NSDEFAULT_USERNAME"
+#define NSDEFAULT_REDROBOTIP                @"NSDEFAULT_REDROBOTIP"
+#define NSDEFAULT_BLUEROBOTIP               @"NSDEFAULT_BLUEROBOTIP"
+#define NSDEFAULT_PickupDeskNum             @"NSDEFAULT_PickupDeskNum"
+
 
 #endif
+
+
+
+
+
+
+

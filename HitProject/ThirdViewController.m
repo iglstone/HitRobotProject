@@ -9,9 +9,13 @@
 #import "ThirdViewController.h"
 #import "DeskView.h"
 
+#define DESKNUMPERLINE 5;
+
 @interface ThirdViewController ()<UIAlertViewDelegate>
 {
     UIScrollView *rawView;
+    NSInteger deskWidth,deskHeight;
+    NSString *sss;
 }
 @property (nonatomic) UILabel *infoLabel;
 @property (nonatomic) NSInteger deskNum;
@@ -29,10 +33,20 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.TotaldeskNum = 28;
+        NSInteger denum = [[[NSUserDefaults standardUserDefaults] objectForKey:NSDEFAULT_PickupDeskNum] integerValue];
+        if (denum == 0) {
+            self.TotaldeskNum = 28;
+        }else
+            self.TotaldeskNum = denum;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deskNumNoti:) name:NOTICE_PICKDESKNUM object:nil];
     }
     return self;
+}
+
+- (void)viewDidLayoutSubviews {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] <= 8.0) {//补充ios7的scrollview 不能滑动的问题。
+        [self layOutRawView];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -90,6 +104,7 @@
     infoLabel =[UILabel new];
     [self.view addSubview:infoLabel];
     infoLabel.text = @"信息窗口：";
+    infoLabel.font = [UIFont systemFontOfSize:20];
     [infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(rawView.mas_right).offset (20);
         make.top.equalTo(rawView.mas_top).offset(20);
@@ -141,6 +156,8 @@
 }
 
 - (void ) deskView {
+    int deknum = DESKNUMPERLINE;
+    
     DeskView *desk1 = [[DeskView alloc] init];//WithFrame:CGRectMake(0, 0, 150, 150)];
     desk1.backgroundColor = [UIColor redColor];
     [rawView addSubview:desk1];
@@ -150,35 +167,85 @@
         make.size.mas_equalTo(CGSizeMake(60, 60));
     }];
     
-    NSInteger deskWidth,deskHeight;
-    NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width;
-    if ([CommonsFunc isDeviceIpad]) {
-        deskWidth = (self.view.bounds.size.width - 400 -20)/6;
-        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
-    }else {
-        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
-        deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/7;
-    }
-    
-    NSInteger contentWidth ;
-    if ([CommonsFunc isDeviceIpad]) {
-        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
-        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/6) +1) + 10);
-    }else {
-        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
-        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/6) +1) + 10);
-    }
+//    NSInteger contentWidth ;
+////    NSInteger deskWidth,deskHeight;
+//    NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width;
+//    if ([CommonsFunc isDeviceIpad]) {
+//        deskWidth = (self.view.bounds.size.width - 400 -20)/6;
+//        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
+//        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
+//        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/6) +1) + 10);
+//    }else {
+//        deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/7;
+//        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
+//        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
+//        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/6) +1) + 10);
+//    }
+    [self layOutRawView];
     
     int deskNum = 1;
     NSInteger tt = 0;
     for (int i = 0; i <= 10; i++) {
-        for (int j = 0; j < 6; j++) {
+        for (int j = 0; j < deknum; j++) {
             if (deskNum > self.TotaldeskNum) {
                 tt = 1;
                 break;
             }
             DeskView *deskview = [DeskView new];
-            deskview.deskName.text = [NSString stringWithFormat:@"%d号桌",deskNum];//(NSInteger)((j+1)+(i)*(j+1))];
+            NSString *deskNumString = nil;
+            
+            NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
+            
+            if (deskNum <= 13) {
+                deskNumString = deskNumArray[deskNum -1];
+//                switch (deskNum) {
+//                    case 1:
+//                        deskNumString = @"121";
+//                        break;
+//                    case 2:
+//                        deskNumString = @"122";
+//                        break;
+//                    case 3:
+//                        deskNumString = @"123";
+//                        break;
+//                    case 4:
+//                        deskNumString = @"125";
+//                        break;
+//                    case 5:
+//                        deskNumString = @"126";
+//                        break;
+//                    case 6:
+//                        deskNumString = @"127";
+//                        break;
+//                    case 7:
+//                        deskNumString = @"128";
+//                        break;
+//                    case 8:
+//                        deskNumString = @"117";
+//                        break;
+//                    case 9:
+//                        deskNumString = @"116";
+//                        break;
+//                    case 10:
+//                        deskNumString = @"115";
+//                        break;
+//                    case 11:
+//                        deskNumString = @"113";
+//                        break;
+//                    case 12:
+//                        deskNumString = @"112";
+//                        break;
+//                    case 13:
+//                        deskNumString = @"106";
+//                        break;
+//                    default:
+//                        break;
+//                }
+                deskview.deskName.text = [NSString stringWithFormat:@"%@桌",deskNumString];//(NSInteger)((j+1)+(i)*(j+1))];
+            }else {
+                deskview.deskName.text = [NSString stringWithFormat:@"%d桌",deskNum];//(NSInteger)((j+1)+(i)*(j+1))];
+            }
+            
             deskview.deskName.font = [UIFont systemFontOfSize:13];
             deskNum ++;
             deskview.tag = deskNum;
@@ -203,9 +270,27 @@
     desk1.hidden = YES;
 }
 
+- (void)layOutRawView {
+    NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width;
+    NSInteger contentWidth ;
+//    NSInteger deskWidth,deskHeight;
+    if ([CommonsFunc isDeviceIpad]) {
+        deskWidth = (self.view.bounds.size.width - 400 -20)/5;
+        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
+        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
+        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/6) +1) + 10);
+    } else {
+        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
+        deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/7;
+        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
+        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/6) +1) + 10);
+    }
+}
+
 - (void)deskNumNoti :(NSNotification *)noti {
-    NSInteger deskNum2 = [[[noti userInfo] objectForKey:@"desknum"] integerValue];
-    self.TotaldeskNum = deskNum2;
+//    NSInteger deskNum2 = [[[noti userInfo] objectForKey:@"desknum"] integerValue];
+    NSInteger denum = [[[NSUserDefaults standardUserDefaults] objectForKey:NSDEFAULT_PickupDeskNum] integerValue];
+    self.TotaldeskNum = denum;
 }
 
 - (void)backToOrigin:(UIButton *)btn {
@@ -226,9 +311,9 @@
 
 - (void)deskTaped:(UIGestureRecognizer *)gesture {
     tmpDeskView = (DeskView *)[gesture view];
-    
+    sss = [[tmpDeskView deskName] text];
     self.deskNum = tmpDeskView.tag - 1;
-    NSString *string = [NSString stringWithFormat:@"选择%ld号桌？",(long)self.deskNum];
+    NSString *string = [NSString stringWithFormat:@"选择%@？",sss];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:string message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
     [alert show];
 }
@@ -248,13 +333,13 @@
     if (buttonIndex == 0) {
         
     }else{
-        infoLabel.text = [NSString stringWithFormat:@"信息窗口: %ld号桌", (long)self.deskNum];
-        if (tmpDeskView.selected == YES) {//取消送餐
-            tmpDeskView.selected = NO;
-            [tmpDeskView.img setImage:[UIImage imageNamed:@"desk_white.png"]];
-        }
-        else
-        {
+        infoLabel.text = [NSString stringWithFormat:@"信息窗口: %@", sss];
+//        if (tmpDeskView.selected == YES) {//取消送餐
+//            tmpDeskView.selected = NO;
+//            [tmpDeskView.img setImage:[UIImage imageNamed:@"desk_white.png"]];
+//        }
+//        else
+//        {
             [self setUnselectedDeskImage];
             tmpDeskView.selected = YES;
             [tmpDeskView.img setImage:[UIImage imageNamed:@"desk_red.png"]];
@@ -263,7 +348,7 @@
             }else {
                 NSLog(@"目前最多支持30桌");
             }
-        }
+//        }
     }
 }
 

@@ -14,6 +14,7 @@
 @synthesize status;
 @synthesize socket;
 @synthesize isCheck;
+@synthesize robotName;
 
 - (instancetype)init {
     self = [super init];
@@ -37,7 +38,7 @@
 @synthesize isChecked;
 
 - (void)configModel :(ConnectModel *)model {
-    hostIpLabel.text = model.hostIp;
+    hostIpLabel.text = model.robotName;
     portLabel.text = [NSString stringWithFormat:@"%ld",(long)model.port];
     statusLabel.text = model.status;
     [self setIsChecked:model.isCheck];

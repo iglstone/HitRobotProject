@@ -66,7 +66,8 @@
     NSInteger row = [pickView selectedRowInComponent:0];
     NSString *string = [pickerArray objectAtIndex:row];
     NSInteger desknum = [[string substringWithRange:NSMakeRange(0, [string length]-2)] integerValue];
-    NSLog(@"您选择的是 %@ ,,%ld",string,desknum);
+    NSLog(@"您选择的是 %@ ,,%ld",string,(long)desknum);
+    [[NSUserDefaults standardUserDefaults] setObject:@(desknum) forKey:NSDEFAULT_PickupDeskNum];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_PICKDESKNUM object:nil userInfo:@{@"desknum":@(desknum)}];
     [self.navigationController popViewControllerAnimated:YES];
 }

@@ -140,11 +140,11 @@
 }
 
 - (void) sele :(id)sender {
-    NSString *serverip = [CommonsFunc getIPAddressByHostName:@"guolongios.imwork.net"];//http://guolongios.imwork.net:20935/
+//    NSString *serverip = [CommonsFunc getIPAddressByHostName:@"guolongios.imwork.net"];//http://guolongios.imwork.net:20935/
+    NSString *serverip = @"60.166.32.242";
     NSLog(@"serverip: %@",serverip);
-    [self connectHost:serverip port:20935];
+    [self connectHost:serverip port:1234];
 }
-
 
 - (void)didReceiveMemoryWarning
 {

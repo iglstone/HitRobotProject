@@ -40,6 +40,20 @@
     }
 }
 
+- (void)viewDidLayoutSubviews {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] <= 8.0) {//补充ios7的scrollview 不能滑动的问题。
+        NSInteger contentWidth ;
+        NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width;
+        if ([CommonsFunc isDeviceIpad]) {
+            contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
+            rawView.contentSize = CGSizeMake(contentWidth, 600);
+        }else {
+            contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
+            rawView.contentSize = CGSizeMake(contentWidth, 300);
+        }
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
@@ -90,37 +104,15 @@
     
     NSInteger deskWidth,deskHeight;
     if ([CommonsFunc isDeviceIpad]) {
-        deskWidth = (self.view.bounds.size.width - 315 -5)/7;
-        deskHeight = (self.view.bounds.size.height - 250 - 20 -40)/4;
+//        deskWidth = (self.view.bounds.size.width - 315 -5)/7;
+        deskWidth = 100;//(self.view.bounds.size.width - 20 - 400)/6;
+        deskHeight = 121;//(self.view.bounds.size.height - 250 - 20 -40)/4;
     }else {
         deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
-        deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/7;
+        deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/6;
     }
     
     int deskNum = 1;
-    
-//    NSArray *musics = @[@"铃儿响叮当",
-//                        @"生日歌",
-//                        @"熊出没",
-//                        @"恭喜发财",
-//                        @"初雪",
-//                        @"红豆",
-//                        @"滴答",
-//                        @"飘雪",
-//                        @"As long As U Love Me",
-//                        @"Angel",
-//                        @"Whatever will be",
-//                        @"Traveling Light",
-//                        @"End of Way",
-//                        @"The Show",
-//                        @"My Destiny",
-//                        @"Pretty Boy",
-//                        @"Black Black Heart",
-//                        @"Only Love",
-//                        @"My Love",
-//                        @"See You Again"
-//                        ];
-    
 
     NSArray *musics = @[@"铃儿响叮当",
                         @"生日歌",
@@ -175,7 +167,7 @@
     desk1.hidden = YES;
     
     self.voiceLabel = [UILabel new];
-    self.voiceLabel.text = @"音量设置：50";
+    self.voiceLabel.text = @"音量调节：";
     self.voiceLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.voiceLabel];
     [self.voiceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -192,7 +184,7 @@
         make.left.equalTo(self.voiceLabel);
     }];
     [voiceUpBtn addTarget:self action:@selector(voiceUp:) forControlEvents:UIControlEventTouchUpInside];
-
+    
     UIButton *voiceDownBtn = [UIButton new];
     [self.view addSubview:voiceDownBtn];
     [voiceDownBtn setImage:[UIImage imageNamed:@"voiceDown.png"] forState:UIControlStateNormal];
@@ -215,7 +207,7 @@
     if (voice <= 90) {
         voice += 10;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_VOICECHANGE object:nil userInfo:@{@"voice":@(voice)}];
-        self.voiceLabel.text = [NSString stringWithFormat:@"音量设置：%ld",(long)voice];
+//        self.voiceLabel.text = [NSString stringWithFormat:@"音量设置：%ld",(long)voice];
     }
     [control voiceUp];
 }
@@ -225,7 +217,7 @@
     if (voice >= 10) {
         voice -= 10;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_VOICECHANGE object:nil userInfo:@{@"voice":@(voice)}];
-        self.voiceLabel.text = [NSString stringWithFormat:@"音量设置：%ld",(long)voice];
+//        self.voiceLabel.text = [NSString stringWithFormat:@"音量设置：%ld",(long)voice];
     }
     [control voiceDown];
 }

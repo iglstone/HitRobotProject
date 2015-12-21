@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C667AEEA938854297F27795 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC05B4E2E18680CC4941107 /* libPods.a */; };
+		E30EEC3E1C2532BD00352235 /* SocketMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E30EEC3D1C2532BD00352235 /* SocketMessageModel.m */; };
 		E316366F1BEDA80A002EB100 /* ConnectStatesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E316366E1BEDA80A002EB100 /* ConnectStatesCell.m */; };
 		E31636721BEDAA5D002EB100 /* CommonsFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = E31636711BEDAA5D002EB100 /* CommonsFunc.m */; };
 		E31636751BF0428F002EB100 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E31636741BF0428F002EB100 /* AsyncSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -71,6 +72,8 @@
 		397759819632A14F21F4B158 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		5977BFAC93DE4DCB521D4947 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		AAC05B4E2E18680CC4941107 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E30EEC3C1C2532BD00352235 /* SocketMessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocketMessageModel.h; sourceTree = "<group>"; };
+		E30EEC3D1C2532BD00352235 /* SocketMessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocketMessageModel.m; sourceTree = "<group>"; };
 		E316366D1BEDA80A002EB100 /* ConnectStatesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectStatesCell.h; sourceTree = "<group>"; };
 		E316366E1BEDA80A002EB100 /* ConnectStatesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConnectStatesCell.m; sourceTree = "<group>"; };
 		E31636701BEDAA5D002EB100 /* CommonsFunc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonsFunc.h; sourceTree = "<group>"; };
@@ -344,6 +347,8 @@
 				E3E91FC61BEC32C6003AE247 /* AsyncUdpSocket.m */,
 				E3E91FC01BEC318F003AE247 /* ServerSocket.h */,
 				E3E91FC11BEC318F003AE247 /* ServerSocket.m */,
+				E30EEC3C1C2532BD00352235 /* SocketMessageModel.h */,
+				E30EEC3D1C2532BD00352235 /* SocketMessageModel.m */,
 				E3E91FCA1BEC8117003AE247 /* HitControl.h */,
 				E3E91FCB1BEC8117003AE247 /* HitControl.m */,
 				E33DD38A1BF20DE40028FCBD /* SocketClientViewController.h */,
@@ -509,6 +514,7 @@
 				E353A2C41C0FD4180058BC6A /* DataCenter.m in Sources */,
 				E3E91FCC1BEC8117003AE247 /* HitControl.m in Sources */,
 				E3C0B52D1BE1EAA5004437EC /* SecondViewController.m in Sources */,
+				E30EEC3E1C2532BD00352235 /* SocketMessageModel.m in Sources */,
 				E35D11B21C0F1CC0009AF0BB /* PickDeskNumViewController.m in Sources */,
 				E31636781BF05607002EB100 /* MainViewController.m in Sources */,
 				E357F6101BE20F6500AE9454 /* ThirdViewController.m in Sources */,
@@ -600,7 +606,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -638,7 +644,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
