@@ -88,6 +88,9 @@ static ServerSocket* _instance = nil;
     for (AsyncSocket * s in self.selectedSocketArray)
     {
         sendedMessage = string;
+        if (!string) {
+            continue;
+        }
         receiveMessage = nil;
         
         NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.23 target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];

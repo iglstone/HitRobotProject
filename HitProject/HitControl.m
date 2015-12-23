@@ -83,6 +83,9 @@ static HitControl* _instance = nil;
 
 - (void)speed:(NSInteger)dang {
     switch (dang) {
+        case 0:
+            [server sendMessage:nil debugstring:@"0档"];
+            break;
         case 1:
             [server sendMessage:@"j" debugstring:@"1档"];
             break;
@@ -93,10 +96,12 @@ static HitControl* _instance = nil;
             [server sendMessage:@"l" debugstring:@"3档"];
             break;
         case 4:
-            [server sendMessage:@"m" debugstring:@"4档"];
+            [server sendMessage:nil debugstring:@"4档"];
+//            [server sendMessage:@"m" debugstring:@"4档"];
             break;
         case 5:
-            [server sendMessage:@"n" debugstring:@"5档"];
+            [server sendMessage:nil debugstring:@"5档"];
+//            [server sendMessage:@"n" debugstring:@"5档"];
             break;
         default:
             break;
@@ -126,9 +131,9 @@ static HitControl* _instance = nil;
                         @"See You Again"
                         ];
     NSString *songname = musics[numeber-1];
-    NSArray *messageArray = @[@"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z", @"A", @"B", @"C", @"(", @")", @"*", @"+", @"-"];
-    NSString *msg = messageArray[numeber -1];
-    [server sendMessage:msg debugstring:songname];
+//    NSArray *messageArray = @[@"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z", @"A", @"B", @"C", @"(", @")", @"*", @"+", @"-"];
+//    NSString *msg = messageArray[numeber -1];
+//    [server sendMessage:msg debugstring:songname];
     
     switch (numeber) {
         case 1:
