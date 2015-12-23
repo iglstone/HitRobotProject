@@ -9,6 +9,8 @@
 #import "ThirdViewController.h"
 #import "DeskView.h"
 
+#define  DESKNUMPERLINE  5;
+
 @interface ThirdViewController ()<UIAlertViewDelegate>
 {
     UIScrollView *rawView;
@@ -141,6 +143,8 @@
 }
 
 - (void ) deskView {
+    int deskNumPerLine = DESKNUMPERLINE;
+    
     DeskView *desk1 = [[DeskView alloc] init];//WithFrame:CGRectMake(0, 0, 150, 150)];
     desk1.backgroundColor = [UIColor redColor];
     [rawView addSubview:desk1];
@@ -153,7 +157,8 @@
     NSInteger deskWidth,deskHeight;
     NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width;
     if ([CommonsFunc isDeviceIpad]) {
-        deskWidth = (self.view.bounds.size.width - 400 -20)/7;
+//        deskWidth = (self.view.bounds.size.width - 400 -20)/7;
+        deskWidth = (self.view.bounds.size.width - 400 -20)/DESKNUMPERLINE;
         deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
     }else {
         deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
@@ -171,14 +176,65 @@
     
     int deskNum = 1;
     NSInteger tt = 0;
+
     for (int i = 0; i <= 9; i++) {
-        for (int j = 0; j < 7; j++) {
+        for (int j = 0; j < deskNumPerLine; j++) {
             if (deskNum > self.TotaldeskNum) {
                 tt = 1;
                 break;
             }
             DeskView *deskview = [DeskView new];
-            deskview.deskName.text = [NSString stringWithFormat:@"%d号桌",deskNum];//(NSInteger)((j+1)+(i)*(j+1))];
+            
+            NSString *deskNumString = nil;
+            if (deskNum <= 13) {
+                switch (deskNum) {
+                    case 1:
+                        deskNumString = @"121";
+                        break;
+                    case 2:
+                        deskNumString = @"122";
+                        break;
+                    case 3:
+                        deskNumString = @"123";
+                        break;
+                    case 4:
+                        deskNumString = @"125";
+                        break;
+                    case 5:
+                        deskNumString = @"126";
+                        break;
+                    case 6:
+                        deskNumString = @"127";
+                        break;
+                    case 7:
+                        deskNumString = @"128";
+                        break;
+                    case 8:
+                        deskNumString = @"117";
+                        break;
+                    case 9:
+                        deskNumString = @"116";
+                        break;
+                    case 10:
+                        deskNumString = @"115";
+                        break;
+                    case 11:
+                        deskNumString = @"113";
+                        break;
+                    case 12:
+                        deskNumString = @"112";
+                        break;
+                    case 13:
+                        deskNumString = @"106";
+                        break;
+                    default:
+                        break;
+                }
+                deskview.deskName.text = [NSString stringWithFormat:@"%@桌",deskNumString];//(NSInteger)((j+1)+(i)*(j+1))];
+            }else {
+                deskview.deskName.text = [NSString stringWithFormat:@"%d 桌",deskNum];//(NSInteger)((j+1)+(i)*(j+1))];
+            }
+            
             deskview.deskName.font = [UIFont systemFontOfSize:13];
             deskNum ++;
             deskview.tag = deskNum;
