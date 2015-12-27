@@ -8,6 +8,9 @@
 
 #import "ThirdViewController.h"
 #import "DeskView.h"
+#import "PopupView.h"
+#import "UIViewController+LewPopupViewController.h"
+#import "LewPopupViewAnimationFade.h"
 
 #define DESKNUMPERLINE 5;
 
@@ -261,6 +264,7 @@
             }];
             deskview.userInteractionEnabled = YES;
             [deskview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deskTaped:)]];
+            [deskview addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deskLongTaped:)]];
             [desksArray addObject: deskview];
         }
         if (tt == 1) {
@@ -316,6 +320,24 @@
     NSString *string = [NSString stringWithFormat:@"选择%@？",sss];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:string message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
     [alert show];
+}
+
+- (void)deskLongTaped :(UIGestureRecognizer *)gesture {
+    if ([gesture isKindOfClass:[UILongPressGestureRecognizer class]]) {
+        if (gesture.state == UIGestureRecognizerStateBegan) {
+            DeskView *tmpView = (DeskView *)[gesture view];
+            NSString *deskName = tmpView.deskName.text;
+            NSLog(@"long taped :%@",deskName);
+            PopupView *view = [PopupView defaultPopupView];
+            view.deskName = deskName;
+            view.signal = @"xxx";
+            view.parentVC = self;
+            [view addInnerView];
+            [self lew_presentPopupView:view animation:[LewPopupViewAnimationFade new] dismissed:^{
+                NSLog(@"动画结束");
+            }];
+        }
+    }
 }
 
 - (void)setUnselectedDeskImage {

@@ -80,9 +80,13 @@ static ServerSocket* _instance = nil;
 {
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
     NSLog(@"selected sockets array num: %lu",(unsigned long)self.selectedSocketArray.count);
-    if (self.selectedSocketArray.count == 0) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_NOROBOT object:nil];//通知到主界面去提示没有连接
-        return;
+    if (self.selectedSocketArray.count == 0 ) {
+        if ([string isEqualToString:@"g"] || [string isEqualToString:@"P"]) {
+            //g:stopmove  P:stopSingSong
+        } else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_NOROBOT object:nil];//通知到主界面去提示没有连接
+            return;
+        }
     }
     [dele.main setDebugLabelText:debugs mode:0];
     for (AsyncSocket * s in self.selectedSocketArray)
@@ -378,6 +382,8 @@ static ServerSocket* _instance = nil;
     {
         //用来检测信息是否发送过去了，即检测发送的信号是否是msg2 == o;
         receiveMessage = msg2;
+        [msg2 release];
+        msg2 = nil;
         tmpSocket = sock;
     }
     if (isShow) {

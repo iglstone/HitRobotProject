@@ -17,6 +17,15 @@
 		E33DD38D1BF20DE40028FCBD /* SocketClientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E33DD38B1BF20DE40028FCBD /* SocketClientViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E33DD38E1BF20DE40028FCBD /* SocketClientViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33DD38C1BF20DE40028FCBD /* SocketClientViewController_iPhone.xib */; };
 		E33DD3901BF20DED0028FCBD /* SocketClientViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33DD38F1BF20DED0028FCBD /* SocketClientViewController_iPad.xib */; };
+		E34C26581C2CDCD3007936D8 /* LewPopupBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C264D1C2CDCD2007936D8 /* LewPopupBackgroundView.m */; };
+		E34C26591C2CDCD3007936D8 /* LewPopupViewAnimationDrop.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C264F1C2CDCD3007936D8 /* LewPopupViewAnimationDrop.m */; };
+		E34C265A1C2CDCD3007936D8 /* LewPopupViewAnimationFade.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C26511C2CDCD3007936D8 /* LewPopupViewAnimationFade.m */; };
+		E34C265B1C2CDCD3007936D8 /* LewPopupViewAnimationSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C26531C2CDCD3007936D8 /* LewPopupViewAnimationSlide.m */; };
+		E34C265C1C2CDCD3007936D8 /* LewPopupViewAnimationSpring.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C26551C2CDCD3007936D8 /* LewPopupViewAnimationSpring.m */; };
+		E34C265D1C2CDCD3007936D8 /* UIViewController+LewPopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C26571C2CDCD3007936D8 /* UIViewController+LewPopupViewController.m */; };
+		E34C26611C2CDCE1007936D8 /* PopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C265F1C2CDCE1007936D8 /* PopupView.m */; };
+		E34C26621C2CDCE1007936D8 /* PopupView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E34C26601C2CDCE1007936D8 /* PopupView.xib */; };
+		E34C26651C2CEC43007936D8 /* DeskInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C26641C2CEC43007936D8 /* DeskInfoModel.m */; };
 		E353A2C41C0FD4180058BC6A /* DataCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = E353A2C31C0FD4180058BC6A /* DataCenter.m */; };
 		E357F6101BE20F6500AE9454 /* ThirdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E357F60F1BE20F6500AE9454 /* ThirdViewController.m */; };
 		E357F6131BE20F8100AE9454 /* FourthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E357F6121BE20F8100AE9454 /* FourthViewController.m */; };
@@ -88,6 +97,24 @@
 		E33DD38B1BF20DE40028FCBD /* SocketClientViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocketClientViewController.m; sourceTree = "<group>"; };
 		E33DD38C1BF20DE40028FCBD /* SocketClientViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SocketClientViewController_iPhone.xib; sourceTree = "<group>"; };
 		E33DD38F1BF20DED0028FCBD /* SocketClientViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SocketClientViewController_iPad.xib; sourceTree = "<group>"; };
+		E34C264B1C2CDCD2007936D8 /* LewPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LewPopupViewController.h; sourceTree = "<group>"; };
+		E34C264C1C2CDCD2007936D8 /* LewPopupBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LewPopupBackgroundView.h; sourceTree = "<group>"; };
+		E34C264D1C2CDCD2007936D8 /* LewPopupBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LewPopupBackgroundView.m; sourceTree = "<group>"; };
+		E34C264E1C2CDCD3007936D8 /* LewPopupViewAnimationDrop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LewPopupViewAnimationDrop.h; sourceTree = "<group>"; };
+		E34C264F1C2CDCD3007936D8 /* LewPopupViewAnimationDrop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LewPopupViewAnimationDrop.m; sourceTree = "<group>"; };
+		E34C26501C2CDCD3007936D8 /* LewPopupViewAnimationFade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LewPopupViewAnimationFade.h; sourceTree = "<group>"; };
+		E34C26511C2CDCD3007936D8 /* LewPopupViewAnimationFade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LewPopupViewAnimationFade.m; sourceTree = "<group>"; };
+		E34C26521C2CDCD3007936D8 /* LewPopupViewAnimationSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LewPopupViewAnimationSlide.h; sourceTree = "<group>"; };
+		E34C26531C2CDCD3007936D8 /* LewPopupViewAnimationSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LewPopupViewAnimationSlide.m; sourceTree = "<group>"; };
+		E34C26541C2CDCD3007936D8 /* LewPopupViewAnimationSpring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LewPopupViewAnimationSpring.h; sourceTree = "<group>"; };
+		E34C26551C2CDCD3007936D8 /* LewPopupViewAnimationSpring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LewPopupViewAnimationSpring.m; sourceTree = "<group>"; };
+		E34C26561C2CDCD3007936D8 /* UIViewController+LewPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+LewPopupViewController.h"; sourceTree = "<group>"; };
+		E34C26571C2CDCD3007936D8 /* UIViewController+LewPopupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LewPopupViewController.m"; sourceTree = "<group>"; };
+		E34C265E1C2CDCE1007936D8 /* PopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupView.h; sourceTree = "<group>"; };
+		E34C265F1C2CDCE1007936D8 /* PopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupView.m; sourceTree = "<group>"; };
+		E34C26601C2CDCE1007936D8 /* PopupView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopupView.xib; sourceTree = "<group>"; };
+		E34C26631C2CEC43007936D8 /* DeskInfoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeskInfoModel.h; sourceTree = "<group>"; };
+		E34C26641C2CEC43007936D8 /* DeskInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeskInfoModel.m; sourceTree = "<group>"; };
 		E353A2C21C0FD4180058BC6A /* DataCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataCenter.h; sourceTree = "<group>"; };
 		E353A2C31C0FD4180058BC6A /* DataCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataCenter.m; sourceTree = "<group>"; };
 		E357F60E1BE20F6500AE9454 /* ThirdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThirdViewController.h; sourceTree = "<group>"; };
@@ -198,6 +225,7 @@
 		E31636791BF07ACC002EB100 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				E34C264A1C2CDCB6007936D8 /* PopView */,
 				E31636701BEDAA5D002EB100 /* CommonsFunc.h */,
 				E31636711BEDAA5D002EB100 /* CommonsFunc.m */,
 				E316367A1BF07AE4002EB100 /* CHYSlider.h */,
@@ -212,6 +240,31 @@
 				E3FCC5EB1BF0924100FAB88C /* UIColor+Hex.m */,
 			);
 			name = Tools;
+			sourceTree = "<group>";
+		};
+		E34C264A1C2CDCB6007936D8 /* PopView */ = {
+			isa = PBXGroup;
+			children = (
+				E34C26631C2CEC43007936D8 /* DeskInfoModel.h */,
+				E34C26641C2CEC43007936D8 /* DeskInfoModel.m */,
+				E34C265E1C2CDCE1007936D8 /* PopupView.h */,
+				E34C265F1C2CDCE1007936D8 /* PopupView.m */,
+				E34C26601C2CDCE1007936D8 /* PopupView.xib */,
+				E34C264B1C2CDCD2007936D8 /* LewPopupViewController.h */,
+				E34C264C1C2CDCD2007936D8 /* LewPopupBackgroundView.h */,
+				E34C264D1C2CDCD2007936D8 /* LewPopupBackgroundView.m */,
+				E34C264E1C2CDCD3007936D8 /* LewPopupViewAnimationDrop.h */,
+				E34C264F1C2CDCD3007936D8 /* LewPopupViewAnimationDrop.m */,
+				E34C26501C2CDCD3007936D8 /* LewPopupViewAnimationFade.h */,
+				E34C26511C2CDCD3007936D8 /* LewPopupViewAnimationFade.m */,
+				E34C26521C2CDCD3007936D8 /* LewPopupViewAnimationSlide.h */,
+				E34C26531C2CDCD3007936D8 /* LewPopupViewAnimationSlide.m */,
+				E34C26541C2CDCD3007936D8 /* LewPopupViewAnimationSpring.h */,
+				E34C26551C2CDCD3007936D8 /* LewPopupViewAnimationSpring.m */,
+				E34C26561C2CDCD3007936D8 /* UIViewController+LewPopupViewController.h */,
+				E34C26571C2CDCD3007936D8 /* UIViewController+LewPopupViewController.m */,
+			);
+			name = PopView;
 			sourceTree = "<group>";
 		};
 		E35D11AF1C0F1C91009AF0BB /* Settings */ = {
@@ -449,6 +502,7 @@
 				E3E0F8A81C0E7982001CC06F /* login_textfield_mid.png in Resources */,
 				E3C0B5351BE1EAA5004437EC /* LaunchScreen.xib in Resources */,
 				E3E0F8B31C0E7A7A001CC06F /* login_textfield_top.png in Resources */,
+				E34C26621C2CDCE1007936D8 /* PopupView.xib in Resources */,
 				E3E0F8AB1C0E79BB001CC06F /* login_textfield_bottom.png in Resources */,
 				E3E0F8BC1C0E7ABA001CC06F /* login_btn_blue_press@2x.png in Resources */,
 				E3E0F8BF1C0E7B60001CC06F /* login_avatar_default.png in Resources */,
@@ -517,22 +571,30 @@
 				E30EEC3E1C2532BD00352235 /* SocketMessageModel.m in Sources */,
 				E35D11B21C0F1CC0009AF0BB /* PickDeskNumViewController.m in Sources */,
 				E31636781BF05607002EB100 /* MainViewController.m in Sources */,
+				E34C265D1C2CDCD3007936D8 /* UIViewController+LewPopupViewController.m in Sources */,
 				E357F6101BE20F6500AE9454 /* ThirdViewController.m in Sources */,
+				E34C26581C2CDCD3007936D8 /* LewPopupBackgroundView.m in Sources */,
 				E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */,
+				E34C26591C2CDCD3007936D8 /* LewPopupViewAnimationDrop.m in Sources */,
 				E37BA5031BE462C700DB7A96 /* JSAnalogueStick.m in Sources */,
 				E31636751BF0428F002EB100 /* AsyncSocket.m in Sources */,
 				E316366F1BEDA80A002EB100 /* ConnectStatesCell.m in Sources */,
 				E3C0B5271BE1EAA5004437EC /* AppDelegate.m in Sources */,
 				E3FC88881BEAF3750016376D /* RadioButton.m in Sources */,
 				E3C0B52A1BE1EAA5004437EC /* FirstViewController.m in Sources */,
+				E34C26651C2CEC43007936D8 /* DeskInfoModel.m in Sources */,
 				E3E91FC21BEC318F003AE247 /* ServerSocket.m in Sources */,
 				E3FCC5EC1BF0924100FAB88C /* UIColor+Hex.m in Sources */,
+				E34C265C1C2CDCD3007936D8 /* LewPopupViewAnimationSpring.m in Sources */,
 				E3C0B5241BE1EAA5004437EC /* main.m in Sources */,
 				E316367C1BF07AE4002EB100 /* CHYSlider.m in Sources */,
 				E31636721BEDAA5D002EB100 /* CommonsFunc.m in Sources */,
 				E35D11A81C0ECAA3009AF0BB /* SettingViewController.m in Sources */,
 				E3E0F8A51C0E77C1001CC06F /* LoginViewController.m in Sources */,
 				E35D11AE1C0EE0B8009AF0BB /* WebViewController.m in Sources */,
+				E34C26611C2CDCE1007936D8 /* PopupView.m in Sources */,
+				E34C265B1C2CDCD3007936D8 /* LewPopupViewAnimationSlide.m in Sources */,
+				E34C265A1C2CDCD3007936D8 /* LewPopupViewAnimationFade.m in Sources */,
 				E37BA50A1BE7162500DB7A96 /* DeskView.m in Sources */,
 				E35D11AB1C0ECAD2009AF0BB /* ResetSecurityViewController.m in Sources */,
 				E33DD38D1BF20DE40028FCBD /* SocketClientViewController.m in Sources */,
@@ -606,7 +668,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -644,7 +706,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
