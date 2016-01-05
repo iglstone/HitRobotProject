@@ -9,8 +9,17 @@
 #import "FourthViewController.h"
 #import "DeskView.h"
 #import "RadioButton.h"
+#import "PopupView.h"
+#import "UIViewController+LewPopupViewController.h"
+#import "LewPopupViewAnimationFade.h"
+#import "DeskInfoHelper.h"
 
-@interface FourthViewController ()
+@interface FourthViewController () {
+    DeskView *tmpView;
+    DeskInfoHelper *helper;
+    NSInteger totalSongNum;
+    NSInteger screenWidth ;
+}
 
 @property (nonatomic) UILabel *voiceLabel;
 @property (nonatomic) UIScrollView *rawView;
@@ -31,6 +40,20 @@
 @synthesize playLabel;
 @synthesize musicsArray;
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        helper = [DeskInfoHelper new];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songPopViewConfrimed:) name:NOTICE_SONGPOPVIEW_CONFIRM object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songsNumPicked:) name:NOTICE_PICKSONGNUM object:nil];
+        totalSongNum = [[[NSUserDefaults standardUserDefaults] objectForKey:NSDEFAULT_PickupSongsNum] integerValue];
+        if (!totalSongNum) {
+            totalSongNum = 15;
+        }
+    }
+    return self;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     MainViewController *main =(MainViewController *) self.tabBarController;
@@ -38,17 +61,25 @@
         main.views.hidden = YES;
         main.m_debugLabel.hidden = NO;
     }
+    [self initDeskView];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    for (UIView *view in rawView.subviews) {
+        [view removeFromSuperview];
+    }
 }
 
 - (void)viewDidLayoutSubviews {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] <= 8.0) {//补充ios7的scrollview 不能滑动的问题。
         NSInteger contentWidth ;
-        NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width;
+        NSInteger screenWidth2 = [UIScreen mainScreen].bounds.size.width;
         if ([CommonsFunc isDeviceIpad]) {
             contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
             rawView.contentSize = CGSizeMake(contentWidth, 600);
         }else {
-            contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
+            contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth2/4;
             rawView.contentSize = CGSizeMake(contentWidth, 300);
         }
     }
@@ -60,9 +91,7 @@
     voice = 50;
     isPlay = NO;
     control = [HitControl sharedControl];
-    
-    NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width;
-    
+    screenWidth = [UIScreen mainScreen].bounds.size.width;
     musicsArray = [[NSMutableArray alloc] init];
     
     rawView = [UIScrollView new];
@@ -73,7 +102,6 @@
     rawView.layer.masksToBounds = YES;
     rawView.backgroundColor = [CommonsFunc colorOfLight];
     [self.view addSubview:rawView];
-    
     [rawView mas_makeConstraints:^(MASConstraintMaker *make) {
         if ([CommonsFunc isDeviceIpad]) {
             make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 250, 400));
@@ -81,90 +109,8 @@
             make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 150, screenWidth/4));
         }
     }];
-    NSInteger contentWidth ;
-    if ([CommonsFunc isDeviceIpad]) {
-        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
-        rawView.contentSize = CGSizeMake(contentWidth, 600);
-    }else {
-        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
-        rawView.contentSize = CGSizeMake(contentWidth, 300);
-    }
     
-    DeskView *desk1 = [[DeskView alloc] init];
-    desk1.backgroundColor = [UIColor redColor];
-    [rawView addSubview:desk1];
-    [desk1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        if ([CommonsFunc isDeviceIpad]) {
-            make.top.equalTo(rawView).offset(20);
-        }else
-            make.top.equalTo(rawView).offset(10);
-        make.left.equalTo(rawView).offset(20);
-        make.size.mas_equalTo(CGSizeMake(60, 60));
-    }];
-    
-    NSInteger deskWidth,deskHeight;
-    if ([CommonsFunc isDeviceIpad]) {
-//        deskWidth = (self.view.bounds.size.width - 315 -5)/7;
-        deskWidth = 100;//(self.view.bounds.size.width - 20 - 400)/6;
-        deskHeight = 121;//(self.view.bounds.size.height - 250 - 20 -40)/4;
-    }else {
-        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
-        deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/6;
-    }
-    
-    int deskNum = 1;
-
-    NSArray *musics = @[@"铃儿响叮当",
-                        @"生日歌",
-                        @"熊出没",
-                        @"恭喜发财",
-                        @"My Soul",
-                        @"The Truth That U Leave",
-                        @"Not going anyway",
-                        @"Annie's Wonderland",
-                        @"Kiss The Rain",
-                        @"卡农",
-                        @"红豆",
-                        @"滴答",
-                        @"飘雪",
-                        @"Angel",
-                        @"Whatever will be",
-                        @"The Show",
-                        @"Black Black Heart",
-                        @"Only Love",
-                        @"Right Now Right Here",
-                        @"See You Again"
-                        ];
-    
-    NSInteger tt = 0;
-    for (int i = 0; i <= 6; i++) {
-        for (int j = 0; j < 6; j++) {
-            if (deskNum >= 21) {
-                tt = 1;
-                break;
-            }
-            DeskView *deskview = [DeskView new];
-            [deskview.img setImage:[UIImage imageNamed:@"music_unplay.png"]];
-            deskview.deskName.text = musics[deskNum-1];//[NSString stringWithFormat:@"歌曲%d",deskNum];
-            deskview.deskName.font = [UIFont systemFontOfSize:13];
-            deskNum ++;
-            deskview.tag = deskNum;
-            [rawView addSubview:deskview];
-            [deskview mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(desk1).offset((deskWidth)*j);
-                make.top.equalTo(desk1).offset((deskHeight + 5)*i);
-                make.size.mas_equalTo(CGSizeMake(60, 60));
-            }];
-            deskview.userInteractionEnabled = YES;
-            [deskview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(songTaped:)]];
-            [musicsArray addObject:deskview];
-        }
-        
-        if (tt ==1 ) {
-            break;
-        }
-    }
-    desk1.hidden = YES;
+//    [self initDeskView];
     
     self.voiceLabel = [UILabel new];
     self.voiceLabel.text = @"音量调节：";
@@ -201,7 +147,115 @@
     [self addRadioBtn];
 }
 
+/**
+ *  初始化对应的歌曲列表
+ */
+- (void)initDeskView {
+    DeskView *desk1 = [[DeskView alloc] init];
+    desk1.backgroundColor = [UIColor redColor];
+    [rawView addSubview:desk1];
+    [desk1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        if ([CommonsFunc isDeviceIpad]) {
+            make.top.equalTo(rawView).offset(20);
+        }else
+            make.top.equalTo(rawView).offset(10);
+        make.left.equalTo(rawView).offset(20);
+        make.size.mas_equalTo(CGSizeMake(60, 60));
+    }];
+    
+    
+    NSInteger contentWidth ;
+    NSInteger deskWidth,deskHeight;
+    if ([CommonsFunc isDeviceIpad]) {
+        deskWidth = 100;//(self.view.bounds.size.width - 20 - 400)/6;
+        deskHeight = 121;//(self.view.bounds.size.height - 250 - 20 -40)/4;
+        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
+        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(totalSongNum/6) +1) + 10);
+    }else {
+        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
+        deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/6;
+        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
+        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(totalSongNum/6) +1) + 10);//300);
+    }
+    
+    int deskNum = 1;
+    
+    NSArray *musics = [helper getDeskNamesFromUserdefaultByTag:(int)totalSongNum isSong:YES];
+    
+    @autoreleasepool {
+        NSInteger tt = 0;
+        for (int i = 0; i <= 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                if (deskNum > totalSongNum) {
+                    tt = 1;
+                    break;
+                }
+                DeskView *deskview = [DeskView new];
+                [deskview.img setImage:[UIImage imageNamed:@"music_unplay.png"]];
+                deskview.tag = deskNum;
+                if (deskNum <= musics.count) {
+                    deskview.deskName.text = musics[deskNum-1];//[NSString stringWithFormat:@"歌曲%d",deskNum];
+                }else
+                    deskview.deskName.text = [NSString stringWithFormat:@"歌曲%d",deskNum];
+                
+                deskNum ++;
+                
+                deskview.deskName.font = [UIFont systemFontOfSize:13];
+                
+                [rawView addSubview:deskview];
+                [deskview mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.equalTo(desk1).offset((deskWidth)*j);
+                    make.top.equalTo(desk1).offset((deskHeight + 5)*i);
+                    make.size.mas_equalTo(CGSizeMake(60, 60));
+                }];
+                deskview.userInteractionEnabled = YES;
+                [deskview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(songTaped:)]];
+                [deskview addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deskLongTaped:)]];
+                [musicsArray addObject:deskview];
+            }
+            
+            if (tt ==1 ) {
+                break;
+            }
+        }
+        desk1.hidden = YES;
+    }
+}
+
 #pragma mark - actions
+- (void)songsNumPicked:(NSNotification *)noti {
+    NSInteger num = [[[noti userInfo] objectForKey:@"desknum"] integerValue];
+    totalSongNum = num;
+}
+
+- (void)songPopViewConfrimed :(NSNotification *)noti {
+    NSDictionary *dic     = [noti userInfo];
+    NSInteger tag         = [[dic objectForKey:@"deskTag"] integerValue];
+    NSString *deskNames   = [dic objectForKey:@"deskName"];
+    [helper changeDeskModelByTag:(int)tag name:deskNames isSong:YES];
+    tmpView.deskName.text = deskNames;//[deskNames hasSuffix:@"桌"] ? deskNames : [NSString stringWithFormat:@"%@桌", deskNames];
+}
+
+- (void)deskLongTaped :(UIGestureRecognizer *)gesture {
+    if ([gesture isKindOfClass:[UILongPressGestureRecognizer class]]) {
+        if (gesture.state == UIGestureRecognizerStateBegan) {
+            tmpView = (DeskView *)[gesture view];
+            NSString *deskName = tmpView.deskName.text;
+            NSLog(@"long taped :%@",deskName);
+            PopupView *view = [PopupView defaultPopupView];
+            view.deskName = deskName;
+            view.signal = @"xxx";
+            view.parentVC = self;
+            view.deskTag = tmpView.tag;
+            view.isSong = YES;
+            [view addInnerView];
+            [self lew_presentPopupView:view animation:[LewPopupViewAnimationFade new] dismissed:^{
+                NSLog(@"动画结束");
+            }];
+        }
+    }
+}
+
 - (void)voiceUp:(UIButton *)button {
     NSLog(@"voice up");
     if (voice <= 90) {
@@ -291,6 +345,10 @@
 }
 
 #pragma mark - add views
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)addRadioBtn {
     UIView *container = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 300, 400)];
     container.backgroundColor = [CommonsFunc colorOfLight];

@@ -10,4 +10,6 @@
 
 @interface PickDeskNumViewController : UIViewController
 
+@property (nonatomic) BOOL isSongChoose;
+
 @end

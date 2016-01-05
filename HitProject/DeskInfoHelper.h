@@ -12,34 +12,38 @@
 @interface DeskInfoHelper : NSObject
 
 /**
- *  初始化100个桌号到内存，最先调用。
+ *  初始化60个桌号到内存，最先调用。
  */
-- (void)defaultArray ;
+- (void)defaultDeskArray ;
+/**
+ *  初始化15首音乐到内存
+ */
+- (void)defaultSongsArray ;
 
 /**
  *  根据tag改变deskNum的name
  *  @param deskNum 第几桌，桌的tag
  *  @param name    桌的名字
  */
-- (void) changeDeskModelByTag :(int)deskNum name:(NSString *)name;
+- (void) changeDeskModelByTag :(int)deskNum name:(NSString *)name isSong:(BOOL)issong;
 
 /**
  *  获得到指定桌号数的名称。
  *  @param tag
  *  @return
  */
-- (NSArray <NSString *> *)getDeskNamesFromUserdefaultByTag:(int) tag ;
+- (NSArray <NSString *> *)getDeskNamesFromUserdefaultByTag:(int) tag isSong:(BOOL)issong;
 
 /**
  *  将deskNameArray存储到userinfo
- *  @param array
+ *  @param issong:是否是歌曲flag
  */
-- (void) setDeskModelsToUserdefault:(NSArray <DeskInfoModel *>*)deskModelsArray;
+- (void)setDeskModelsToUserdefault:(NSArray<DeskInfoModel *> *)deskModelsArray isSong:(BOOL)isSong;
 
 /**
  *  从userdefault 获取key
  *  @return
  */
-- (NSArray <DeskInfoModel *>*) getDeskModelsFromUserdefault;
+- (NSArray <DeskInfoModel *>*) getDeskModelsFromUserdefault:(BOOL)isSong;
 
 @end

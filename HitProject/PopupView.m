@@ -14,6 +14,7 @@
 #import "LewPopupViewAnimationDrop.h"
 
 @implementation PopupView
+@synthesize isSong;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -55,7 +56,11 @@
     [confirmBtn addTarget:self action:@selector(confirmBtnTaped:) forControlEvents:UIControlEventTouchUpInside];
     
     //bianliang zhuangshang
-    NSArray *arr = @[@"*桌号",@"*信号",@"备注",@"其他"];
+    NSArray *arr = [NSArray new];
+    if (isSong) {
+        arr = @[@"*歌曲",@"*信号",@"备注",@"其他"];
+    }else
+        arr = @[@"*桌号",@"*信号",@"备注",@"其他"];
     NSArray *arr2 = @[self.deskName,self.signal,@"备注",@"其他"];
     for (int i =0; i<4; i++) {
         UIView *labelView = [self labelAndTextfield:100+i label:arr[i] textFeild:arr2[i]];
@@ -82,13 +87,16 @@
 
 
 - (void)confirmBtnTaped:(id)sender {
-    UITextField *textFeild= [self getTextViewByTag:100];
+    UITextField *textFeild= [self getTextViewByTag:100];//tag =100,is桌号
     NSString *string = textFeild.text;
     if (!string) {
         [self makeToast:@"桌号不能为空" duration:1.8 position:CSToastPositionCenter];
         return;
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_POPVIEW_CONFIRM object:nil userInfo:@{@"deskName":string, @"deskTag":@(self.deskTag)}];
+    if (isSong) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_SONGPOPVIEW_CONFIRM object:nil userInfo:@{@"deskName":string, @"deskTag":@(self.deskTag)}];
+    }else
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_POPVIEW_CONFIRM object:nil userInfo:@{@"deskName":string, @"deskTag":@(self.deskTag)}];
     [_parentVC lew_dismissPopupViewWithanimation:[LewPopupViewAnimationFade new]];
 }
 

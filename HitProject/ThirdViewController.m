@@ -51,6 +51,10 @@
     return self;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewDidLayoutSubviews {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] <= 8.0) {//补充ios7的scrollview 不能滑动的问题。
         [self layOutRawView];
@@ -74,9 +78,9 @@
     }
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
+//- (void)dealloc {
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -154,7 +158,7 @@
     
 }
 
-- (void ) deskView {
+- (void )deskView {
     int deknum = DESKNUMPERLINE;
     
     DeskView *desk1 = [[DeskView alloc] init];//WithFrame:CGRectMake(0, 0, 150, 150)];
@@ -162,7 +166,8 @@
     [rawView addSubview:desk1];
     [desk1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(rawView).offset(20);
-        make.left.equalTo(rawView).offset(20);
+//        make.left.equalTo(rawView).offset(20);
+        make.left.equalTo(rawView).offset(0);
         make.size.mas_equalTo(CGSizeMake(60, 60));
     }];
     
@@ -172,7 +177,9 @@
     NSInteger tt = 0;
     
     @autoreleasepool {
-        for (int i = 0; i <= 10; i++) {
+//      NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
+        NSArray <NSString *> *deskNumArray = [helper getDeskNamesFromUserdefaultByTag:(int)self.TotaldeskNum isSong:NO];
+        for (int i = 0; i <= 12; i++) {
             for (int j = 0; j < deknum; j++) {
                 if (deskNum > self.TotaldeskNum) {
                     tt = 1;
@@ -181,22 +188,20 @@
                 DeskView *deskview = [DeskView new];
                 NSString *deskNumString = nil;
                 
-//                NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
-                NSArray <NSString *> *deskNumArray = [helper getDeskNamesFromUserdefaultByTag:16];
-                
                 if (deskNum <= 13) {
                     deskNumString = deskNumArray[deskNum -1];
-                    deskview.deskName.text = [NSString stringWithFormat:@"%@桌",deskNumString];//(NSInteger)((j+1)+(i)*(j+1))];
+                    deskview.deskName.text = [NSString stringWithFormat:@"%@",deskNumString];//(NSInteger)((j+1)+(i)*(j+1))];
                 }else {
                     deskview.deskName.text = [NSString stringWithFormat:@"%d桌",deskNum];//(NSInteger)((j+1)+(i)*(j+1))];
                 }
                 
                 deskview.deskName.font = [UIFont systemFontOfSize:13];
-                deskNum ++;
                 deskview.tag = deskNum;
+                deskNum ++;
                 [rawView addSubview:deskview];
                 [deskview mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.left.equalTo(desk1).offset((deskWidth)*j);
+                    NSInteger gap = deskWidth - 60;
+                    make.left.equalTo(desk1).offset((deskWidth)*j + gap/2);
                     make.top.equalTo(desk1).offset((deskHeight + 10)*i);
                     if ([CommonsFunc isDeviceIpad]) {
                         make.size.mas_equalTo(CGSizeMake(60, 60));
@@ -224,7 +229,7 @@
         deskWidth = (self.view.bounds.size.width - 400 -20)/5;
         deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
         contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
-        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/5) +1) + 10);
+        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 5) * ((int)(self.TotaldeskNum/5) +1) + 20);
     } else {
         deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
         deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/7;
@@ -238,7 +243,7 @@
     NSDictionary *dic  = [noti userInfo];
     NSInteger tag      = [[dic objectForKey:@"deskTag"] integerValue];
     NSString *deskNames = [dic objectForKey:@"deskName"];
-    [helper changeDeskModelByTag:(int)tag name:deskNames];
+    [helper changeDeskModelByTag:(int)tag name:deskNames isSong:NO];
     tmpView.deskName.text = [deskNames hasSuffix:@"桌"] ? deskNames : [NSString stringWithFormat:@"%@桌", deskNames];
 }
 

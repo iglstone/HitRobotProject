@@ -12,9 +12,10 @@
 @property (nonatomic, strong) UIView *innerView;
 @property (nonatomic, weak)UIViewController *parentVC;
 
-@property (nonatomic) NSString *deskName;
-@property (nonatomic) NSString *signal;
+@property (nonatomic) NSString  *deskName;
+@property (nonatomic) NSString  *signal;
 @property (nonatomic) NSInteger deskTag;
+@property (nonatomic) BOOL      isSong;//这是个flag,歌曲的控制flag
 
 + (instancetype)defaultPopupView;
 + (instancetype)popupViewOfFrame:(CGRect)frame;

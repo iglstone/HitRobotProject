@@ -38,6 +38,9 @@
 //选择桌数
 #define NOTICE_PICKDESKNUM                  @"NOTICE_PICKDESKNUM"
 
+//选择歌曲数
+#define NOTICE_PICKSONGNUM                  @"NOTICE_PICKSONGNUM"
+
 //提示再发一次
 #define NOTICE_TRYAGIAN                     @"NOTICE_TRYAGIAN"
 
@@ -60,8 +63,11 @@
 
 #define NOTICE_CLOSE_WEBVIEW                @"NOTICE_CLOSE_WEBVIEW"
 
-//popview确认修改按钮
+//popview桌号确认修改按钮
 #define NOTICE_POPVIEW_CONFIRM              @"NOTICE_POPVIEW_CONFIRM"
+
+//popview歌曲确认修改按钮
+#define NOTICE_SONGPOPVIEW_CONFIRM          @"NOTICE_SONGPOPVIEW_CONFIRM"
 
 //nsdefaut KEY
 #define NSDEFAULT_REMEMBERCODE              @"NSDEFAULT_REMEMBERCODE"
@@ -69,7 +75,7 @@
 #define NSDEFAULT_REDROBOTIP                @"NSDEFAULT_REDROBOTIP"
 #define NSDEFAULT_BLUEROBOTIP               @"NSDEFAULT_BLUEROBOTIP"
 #define NSDEFAULT_PickupDeskNum             @"NSDEFAULT_PickupDeskNum"
-
+#define NSDEFAULT_PickupSongsNum            @"NSDEFAULT_PickupSongsNum"
 
 #endif
 

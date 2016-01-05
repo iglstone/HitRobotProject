@@ -12,7 +12,6 @@
 
 - (void)showView:(UIView *)popupView overlayView:(UIView *)overlayView{
     popupView.center = CGPointMake(overlayView.center.x, -popupView.bounds.size.height/2);
-    
     popupView.transform = CGAffineTransformMakeRotation(-M_1_PI / 2);
     
     [UIView animateWithDuration:0.30f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^{

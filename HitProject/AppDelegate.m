@@ -25,9 +25,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launc
     
-    //程序运行第一次存100个桌号到内存中
+    //程序运行第一次存60个桌号 40首歌曲到内存中
     DeskInfoHelper *help = [DeskInfoHelper new];
-    [help defaultArray];
+    [help defaultDeskArray];
+    [help defaultSongsArray];
     
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
     _main = [MainViewController new];

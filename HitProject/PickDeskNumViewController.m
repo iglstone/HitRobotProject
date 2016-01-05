@@ -17,6 +17,15 @@
 @end
 
 @implementation PickDeskNumViewController
+@synthesize isSongChoose;
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        isSongChoose = NO;
+    }
+    return self;
+}
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -24,13 +33,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"选择桌数";
+    if (isSongChoose) {
+        self.title = @"设置歌曲数";
+    }else
+        self.title = @"选择桌数";
     self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
     NSInteger screenHeight = [[UIScreen mainScreen] bounds].size.height;
     
     pickerArray = [NSMutableArray new];
-    for (int i = 1; i <= 40 ;i++) {
-        NSString *st = [NSString stringWithFormat:@"%d 桌", i];
+    for (int i = 1; i <= 60 ;i++) {
+        NSString *st = nil;
+        if (isSongChoose) {
+            if (i >40) {
+                break;
+            }
+            st = [NSString stringWithFormat:@"%d 首",i];
+        }else
+            st= [NSString stringWithFormat:@"%d 桌", i];
         [pickerArray addObject:st];
     }
 
@@ -50,8 +69,8 @@
     UILabel *label = [UILabel new];
     [self.view addSubview:label];
     label.text = @"选择完成请点击右上角 “确定” 按钮";
-    label.textColor =[UIColor lightGrayColor];
-    label.font = [UIFont systemFontOfSize:14];
+    label.textColor =[UIColor grayColor];
+    label.font = [UIFont systemFontOfSize:15];
     [label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(pickView.mas_bottom).offset(20);
         make.centerX.equalTo(pickView);
@@ -67,8 +86,13 @@
     NSString *string = [pickerArray objectAtIndex:row];
     NSInteger desknum = [[string substringWithRange:NSMakeRange(0, [string length]-2)] integerValue];
     NSLog(@"您选择的是 %@ ,,%ld",string,(long)desknum);
-    [[NSUserDefaults standardUserDefaults] setObject:@(desknum) forKey:NSDEFAULT_PickupDeskNum];
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_PICKDESKNUM object:nil userInfo:@{@"desknum":@(desknum)}];
+    if (isSongChoose) {
+        [[NSUserDefaults standardUserDefaults] setObject:@(desknum) forKey:NSDEFAULT_PickupSongsNum];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_PICKSONGNUM object:nil userInfo:@{@"desknum":@(desknum)}];
+    }else {
+        [[NSUserDefaults standardUserDefaults] setObject:@(desknum) forKey:NSDEFAULT_PickupDeskNum];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_PICKDESKNUM object:nil userInfo:@{@"desknum":@(desknum)}];
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 

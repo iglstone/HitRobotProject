@@ -69,10 +69,10 @@
     if (indexPath.row == 0) {
         cell.textLabel.text =@"设置桌数";
     }
-//    if (indexPath.row == 1) {
-//        cell.textLabel.text =@"添加账户";
-//    }
     if (indexPath.row == 1) {
+        cell.textLabel.text =@"设置音乐首数";
+    }
+    if (indexPath.row == 2) {
         cell.textLabel.text =@"退出登陆";
     }
     cell.backgroundColor = [CommonsFunc colorOfSystemBackground];
@@ -85,6 +85,11 @@
         [self.navigationController pushViewController:[PickDeskNumViewController new] animated:YES];
     }
     if (indexPath.row == 1) {
+        PickDeskNumViewController *pickVC = [PickDeskNumViewController new];
+        pickVC.isSongChoose = YES;
+        [self.navigationController pushViewController:pickVC animated:YES];
+    }
+    if (indexPath.row == 2) {
         UIAlertView *alet = [[UIAlertView alloc] initWithTitle:@"确定退出登录？" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
         [alet show];
     }
@@ -119,7 +124,7 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 2;
+    return 3;
 }
 
 - (void)didReceiveMemoryWarning {
