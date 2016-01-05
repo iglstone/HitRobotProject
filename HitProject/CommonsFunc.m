@@ -13,7 +13,26 @@
 #import <netdb.h>
 // positions
 
+#define UD [NSUserDefaults standardUserDefaults]
+
 @implementation CommonsFunc
+
++ (BOOL)isFirstLaunch {
+    if (![UD boolForKey:@"everLaunched"]) {
+        [UD setBool:YES forKey:@"everLaunched"];
+        [UD setBool:YES forKey:@"firstLaunch"];
+    }
+    else{
+        [UD setBool:NO forKey:@"firstLaunch"];
+    }
+
+    return [UD boolForKey:@"firstLaunch"];
+//    if ([UD boolForKey:@"firstLaunch"]) {
+//        //第一次运行,以游客登录
+//        NSLog(@"firstLaunch..");
+//        
+//    }
+}
 
 +(BOOL)isDeviceIpad
 {

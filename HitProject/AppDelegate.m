@@ -12,6 +12,7 @@
 #import "ThirdViewController.h"
 #import "FourthViewController.h"
 #import "LoginViewController.h"
+#import "DeskInfoHelper.h"
 
 #import "SocketClientViewController.h"
 @interface AppDelegate ()
@@ -24,12 +25,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launc
     
-//    self.server = [[ServerSocket alloc] init];
+    //程序运行第一次存100个桌号到内存中
+    DeskInfoHelper *help = [DeskInfoHelper new];
+    [help defaultArray];
     
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
     _main = [MainViewController new];
     self.window.rootViewController = [LoginViewController new];
-//    self.window.rootViewController = [SocketClientViewController new];
     
     [self.window makeKeyAndVisible];
     return YES;

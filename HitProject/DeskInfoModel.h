@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface DeskInfoModel : NSObject
+@interface DeskInfoModel : NSObject <NSCoding>
 //NSArray *arr = @[@"桌号",@"信号",@"备注",@"其他"];
 @property (nonatomic) NSString *p_deskNum;
 @property (nonatomic) NSString *p_sign;

@@ -35,6 +35,8 @@
 		E35D11B21C0F1CC0009AF0BB /* PickDeskNumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11B11C0F1CC0009AF0BB /* PickDeskNumViewController.m */; };
 		E37BA5031BE462C700DB7A96 /* JSAnalogueStick.m in Sources */ = {isa = PBXBuildFile; fileRef = E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */; };
 		E37BA50A1BE7162500DB7A96 /* DeskView.m in Sources */ = {isa = PBXBuildFile; fileRef = E37BA5091BE7162500DB7A96 /* DeskView.m */; };
+		E39DA2161C3A1E5E002065BE /* DeskInfoHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DA2151C3A1E5E002065BE /* DeskInfoHelper.m */; };
+		E39DA2171C3A1E5E002065BE /* DeskInfoHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DA2151C3A1E5E002065BE /* DeskInfoHelper.m */; };
 		E3C0B5241BE1EAA5004437EC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E3C0B5231BE1EAA5004437EC /* main.m */; };
 		E3C0B5271BE1EAA5004437EC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E3C0B5261BE1EAA5004437EC /* AppDelegate.m */; };
 		E3C0B52A1BE1EAA5004437EC /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3C0B5291BE1EAA5004437EC /* FirstViewController.m */; };
@@ -133,6 +135,8 @@
 		E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSAnalogueStick.m; sourceTree = "<group>"; };
 		E37BA5081BE7162500DB7A96 /* DeskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeskView.h; sourceTree = "<group>"; };
 		E37BA5091BE7162500DB7A96 /* DeskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeskView.m; sourceTree = "<group>"; };
+		E39DA2141C3A1E5E002065BE /* DeskInfoHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeskInfoHelper.h; sourceTree = "<group>"; };
+		E39DA2151C3A1E5E002065BE /* DeskInfoHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeskInfoHelper.m; sourceTree = "<group>"; };
 		E3B146BD1BED9CB100963FA8 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		E3C0B51E1BE1EAA5004437EC /* HitProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HitProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3C0B5221BE1EAA5004437EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -247,6 +251,8 @@
 			children = (
 				E34C26631C2CEC43007936D8 /* DeskInfoModel.h */,
 				E34C26641C2CEC43007936D8 /* DeskInfoModel.m */,
+				E39DA2141C3A1E5E002065BE /* DeskInfoHelper.h */,
+				E39DA2151C3A1E5E002065BE /* DeskInfoHelper.m */,
 				E34C265E1C2CDCE1007936D8 /* PopupView.h */,
 				E34C265F1C2CDCE1007936D8 /* PopupView.m */,
 				E34C26601C2CDCE1007936D8 /* PopupView.xib */,
@@ -596,6 +602,7 @@
 				E34C265B1C2CDCD3007936D8 /* LewPopupViewAnimationSlide.m in Sources */,
 				E34C265A1C2CDCD3007936D8 /* LewPopupViewAnimationFade.m in Sources */,
 				E37BA50A1BE7162500DB7A96 /* DeskView.m in Sources */,
+				E39DA2161C3A1E5E002065BE /* DeskInfoHelper.m in Sources */,
 				E35D11AB1C0ECAD2009AF0BB /* ResetSecurityViewController.m in Sources */,
 				E33DD38D1BF20DE40028FCBD /* SocketClientViewController.m in Sources */,
 			);
@@ -605,6 +612,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E39DA2171C3A1E5E002065BE /* DeskInfoHelper.m in Sources */,
 				E3C0B5411BE1EAA6004437EC /* HitProjectTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

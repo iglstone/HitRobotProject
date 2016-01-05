@@ -14,6 +14,7 @@
 
 @property (nonatomic) NSString *deskName;
 @property (nonatomic) NSString *signal;
+@property (nonatomic) NSInteger deskTag;
 
 + (instancetype)defaultPopupView;
 + (instancetype)popupViewOfFrame:(CGRect)frame;

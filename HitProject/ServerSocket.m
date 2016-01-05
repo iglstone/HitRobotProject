@@ -97,11 +97,11 @@ static ServerSocket* _instance = nil;
         }
         receiveMessage = nil;
         
-        NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.23 target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
+//        NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.23 target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
         
         if (s.isConnected) {
             [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
-            [timer fire];
+//            [timer fire];
         }else
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
     }
@@ -401,6 +401,12 @@ static ServerSocket* _instance = nil;
     [sock readDataWithTimeout:-1 tag:0];
 }
 
+/**
+ *  原理：连接一个socket，等待接收 RED / BLUE 消息来nsuserdefault 存储
+ *  其ip，后面根据其ip来找到对应的小红小兰。
+ *  @param sock
+ *  @return 小红，小蓝
+ */
 + (NSString *)getRobotName :(AsyncSocket *)sock {
     if (!sock.isConnected) {
         NSLog(@"sock 断连了");

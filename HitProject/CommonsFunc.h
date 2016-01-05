@@ -11,6 +11,11 @@
 
 @interface CommonsFunc : NSObject
 +(BOOL)isDeviceIpad;
+/**
+ *  判断程序整个生命周期都只执行一次
+ *  @return yes 表示是第一次运行，no 不是第一次执行。
+ */
++ (BOOL)isFirstLaunch ;
 
 //获得系统背景色
 +(UIColor *)colorOfSystemBackground;

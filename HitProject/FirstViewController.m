@@ -16,7 +16,6 @@
 @interface FirstViewController ()
 
 @property (nonatomic) ServerSocket *server;
-
 @property (nonatomic) HitControl *control;
 @property (nonatomic) BOOL isStart;
 
@@ -173,11 +172,17 @@
     
 }
 
+#pragma mark - noti
+/**
+ *  返回该程序后的重新监听
+ *  @param
+ */
 - (void)backToForground :(NSNotification *)noti {
     NSLog(@"backToForground noti");
     [control startListen];
 }
 
+#pragma mark - action.
 - (void)logout:(id)sender {
     MainViewController *main =(MainViewController *) self.tabBarController;
     AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];

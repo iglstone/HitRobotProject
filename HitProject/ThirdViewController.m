@@ -11,6 +11,7 @@
 #import "PopupView.h"
 #import "UIViewController+LewPopupViewController.h"
 #import "LewPopupViewAnimationFade.h"
+#import "DeskInfoHelper.h"
 
 #define DESKNUMPERLINE 5;
 
@@ -19,6 +20,8 @@
     UIScrollView *rawView;
     NSInteger deskWidth,deskHeight;
     NSString *sss;
+    DeskInfoHelper *helper;
+    DeskView *tmpView;
 }
 @property (nonatomic) UILabel *infoLabel;
 @property (nonatomic) NSInteger deskNum;
@@ -42,6 +45,8 @@
         }else
             self.TotaldeskNum = denum;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deskNumNoti:) name:NOTICE_PICKDESKNUM object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popViewConfrimed:) name:NOTICE_POPVIEW_CONFIRM object:nil];
+        helper = [DeskInfoHelper new];
     }
     return self;
 }
@@ -94,15 +99,6 @@
         }else
             make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(20, 20, 100, screenWidth/4));
     }];
-    
-//    NSInteger contentWidth ;
-//    if ([CommonsFunc isDeviceIpad]) {
-//        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
-//        rawView.contentSize = CGSizeMake(contentWidth, 700);
-//    }else {
-//        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
-//        rawView.contentSize = CGSizeMake(contentWidth, 350);
-//    }
     
     infoLabel =[UILabel new];
     [self.view addSubview:infoLabel];
@@ -170,105 +166,52 @@
         make.size.mas_equalTo(CGSizeMake(60, 60));
     }];
     
-//    NSInteger contentWidth ;
-////    NSInteger deskWidth,deskHeight;
-//    NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width;
-//    if ([CommonsFunc isDeviceIpad]) {
-//        deskWidth = (self.view.bounds.size.width - 400 -20)/6;
-//        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
-//        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
-//        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/6) +1) + 10);
-//    }else {
-//        deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/7;
-//        deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
-//        contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
-//        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/6) +1) + 10);
-//    }
     [self layOutRawView];
     
     int deskNum = 1;
     NSInteger tt = 0;
-    for (int i = 0; i <= 10; i++) {
-        for (int j = 0; j < deknum; j++) {
-            if (deskNum > self.TotaldeskNum) {
-                tt = 1;
+    
+    @autoreleasepool {
+        for (int i = 0; i <= 10; i++) {
+            for (int j = 0; j < deknum; j++) {
+                if (deskNum > self.TotaldeskNum) {
+                    tt = 1;
+                    break;
+                }
+                DeskView *deskview = [DeskView new];
+                NSString *deskNumString = nil;
+                
+//                NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
+                NSArray <NSString *> *deskNumArray = [helper getDeskNamesFromUserdefaultByTag:16];
+                
+                if (deskNum <= 13) {
+                    deskNumString = deskNumArray[deskNum -1];
+                    deskview.deskName.text = [NSString stringWithFormat:@"%@桌",deskNumString];//(NSInteger)((j+1)+(i)*(j+1))];
+                }else {
+                    deskview.deskName.text = [NSString stringWithFormat:@"%d桌",deskNum];//(NSInteger)((j+1)+(i)*(j+1))];
+                }
+                
+                deskview.deskName.font = [UIFont systemFontOfSize:13];
+                deskNum ++;
+                deskview.tag = deskNum;
+                [rawView addSubview:deskview];
+                [deskview mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.equalTo(desk1).offset((deskWidth)*j);
+                    make.top.equalTo(desk1).offset((deskHeight + 10)*i);
+                    if ([CommonsFunc isDeviceIpad]) {
+                        make.size.mas_equalTo(CGSizeMake(60, 60));
+                    }
+                    else
+                        make.size.mas_equalTo(CGSizeMake(40, 40));
+                }];
+                deskview.userInteractionEnabled = YES;
+                [deskview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deskTaped:)]];
+                [deskview addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deskLongTaped:)]];
+                [desksArray addObject: deskview];
+            }
+            if (tt == 1) {
                 break;
             }
-            DeskView *deskview = [DeskView new];
-            NSString *deskNumString = nil;
-            
-            NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
-            
-            if (deskNum <= 13) {
-                deskNumString = deskNumArray[deskNum -1];
-//                switch (deskNum) {
-//                    case 1:
-//                        deskNumString = @"121";
-//                        break;
-//                    case 2:
-//                        deskNumString = @"122";
-//                        break;
-//                    case 3:
-//                        deskNumString = @"123";
-//                        break;
-//                    case 4:
-//                        deskNumString = @"125";
-//                        break;
-//                    case 5:
-//                        deskNumString = @"126";
-//                        break;
-//                    case 6:
-//                        deskNumString = @"127";
-//                        break;
-//                    case 7:
-//                        deskNumString = @"128";
-//                        break;
-//                    case 8:
-//                        deskNumString = @"117";
-//                        break;
-//                    case 9:
-//                        deskNumString = @"116";
-//                        break;
-//                    case 10:
-//                        deskNumString = @"115";
-//                        break;
-//                    case 11:
-//                        deskNumString = @"113";
-//                        break;
-//                    case 12:
-//                        deskNumString = @"112";
-//                        break;
-//                    case 13:
-//                        deskNumString = @"106";
-//                        break;
-//                    default:
-//                        break;
-//                }
-                deskview.deskName.text = [NSString stringWithFormat:@"%@桌",deskNumString];//(NSInteger)((j+1)+(i)*(j+1))];
-            }else {
-                deskview.deskName.text = [NSString stringWithFormat:@"%d桌",deskNum];//(NSInteger)((j+1)+(i)*(j+1))];
-            }
-            
-            deskview.deskName.font = [UIFont systemFontOfSize:13];
-            deskNum ++;
-            deskview.tag = deskNum;
-            [rawView addSubview:deskview];
-            [deskview mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(desk1).offset((deskWidth)*j);
-                make.top.equalTo(desk1).offset((deskHeight + 10)*i);
-                if ([CommonsFunc isDeviceIpad]) {
-                    make.size.mas_equalTo(CGSizeMake(60, 60));
-                }
-                else
-                    make.size.mas_equalTo(CGSizeMake(40, 40));
-            }];
-            deskview.userInteractionEnabled = YES;
-            [deskview addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(deskTaped:)]];
-            [deskview addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(deskLongTaped:)]];
-            [desksArray addObject: deskview];
-        }
-        if (tt == 1) {
-            break;
         }
     }
     desk1.hidden = YES;
@@ -277,12 +220,11 @@
 - (void)layOutRawView {
     NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width;
     NSInteger contentWidth ;
-//    NSInteger deskWidth,deskHeight;
     if ([CommonsFunc isDeviceIpad]) {
         deskWidth = (self.view.bounds.size.width - 400 -20)/5;
         deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5;
         contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - 400;
-        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/6) +1) + 10);
+        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/5) +1) + 10);
     } else {
         deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
         deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/7;
@@ -291,12 +233,21 @@
     }
 }
 
+#pragma mark - notification
+- (void) popViewConfrimed:(NSNotification *)noti {
+    NSDictionary *dic  = [noti userInfo];
+    NSInteger tag      = [[dic objectForKey:@"deskTag"] integerValue];
+    NSString *deskNames = [dic objectForKey:@"deskName"];
+    [helper changeDeskModelByTag:(int)tag name:deskNames];
+    tmpView.deskName.text = [deskNames hasSuffix:@"桌"] ? deskNames : [NSString stringWithFormat:@"%@桌", deskNames];
+}
+
 - (void)deskNumNoti :(NSNotification *)noti {
-//    NSInteger deskNum2 = [[[noti userInfo] objectForKey:@"desknum"] integerValue];
     NSInteger denum = [[[NSUserDefaults standardUserDefaults] objectForKey:NSDEFAULT_PickupDeskNum] integerValue];
     self.TotaldeskNum = denum;
 }
 
+#pragma mark - action
 - (void)backToOrigin:(UIButton *)btn {
     NSLog(@"backToOrigin");
     [control backToOrigin];
@@ -325,13 +276,14 @@
 - (void)deskLongTaped :(UIGestureRecognizer *)gesture {
     if ([gesture isKindOfClass:[UILongPressGestureRecognizer class]]) {
         if (gesture.state == UIGestureRecognizerStateBegan) {
-            DeskView *tmpView = (DeskView *)[gesture view];
+            tmpView = (DeskView *)[gesture view];
             NSString *deskName = tmpView.deskName.text;
             NSLog(@"long taped :%@",deskName);
             PopupView *view = [PopupView defaultPopupView];
             view.deskName = deskName;
             view.signal = @"xxx";
             view.parentVC = self;
+            view.deskTag = tmpView.tag;
             [view addInnerView];
             [self lew_presentPopupView:view animation:[LewPopupViewAnimationFade new] dismissed:^{
                 NSLog(@"动画结束");

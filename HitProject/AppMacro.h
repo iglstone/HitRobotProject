@@ -60,6 +60,9 @@
 
 #define NOTICE_CLOSE_WEBVIEW                @"NOTICE_CLOSE_WEBVIEW"
 
+//popview确认修改按钮
+#define NOTICE_POPVIEW_CONFIRM              @"NOTICE_POPVIEW_CONFIRM"
+
 //nsdefaut KEY
 #define NSDEFAULT_REMEMBERCODE              @"NSDEFAULT_REMEMBERCODE"
 #define NSDEFAULT_USERNAME                  @"NSDEFAULT_USERNAME"

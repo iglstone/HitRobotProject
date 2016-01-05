@@ -19,14 +19,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        [[NSBundle mainBundle] loadNibNamed:[[self class] description] owner:self options:nil];
         
-//        _innerView = [self innerView];
-//        [self addSubview:_innerView];
-//        [_innerView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.edges.equalTo(self).insets(UIEdgeInsetsMake(0, 0, 0, 0));
-//        }];
-//        _innerView.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
@@ -40,7 +33,6 @@
         make.edges.equalTo(self).insets(UIEdgeInsetsMake(0, 0, 0, 0));
     }];
     view.backgroundColor = [UIColor whiteColor];
-    
     
     UIButton *cancelBtn = [UIButton new];
     [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
@@ -60,13 +52,13 @@
         make.top.equalTo(view);
         make.right.equalTo(view).offset(-20);
     }];
-    [confirmBtn addTarget:self action:@selector(dismissViewFadeAction:) forControlEvents:UIControlEventTouchUpInside];
+    [confirmBtn addTarget:self action:@selector(confirmBtnTaped:) forControlEvents:UIControlEventTouchUpInside];
     
     //bianliang zhuangshang
     NSArray *arr = @[@"*桌号",@"*信号",@"备注",@"其他"];
     NSArray *arr2 = @[self.deskName,self.signal,@"备注",@"其他"];
     for (int i =0; i<4; i++) {
-        UIView *labelView = [self labelAndTextfield:100 label:arr[i] textFeild:arr2[i]];
+        UIView *labelView = [self labelAndTextfield:100+i label:arr[i] textFeild:arr2[i]];
         [view addSubview:labelView];
         [labelView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(view).offset(i*50 + 60);
@@ -75,8 +67,29 @@
             make.right.equalTo(view);
         }];
     }
-    
-//    return view;
+}
+
+
+- (UITextField *)getTextViewByTag:(NSInteger)tag {
+    UIView *subView = [self viewWithTag:tag];
+    for (UIView *view in subView.subviews) {
+        if ([view isKindOfClass:[UITextField class]]) {
+            return (UITextField *)view;
+        }
+    }
+    return nil;
+}
+
+
+- (void)confirmBtnTaped:(id)sender {
+    UITextField *textFeild= [self getTextViewByTag:100];
+    NSString *string = textFeild.text;
+    if (!string) {
+        [self makeToast:@"桌号不能为空" duration:1.8 position:CSToastPositionCenter];
+        return;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_POPVIEW_CONFIRM object:nil userInfo:@{@"deskName":string, @"deskTag":@(self.deskTag)}];
+    [_parentVC lew_dismissPopupViewWithanimation:[LewPopupViewAnimationFade new]];
 }
 
 - (UIView *)labelAndTextfield:(NSInteger)tag label:(NSString *)lableText textFeild:(NSString *)feildText {
@@ -109,13 +122,17 @@
 
 + (instancetype)defaultPopupView{
     if ([CommonsFunc isDeviceIpad]) {
-        return [[PopupView alloc]initWithFrame:CGRectMake(0, 0, 300, 330)];
+        PopupView *pop = [[PopupView alloc]initWithFrame:CGRectMake(0, 0, 300, 330)];
+//        [pop addInnerView];//需要在self完全成型之后加。
+        return pop;
     }
     return [[PopupView alloc]initWithFrame:CGRectMake(0, 0, 195, 210)];
 }
 
 + (instancetype)popupViewOfFrame:(CGRect)frame{
-    return [[PopupView alloc]initWithFrame:frame];
+    PopupView *pop = [[PopupView alloc]initWithFrame:frame];
+//    [pop addInnerView];
+    return pop;
 }
 
 - (IBAction)dismissAction:(id)sender{
