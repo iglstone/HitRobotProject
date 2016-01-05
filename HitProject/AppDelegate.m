@@ -27,12 +27,12 @@
     
     //程序运行第一次存60个桌号 40首歌曲到内存中
     DeskInfoHelper *help = [DeskInfoHelper new];
-    [help defaultDeskArray];
-    [help defaultSongsArray];
+    [help default];
     
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
-    _main = [MainViewController new];
-    self.window.rootViewController = [LoginViewController new];
+//    _main = [MainViewController new];
+    _main = [LoginViewController new];
+    self.window.rootViewController = _main;//切换viewcontroller 只要把main换掉就好。
     
     [self.window makeKeyAndVisible];
     return YES;

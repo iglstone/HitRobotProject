@@ -88,7 +88,10 @@ static ServerSocket* _instance = nil;
             return;
         }
     }
-    [dele.main setDebugLabelText:debugs mode:0];
+    if ([dele.main isKindOfClass:[MainViewController class]]) {
+        MainViewController *tmpMain = (MainViewController *)dele.main;
+        [tmpMain setDebugLabelText:debugs mode:0];
+    }
     for (AsyncSocket * s in self.selectedSocketArray)
     {
         sendedMessage = string;
@@ -390,7 +393,10 @@ static ServerSocket* _instance = nil;
         if ([msg isEqualToString:@"o"]) {
             msg = @"完成";
         }
-        [dele.main setDebugLabelText:msg mode:1];
+        if ([dele.main isKindOfClass:[MainViewController class]]) {
+            MainViewController *tmpMain = (MainViewController *)dele.main;
+            [tmpMain setDebugLabelText:msg mode:1];
+        }
     }
     
 //    [result appendString:[ServerSocket dataToString:data]];

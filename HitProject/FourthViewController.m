@@ -48,7 +48,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(songsNumPicked:) name:NOTICE_PICKSONGNUM object:nil];
         totalSongNum = [[[NSUserDefaults standardUserDefaults] objectForKey:NSDEFAULT_PickupSongsNum] integerValue];
         if (!totalSongNum) {
-            totalSongNum = 15;
+            totalSongNum = 20;
         }
     }
     return self;

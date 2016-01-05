@@ -12,13 +12,9 @@
 @interface DeskInfoHelper : NSObject
 
 /**
- *  初始化60个桌号到内存，最先调用。
+ *  初始化60个桌号到内存，最先调用。 初始化40首音乐到内存
  */
-- (void)defaultDeskArray ;
-/**
- *  初始化15首音乐到内存
- */
-- (void)defaultSongsArray ;
+- (void)default;
 
 /**
  *  根据tag改变deskNum的name

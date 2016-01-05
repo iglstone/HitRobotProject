@@ -166,7 +166,6 @@
     [rawView addSubview:desk1];
     [desk1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(rawView).offset(20);
-//        make.left.equalTo(rawView).offset(20);
         make.left.equalTo(rawView).offset(0);
         make.size.mas_equalTo(CGSizeMake(60, 60));
     }];

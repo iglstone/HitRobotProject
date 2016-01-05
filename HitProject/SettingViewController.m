@@ -102,24 +102,25 @@
 }
 
 - (void) logout {
-    MainViewController *main =(MainViewController *) self.tabBarController;
-    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    UIViewController *VC = self.tabBarController;//nil
+//    MainViewController *main =(MainViewController *) self.tabBarController;//nil
+//    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];//no user
     // 在delegate中初始化新的controller
     // 修改rootViewController
     // [delegate.window addSubview:delegate.main.view];
-    [main.view removeFromSuperview];
-    delegate.window.rootViewController = [LoginViewController new];
+//    UIViewController *VC2 = delegate.main;//not nil
+//    [main.view removeFromSuperview];//把当前的view删除掉
+//    delegate.main = [LoginViewController new];//切换viewcontroller
+    
+//    delegate.window.rootViewController = [LoginViewController new];//也行，但是释放不掉之前的vc好像
+//    VC2.view.window.rootViewController = [LoginViewController new];//直接就不行，原因自己分析
+    
+    /******** very important */
+    self.view.window.rootViewController = [LoginViewController new];//*****这个可以，应该是释放了，因为内存没有增加
     
     [self dismissViewControllerAnimated:YES completion:^{
         HitControl *cont = [HitControl sharedControl];
         [cont stopAll];
-//            MainViewController *main =(MainViewController *) self.tabBarController;
-//            AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//            // 在delegate中初始化新的controller
-//            // 修改rootViewController
-//            //    [delegate.window addSubview:delegate.main.view];
-//            [main.view removeFromSuperview];
-//            delegate.window.rootViewController = [LoginViewController new];
     }];
 }
 

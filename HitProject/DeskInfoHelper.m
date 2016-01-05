@@ -14,52 +14,55 @@
 @implementation DeskInfoHelper
 
 #pragma mark -
-- (void)defaultDeskArray {
+- (void) default {
     if ([CommonsFunc isFirstLaunch]) {
-        NSMutableArray <DeskInfoModel *> *modlesArr = [NSMutableArray new];
-        for (int i = 0; i < 60; i++) {
-            DeskInfoModel *model = [DeskInfoModel new];
-            model.p_deskNum = [NSString stringWithFormat:@"%d桌",(i+1)];
-            [modlesArr addObject:model];
-        }
-        [self setDeskModelsToUserdefault:[NSArray arrayWithArray:modlesArr] isSong:NO];
+        [self defaultDeskArray];
+        [self defaultSongsArray];
     }
 }
 
-- (void)defaultSongsArray {
-    if ([CommonsFunc isFirstLaunch]) {
-        NSArray *musics = @[@"铃儿响叮当",
-                            @"生日歌",
-                            @"熊出没",
-                            @"恭喜发财",
-                            @"My Soul",
-                            @"The Truth That U Leave",
-                            @"Not going anyway",
-                            @"Annie's Wonderland",
-                            @"Kiss The Rain",
-                            @"卡农",
-                            @"红豆",
-                            @"滴答",
-                            @"飘雪",
-                            @"Angel",
-                            @"Whatever will be",
-                            @"The Show",
-                            @"Black Black Heart",
-                            @"Only Love",
-                            @"Right Now Right Here",
-                            @"See You Again"
-                            ];
-        NSMutableArray <DeskInfoModel *> *modlesArr = [NSMutableArray new];
-        for (int i = 0; i < 40; i++) {
-            DeskInfoModel *model = [DeskInfoModel new];
-            if (i < musics.count) {
-                model.p_deskNum = musics[i];//[NSString stringWithFormat:@"%d桌",(i+1)];
-            }else
-                model.p_deskNum = [NSString stringWithFormat:@"歌曲%d",(i+1)];
-            [modlesArr addObject:model];
-        }
-        [self setDeskModelsToUserdefault:[NSArray arrayWithArray:modlesArr] isSong:YES];
+- (void) defaultDeskArray {
+    NSMutableArray <DeskInfoModel *> *modlesArr = [NSMutableArray new];
+    for (int i = 0; i < 60; i++) {
+        DeskInfoModel *model = [DeskInfoModel new];
+        model.p_deskNum = [NSString stringWithFormat:@"%d桌",(i+1)];
+        [modlesArr addObject:model];
     }
+    [self setDeskModelsToUserdefault:[NSArray arrayWithArray:modlesArr] isSong:NO];
+}
+
+- (void)defaultSongsArray {
+    NSArray *musics = @[@"铃儿响叮当",
+                        @"生日歌",
+                        @"熊出没",
+                        @"恭喜发财",
+                        @"My Soul",
+                        @"The Truth That U Leave",
+                        @"Not going anyway",
+                        @"Annie's Wonderland",
+                        @"Kiss The Rain",
+                        @"卡农",
+                        @"红豆",
+                        @"滴答",
+                        @"飘雪",
+                        @"Angel",
+                        @"Whatever will be",
+                        @"The Show",
+                        @"Black Black Heart",
+                        @"Only Love",
+                        @"Right Now Right Here",
+                        @"See You Again"
+                        ];
+    NSMutableArray <DeskInfoModel *> *modlesArr = [NSMutableArray new];
+    for (int i = 0; i < 40; i++) {
+        DeskInfoModel *model = [DeskInfoModel new];
+        if (i < musics.count) {
+            model.p_deskNum = musics[i];//[NSString stringWithFormat:@"%d桌",(i+1)];
+        }else
+            model.p_deskNum = [NSString stringWithFormat:@"歌曲%d",(i+1)];
+        [modlesArr addObject:model];
+    }
+    [self setDeskModelsToUserdefault:[NSArray arrayWithArray:modlesArr] isSong:YES];
 }
 
 - (void) changeDeskModelByTag :(int)deskNum name:(NSString *)name isSong:(BOOL)issong{

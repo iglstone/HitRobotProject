@@ -131,74 +131,9 @@ static HitControl* _instance = nil;
                         @"See You Again"
                         ];
     NSString *songname = musics[numeber-1];
-//    NSArray *messageArray = @[@"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z", @"A", @"B", @"C", @"(", @")", @"*", @"+", @"-"];
-//    NSString *msg = messageArray[numeber -1];
-//    [server sendMessage:msg debugstring:songname];
-    
-    switch (numeber) {
-        case 1:
-            [server sendMessage:@"o" debugstring:songname];
-            break;
-        case 2:
-            [server sendMessage:@"p" debugstring:songname];
-            break;
-        case 3:
-            [server sendMessage:@"q" debugstring:songname];
-            break;
-        case 4:
-            [server sendMessage:@"r" debugstring:songname];
-            break;
-        case 5:
-            [server sendMessage:@"s" debugstring:songname];
-            break;
-        case 6:
-            [server sendMessage:@"t" debugstring:songname];
-            break;
-        case 7:
-            [server sendMessage:@"u" debugstring:songname];
-            break;
-        case 8:
-            [server sendMessage:@"v" debugstring:songname];
-            break;
-        case 9:
-            [server sendMessage:@"w" debugstring:songname];
-            break;
-        case 10:
-            [server sendMessage:@"x" debugstring:songname];
-            break;
-        case 11:
-            [server sendMessage:@"y" debugstring:songname];
-            break;
-        case 12:
-            [server sendMessage:@"z" debugstring:songname];
-            break;
-        case 13:
-            [server sendMessage:@"A" debugstring:songname];
-            break;
-        case 14:
-            [server sendMessage:@"B" debugstring:songname];
-            break;
-        case 15:
-            [server sendMessage:@"C" debugstring:songname];
-            break;
-        case 16:
-            [server sendMessage:@"(" debugstring:songname];
-            break;
-        case 17:
-            [server sendMessage:@")" debugstring:songname];
-            break;
-        case 18:
-            [server sendMessage:@"*" debugstring:songname];
-            break;
-        case 19:
-            [server sendMessage:@"+" debugstring:songname];
-            break;
-        case 20:
-            [server sendMessage:@"-" debugstring:songname];
-            break;
-        default:
-            break;
-    }
+    NSArray *messageArray = @[@"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z", @"A", @"B", @"C", @"(", @")", @"*", @"+", @"-"];
+    NSString *msg = messageArray[numeber -1];
+    [server sendMessage:msg debugstring:songname];
 }
 
 - (void)deskNumber:(NSInteger)numeber {
