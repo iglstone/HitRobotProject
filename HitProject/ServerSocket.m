@@ -9,6 +9,8 @@
 #import "ServerSocket.h"
 #import "SocketMessageModel.h"
 
+#define TIMEOUT_SECKENTS 12
+
 @interface ServerSocket (){
     NSString *sendedMessage;
 //    NSString *receiveMessage;
@@ -76,6 +78,11 @@ static ServerSocket* _instance = nil;
 }
 
 #pragma mark - Private Methods
+/**
+ *  发送到client的数据，
+ *  @param string <#string description#>
+ *  @param debugs <#debugs description#>
+ */
 - (void)sendMessage :(NSString *)string debugstring:(NSString *)debugs
 {
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
@@ -92,23 +99,53 @@ static ServerSocket* _instance = nil;
         MainViewController *tmpMain = (MainViewController *)dele.main;
         [tmpMain setDebugLabelText:debugs mode:0];
     }
-    for (AsyncSocket * s in self.selectedSocketArray)
-    {
-        sendedMessage = string;
-        if (!string) {
-            continue;
+    
+    @autoreleasepool {
+        //二进制数转换成string
+//        string = [self stringFromHexString:string];
+        for (AsyncSocket * s in self.selectedSocketArray)
+        {
+            sendedMessage = string;
+            if (!string) {
+                continue;
+            }
+            receiveMessage = nil;
+            
+//            NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:TIMEOUT_SECKENTS target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
+            
+            if (s.isConnected) {
+                [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
+//                [timer fire];
+            }else
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
         }
-        receiveMessage = nil;
-        
-//        NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.23 target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
-        
-        if (s.isConnected) {
-            [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
-//            [timer fire];
-        }else
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
     }
 }
+
+/**
+ *  十六进制准换成字符串
+ *  @param hexString
+ *  @return
+ */
+- (NSString *)stringFromHexString:(NSString *)hexString {
+    if ([hexString hasPrefix:@"0x"]||[hexString hasPrefix:@"ox"]||[hexString hasPrefix:@"0X"]) {
+        hexString = [hexString stringByReplacingCharactersInRange:NSMakeRange(0, 2) withString:@""];
+        hexString = [hexString stringByReplacingOccurrencesOfString:@"0x" withString:@""];
+    }
+    char *myBuffer = (char *)malloc((int)[hexString length] / 2 + 1);
+    bzero(myBuffer, [hexString length] / 2 + 1);
+    for (int i = 0; i < [hexString length] - 1; i += 2) {
+        unsigned int anInt;
+        NSString * hexCharStr = [hexString substringWithRange:NSMakeRange(i, 2)];
+        NSScanner * scanner = [[[NSScanner alloc] initWithString:hexCharStr] autorelease];
+        [scanner scanHexInt:&anInt];
+        myBuffer[i / 2] = (char)anInt;
+    }
+    NSString *unicodeString = [NSString stringWithCString:myBuffer encoding:4];
+    NSLog(@"----字符串===%@",unicodeString);
+    return unicodeString;
+}
+
 
 - (void)sendMessageAgain{
     for (AsyncSocket * s in self.selectedSocketArray)
@@ -124,30 +161,32 @@ static ServerSocket* _instance = nil;
 
 - (void)compareMessage :(NSTimer  *) timer{
     AsyncSocket *S = (AsyncSocket *)[[timer userInfo] objectForKey:@"sock"];
-    if (!receiveMessage) {//为空，没有读取到
-        NSLog(@"has not receive");
-        [self sendMessageAgain];
-        times ++;
-        if (times == 20) {
-            NSLog(@"20 times return");
-            [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_TRYAGIAN object:nil];//显示toast
-            times = 0;
-            [timer invalidate];
-            timer = nil;
-            return;
-        }
-        return;
-    }
+    [S writeData:[ServerSocket stringToData:@"A"] withTimeout:-1 tag:0];
+    NSLog(@"write A");
     
-    if ([receiveMessage isEqualToString:@"o"] && [S isEqual:tmpSocket]) {
-        times = 0;
-        NSLog(@"socket the same ");
-        [timer invalidate];
-        timer = nil;
-        return;
-    }
-    
-    NSLog(@"receive others :%@",S);
+//    if (!receiveMessage) {//为空，没有读取到
+//        NSLog(@"has not receive");
+//        [self sendMessageAgain];
+//        times ++;
+//        if (times == 20) {
+//            NSLog(@"20 times return");
+//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_TRYAGIAN object:nil];//显示toast
+//            times = 0;
+//            [timer invalidate];
+//            timer = nil;
+//            return;
+//        }
+//        return;
+//    }
+//    
+//    if ([receiveMessage isEqualToString:@"o"] && [S isEqual:tmpSocket]) {
+//        times = 0;
+//        NSLog(@"socket the same ");
+//        [timer invalidate];
+//        timer = nil;
+//        return;
+//    }
+//    NSLog(@"receive others :%@",S);
     
 }
 
@@ -220,7 +259,7 @@ static ServerSocket* _instance = nil;
 /* socket发生错误时,socket关闭；连接时可能被调用，主要用于socket连接错误时读取错误发生前的数据*/
 - (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {
-    NSLog(@"Server willDisconnectWithError");
+    NSLog(@"Server willDisconnectWithError :%@",err);
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
 }
 
@@ -290,7 +329,7 @@ static ServerSocket* _instance = nil;
     NSLog(@"端口:%hu",port);
     
     [sock writeData:[ServerSocket stringToData:@"连接成功 !"] withTimeout:-1 tag:0];//返回
-    [sock readDataWithTimeout:-1 tag:0];
+    [sock readDataWithTimeout:TIMEOUT_SECKENTS tag:0];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONNECTSUCCESS object:nil userInfo:@{@"port":@(port),
                                                                                                            @"host":host,
@@ -404,7 +443,7 @@ static ServerSocket* _instance = nil;
     [result appendString:[NSString stringWithFormat:@"%@:%@\n",[sock connectedHost],[ServerSocket dataToString:data]]];
     
 //    [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_RESULT_NOTIFICATION object:nil];
-    [sock readDataWithTimeout:-1 tag:0];
+    [sock readDataWithTimeout:TIMEOUT_SECKENTS tag:0];
 }
 
 /**

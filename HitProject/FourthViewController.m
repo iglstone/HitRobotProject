@@ -324,7 +324,7 @@
     [self setUnPlayImage];
     [deskview.img setImage:[UIImage imageNamed:@"music_play.png"]];
     
-    self.deskNum = deskview.tag - 1;
+    self.deskNum = deskview.tag ;
     NSLog(@"song num ;%ld",(long)self.deskNum);
     if (![CommonsFunc isDeviceIpad]) {
         if (self.deskNum <= 20) {
@@ -385,12 +385,11 @@
         }];
         [rb.button setTitle:arr[i] forState:UIControlStateNormal];
     }
-    
-    RadioButton *rb = (RadioButton *)[self.view viewWithTag:100];
+    //默认列表循环
+    RadioButton *rb = (RadioButton *)[self.view viewWithTag:104];
     [rb setChecked:YES];
     [RadioButton addObserverForGroupId:@"sencond group" observer:self];
 }
-
 
 - (void) ipadAddPlayAndCancelBtn {
     // uislide is no use.

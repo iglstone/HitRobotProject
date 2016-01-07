@@ -14,9 +14,15 @@
 #import "ConnectStatesCell.h"
 #import <Toast/UIView+Toast.h>
 
+#define NSUSERDEFAULT_DISCONNECT  @"NSUSERDEFAULT_DISCONNECT"
+
 @interface MainViewController () <UITableViewDataSource,UITableViewDelegate> {
 
     NSMutableArray *m_cellsArray;
+    UILabel *disconnectlabel;
+    int disconectTimes;
+    NSTimer *schedulTimer;
+    NSString *ttt;
 }
 
 @property (nonatomic) UITableView *m_tableView;
@@ -47,6 +53,37 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //test
+//    NSInteger a = 10;
+//    self.tmpTest = a;
+//    NSLog(@"%ld",(long)self.tmpTest);
+//    a = 12;
+//    NSLog(@"%ld",(long)self.tmpTest);
+//    
+//    NSString *tt = @"123";
+//    self.tmpTest1 = tt;
+//    NSLog(@"%p",self.tmpTest1);
+    
+    /*********TEST***********/
+    ttt = nil;
+    UIView *disconnectView = [UIView new];
+    [self.view addSubview:disconnectView];
+    [disconnectView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(100, 300, 300, 500));
+    }];
+    disconnectView.backgroundColor = [UIColor whiteColor];
+    disconnectlabel = [UILabel new];
+    NSInteger TIME =[[[NSUserDefaults standardUserDefaults] objectForKey:NSUSERDEFAULT_DISCONNECT] integerValue];
+    disconnectlabel.text = [NSString stringWithFormat:@"断连次数:%ld",TIME];// @"0";
+    [disconnectView addSubview:disconnectlabel];
+    disconnectlabel.numberOfLines = 0;
+    [disconnectlabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(disconnectView);
+        make.top.equalTo(disconnectView);
+    }];
+    /*********************/
+    
     UIImage *image = [UIImage imageNamed:@"me.png"];
     tmpString = @"";
     m_modelsArray = [[NSMutableArray alloc] init];
@@ -186,19 +223,9 @@
 
 - (void)stopBtnTaped :(UIButton *)btn {
     NSLog(@"stopTaped");
-//    [m_selecedModelsArray enumerateObjectsUsingBlock:^(ConnectModel *model, NSUInteger idx, BOOL *stop) {
-//        [model.socket disconnect];
-//        NSLog(@"socket disconect");
-//    }];
     for (ConnectModel *model in m_selecedModelsArray) {
         [model.socket disconnect];
     }
-    
-//    for (ConnectModel *model in m_selecedModelsArray) {
-//        [model.socket disconnect];
-//        tmpCell.isChecked = NO;
-//        //接下来会传到clientDisconnect方法里，具体操作在那里面进行。
-//    }
 }
 
 
@@ -209,9 +236,31 @@
 
 - (void)clientDisconnect :(NSNotification *)noti {
     NSLog(@"clientDisconnect notification");
+    /*****TEST*****/
+    int aa = (int)[[[NSUserDefaults standardUserDefaults] objectForKey:NSUSERDEFAULT_DISCONNECT] integerValue];
+    aa ++;
+    NSString *tmpstring = [NSString stringWithFormat:@"断链次数:%d\n",aa];
+    
+    NSString* date;
+    NSDateFormatter* formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"YYYY-MM-dd hh:mm:ss"];
+    date = [NSString stringWithFormat:@"%@\n", [formatter stringFromDate:[NSDate date]]];
+    
+    NSString *sss = [tmpstring stringByAppendingString:date];
+    
+    if (!ttt) {
+        ttt = @"";
+    }
+    ttt = [ttt stringByAppendingString:sss];
+    NSLog(@"%@",sss);
+    disconnectlabel.text = ttt;
+    [[NSUserDefaults standardUserDefaults] setObject:@(aa) forKey:NSUSERDEFAULT_DISCONNECT];
+    [schedulTimer invalidate];
+    /************/
+    
+    
     NSDictionary *dic = [noti userInfo];
     AsyncSocket *socket = (AsyncSocket *)[dic objectForKey:@"socket"];
-    
     //去除选中的socket
     [server.selectedSocketArray enumerateObjectsUsingBlock:^(AsyncSocket *S, NSUInteger idx, BOOL *stop) {
         if ([socket isEqual:S]) {
@@ -262,11 +311,16 @@
 
 - (void)connectSuccess:(NSNotification *)noti {
     NSLog(@"connectSuccess notification");
+    
     NSDictionary *dic = [noti userInfo];
     NSString *host = [dic objectForKey:@"host"];
     NSInteger port = [(NSNumber *)[dic objectForKey:@"port"] integerValue];
     NSString *status = [dic objectForKey:@"status"];
     AsyncSocket *sokect = (AsyncSocket *)[dic objectForKey:@"socket"];
+    
+    /**************/
+    schedulTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(compareMessage:) userInfo:@{@"sock":sokect} repeats:YES];
+    /*************/
     
     [self.view makeToast:[NSString stringWithFormat:@"连接%@成功", host] duration:1.5 position:CSToastPositionCenter];
     
@@ -288,6 +342,12 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [m_tableView reloadData];
     });
+}
+
+- (void)compareMessage :(NSTimer  *) timer{
+    AsyncSocket *S = (AsyncSocket *)[[timer userInfo] objectForKey:@"sock"];
+    [S writeData:[@"A" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+    NSLog(@"write A");
 }
 
 - (void)dealloc {

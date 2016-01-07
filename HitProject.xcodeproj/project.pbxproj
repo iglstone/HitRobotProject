@@ -44,6 +44,7 @@
 		E3C0B5321BE1EAA5004437EC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3C0B5311BE1EAA5004437EC /* Images.xcassets */; };
 		E3C0B5351BE1EAA5004437EC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3C0B5331BE1EAA5004437EC /* LaunchScreen.xib */; };
 		E3C0B5411BE1EAA6004437EC /* HitProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3C0B5401BE1EAA6004437EC /* HitProjectTests.m */; };
+		E3D671E21C3DEC3F00AF3391 /* HitControlHex.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D671E11C3DEC3F00AF3391 /* HitControlHex.m */; };
 		E3E0F8A51C0E77C1001CC06F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E0F8A31C0E77C1001CC06F /* LoginViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E3E0F8A61C0E77C1001CC06F /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8A41C0E77C1001CC06F /* LoginViewController.xib */; };
 		E3E0F8A81C0E7982001CC06F /* login_textfield_mid.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8A71C0E7982001CC06F /* login_textfield_mid.png */; };
@@ -152,6 +153,8 @@
 		E3C0B53A1BE1EAA6004437EC /* HitProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HitProjectTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3C0B53F1BE1EAA6004437EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E3C0B5401BE1EAA6004437EC /* HitProjectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HitProjectTests.m; sourceTree = "<group>"; };
+		E3D671E01C3DEC3F00AF3391 /* HitControlHex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitControlHex.h; sourceTree = "<group>"; };
+		E3D671E11C3DEC3F00AF3391 /* HitControlHex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HitControlHex.m; sourceTree = "<group>"; };
 		E3E0F8A21C0E77C1001CC06F /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		E3E0F8A31C0E77C1001CC06F /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		E3E0F8A41C0E77C1001CC06F /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
@@ -410,6 +413,8 @@
 				E30EEC3D1C2532BD00352235 /* SocketMessageModel.m */,
 				E3E91FCA1BEC8117003AE247 /* HitControl.h */,
 				E3E91FCB1BEC8117003AE247 /* HitControl.m */,
+				E3D671E01C3DEC3F00AF3391 /* HitControlHex.h */,
+				E3D671E11C3DEC3F00AF3391 /* HitControlHex.m */,
 				E33DD38A1BF20DE40028FCBD /* SocketClientViewController.h */,
 				E33DD38B1BF20DE40028FCBD /* SocketClientViewController.m */,
 				E33DD38C1BF20DE40028FCBD /* SocketClientViewController_iPhone.xib */,
@@ -603,6 +608,7 @@
 				E34C265A1C2CDCD3007936D8 /* LewPopupViewAnimationFade.m in Sources */,
 				E37BA50A1BE7162500DB7A96 /* DeskView.m in Sources */,
 				E39DA2161C3A1E5E002065BE /* DeskInfoHelper.m in Sources */,
+				E3D671E21C3DEC3F00AF3391 /* HitControlHex.m in Sources */,
 				E35D11AB1C0ECAD2009AF0BB /* ResetSecurityViewController.m in Sources */,
 				E33DD38D1BF20DE40028FCBD /* SocketClientViewController.m in Sources */,
 			);

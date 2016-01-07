@@ -17,6 +17,11 @@
 @property (nonatomic, strong) UILabel *m_debugLabel;
 @property (nonatomic, strong) NSMutableArray *m_selecedModelsArray;
 @property (nonatomic, strong) NSMutableArray *m_modelsArray;
+
+@property (assign) NSInteger tmpTest;
+@property (copy, nonatomic) NSString *tmpTest1;
+@property (strong, nonatomic) NSString *tmpTest2;
+
 //red blue both
 //@property (nonatomic, strong) NSString *selectedNames;
 
