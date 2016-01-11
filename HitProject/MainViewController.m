@@ -13,6 +13,7 @@
 #import "FourthViewController.h"
 #import "ConnectStatesCell.h"
 #import <Toast/UIView+Toast.h>
+#import "GLViewProcessingTest.h"
 
 #define NSUSERDEFAULT_DISCONNECT  @"NSUSERDEFAULT_DISCONNECT"
 
@@ -23,6 +24,7 @@
     int disconectTimes;
     NSTimer *schedulTimer;
     NSString *ttt;
+    GLViewProcessingTest *_glView;
 }
 
 @property (nonatomic) UITableView *m_tableView;
@@ -31,6 +33,7 @@
 @property (nonatomic) NSString *tmpString;
 @property (nonatomic) ConnectStatesCell *tmpCell;
 @property (nonatomic) HitControl *control;
+@property (nonatomic, strong) GLViewProcessingTest *glView ;
 
 @end
 
@@ -46,11 +49,6 @@
 @synthesize views;
 
 #pragma mark - lifecicle
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-//    [self presentViewController:[LoginViewController new] animated:YES completion:nil];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -64,6 +62,8 @@
 //    NSString *tt = @"123";
 //    self.tmpTest1 = tt;
 //    NSLog(@"%p",self.tmpTest1);
+    
+    [self.view addSubview:self.glView];
     
     /*********TEST***********/
     ttt = nil;
@@ -82,6 +82,9 @@
         make.centerX.equalTo(disconnectView);
         make.top.equalTo(disconnectView);
     }];
+    
+//    disconnectlabel.hidden = YES;
+//    disconnectView.hidden = YES;
     /*********************/
     
     UIImage *image = [UIImage imageNamed:@"me.png"];
@@ -191,6 +194,34 @@
         }];
     }
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self.glView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view);
+        make.left.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(100, 200));
+    }];
+    
+}
+
+- (GLViewProcessingTest *)glView {
+    if (_glView == nil) {
+        NSLog(@".. glviewProcessing..");
+        _glView = [[GLViewProcessingTest alloc] init ];//WithFrame:CGRectMake(0, 0, 100, 100)];
+        _glView.backgroundColor = [UIColor redColor];
+    }
+    return _glView;
+}
+
+
+- (void)setGlView:(GLViewProcessingTest *)glView2 {
+    if (glView2) {
+        self.glView = glView2;
+    }
+}
+
 
 #pragma mark - Actions
 - (void )setStopBtnRed {

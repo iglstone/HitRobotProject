@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C667AEEA938854297F27795 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC05B4E2E18680CC4941107 /* libPods.a */; };
+		E30B62AD1C40AAE5006712F1 /* GLViewProcessingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E30B62AC1C40AAE5006712F1 /* GLViewProcessingTest.m */; };
 		E30EEC3E1C2532BD00352235 /* SocketMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E30EEC3D1C2532BD00352235 /* SocketMessageModel.m */; };
 		E316366F1BEDA80A002EB100 /* ConnectStatesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E316366E1BEDA80A002EB100 /* ConnectStatesCell.m */; };
 		E31636721BEDAA5D002EB100 /* CommonsFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = E31636711BEDAA5D002EB100 /* CommonsFunc.m */; };
@@ -84,6 +85,8 @@
 		397759819632A14F21F4B158 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		5977BFAC93DE4DCB521D4947 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		AAC05B4E2E18680CC4941107 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E30B62AB1C40AAE5006712F1 /* GLViewProcessingTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLViewProcessingTest.h; sourceTree = "<group>"; };
+		E30B62AC1C40AAE5006712F1 /* GLViewProcessingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLViewProcessingTest.m; sourceTree = "<group>"; };
 		E30EEC3C1C2532BD00352235 /* SocketMessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocketMessageModel.h; sourceTree = "<group>"; };
 		E30EEC3D1C2532BD00352235 /* SocketMessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocketMessageModel.m; sourceTree = "<group>"; };
 		E316366D1BEDA80A002EB100 /* ConnectStatesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectStatesCell.h; sourceTree = "<group>"; };
@@ -321,6 +324,8 @@
 				E3E0F8A11C0E779C001CC06F /* Login */,
 				E31636761BF05607002EB100 /* MainViewController.h */,
 				E31636771BF05607002EB100 /* MainViewController.m */,
+				E30B62AB1C40AAE5006712F1 /* GLViewProcessingTest.h */,
+				E30B62AC1C40AAE5006712F1 /* GLViewProcessingTest.m */,
 				E316366D1BEDA80A002EB100 /* ConnectStatesCell.h */,
 				E316366E1BEDA80A002EB100 /* ConnectStatesCell.m */,
 				E3C0B5281BE1EAA5004437EC /* FirstViewController.h */,
@@ -602,6 +607,7 @@
 				E31636721BEDAA5D002EB100 /* CommonsFunc.m in Sources */,
 				E35D11A81C0ECAA3009AF0BB /* SettingViewController.m in Sources */,
 				E3E0F8A51C0E77C1001CC06F /* LoginViewController.m in Sources */,
+				E30B62AD1C40AAE5006712F1 /* GLViewProcessingTest.m in Sources */,
 				E35D11AE1C0EE0B8009AF0BB /* WebViewController.m in Sources */,
 				E34C26611C2CDCE1007936D8 /* PopupView.m in Sources */,
 				E34C265B1C2CDCD3007936D8 /* LewPopupViewAnimationSlide.m in Sources */,

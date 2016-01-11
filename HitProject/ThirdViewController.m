@@ -178,8 +178,8 @@
     @autoreleasepool {
 //      NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
         NSArray <NSString *> *deskNumArray = [helper getDeskNamesFromUserdefaultByTag:(int)self.TotaldeskNum isSong:NO];
-        for (int i = 0; i <= 12; i++) {
-            for (int j = 0; j < deknum; j++) {
+        for (int i = 0; i <= 12; i++) {//lie
+            for (int j = 0; j < deknum; j++) {//hang
                 if (deskNum > self.TotaldeskNum) {
                     tt = 1;
                     break;

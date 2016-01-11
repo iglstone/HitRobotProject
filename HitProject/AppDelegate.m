@@ -21,7 +21,6 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launc
     
@@ -39,7 +38,7 @@
     //真机调试保存log日志
     UIDevice *device = [UIDevice currentDevice];
     if (![[device model] hasSuffix:@"Simulator"]) {
-        [self redirectNSlogToDocumentFolder];
+//        [self redirectNSlogToDocumentFolder];
     }
     
     return YES;
