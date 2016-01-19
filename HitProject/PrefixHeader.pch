@@ -14,9 +14,12 @@
 #import "CommonsFunc.h"
 #import "UIColor+Hex.h"
 #import <UIView+Toast.h>
+#import "InternationControl.h"
 
 #ifndef HitProject_PrefixHeader_pch
 #define HitProject_PrefixHeader_pch
+
+#define GLLocalizedString(key) [[InternationControl bundle] localizedStringForKey:(key) value:@"" table:nil] //table名字为字符名字
 
 // Include any system framework and library headers here that should be included in all compilation units.
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.

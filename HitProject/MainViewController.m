@@ -24,7 +24,7 @@
     int disconectTimes;
     NSTimer *schedulTimer;
     NSString *ttt;
-    GLViewProcessingTest *_glView;
+//    GLViewProcessingTest *_glView;
 }
 
 @property (nonatomic) UITableView *m_tableView;
@@ -33,7 +33,7 @@
 @property (nonatomic) NSString *tmpString;
 @property (nonatomic) ConnectStatesCell *tmpCell;
 @property (nonatomic) HitControl *control;
-@property (nonatomic, strong) GLViewProcessingTest *glView ;
+//@property (nonatomic, strong) GLViewProcessingTest *glView ;
 
 @end
 
@@ -63,29 +63,29 @@
 //    self.tmpTest1 = tt;
 //    NSLog(@"%p",self.tmpTest1);
     
-    [self.view addSubview:self.glView];
+//    [self.view addSubview:self.glView];
     
-    /*********TEST***********/
-    ttt = nil;
-    UIView *disconnectView = [UIView new];
-    [self.view addSubview:disconnectView];
-    [disconnectView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(100, 300, 300, 500));
-    }];
-    disconnectView.backgroundColor = [UIColor whiteColor];
-    disconnectlabel = [UILabel new];
-    NSInteger TIME =[[[NSUserDefaults standardUserDefaults] objectForKey:NSUSERDEFAULT_DISCONNECT] integerValue];
-    disconnectlabel.text = [NSString stringWithFormat:@"断连次数:%ld",TIME];// @"0";
-    [disconnectView addSubview:disconnectlabel];
-    disconnectlabel.numberOfLines = 0;
-    [disconnectlabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(disconnectView);
-        make.top.equalTo(disconnectView);
-    }];
-    
-//    disconnectlabel.hidden = YES;
-//    disconnectView.hidden = YES;
-    /*********************/
+//    /*********TEST***********/
+//    ttt = nil;
+//    UIView *disconnectView = [UIView new];
+//    [self.view addSubview:disconnectView];
+//    [disconnectView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(100, 300, 300, 500));
+//    }];
+//    disconnectView.backgroundColor = [UIColor whiteColor];
+//    disconnectlabel = [UILabel new];
+//    NSInteger TIME =[[[NSUserDefaults standardUserDefaults] objectForKey:NSUSERDEFAULT_DISCONNECT] integerValue];
+//    disconnectlabel.text = [NSString stringWithFormat:@"断连次数:%ld",TIME];// @"0";
+//    [disconnectView addSubview:disconnectlabel];
+//    disconnectlabel.numberOfLines = 0;
+//    [disconnectlabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerX.equalTo(disconnectView);
+//        make.top.equalTo(disconnectView);
+//    }];
+//    
+////    disconnectlabel.hidden = YES;
+////    disconnectView.hidden = YES;
+//    /*********************/
     
     UIImage *image = [UIImage imageNamed:@"me.png"];
     tmpString = @"";
@@ -198,29 +198,29 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self.glView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view);
-        make.left.equalTo(self.view);
-        make.size.mas_equalTo(CGSizeMake(100, 200));
-    }];
+//    [self.glView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(self.view);
+//        make.left.equalTo(self.view);
+//        make.size.mas_equalTo(CGSizeMake(100, 200));
+//    }];
     
 }
 
-- (GLViewProcessingTest *)glView {
-    if (_glView == nil) {
-        NSLog(@".. glviewProcessing..");
-        _glView = [[GLViewProcessingTest alloc] init ];//WithFrame:CGRectMake(0, 0, 100, 100)];
-        _glView.backgroundColor = [UIColor redColor];
-    }
-    return _glView;
-}
-
-
-- (void)setGlView:(GLViewProcessingTest *)glView2 {
-    if (glView2) {
-        self.glView = glView2;
-    }
-}
+//- (GLViewProcessingTest *)glView {
+//    if (_glView == nil) {
+//        NSLog(@".. glviewProcessing..");
+//        _glView = [[GLViewProcessingTest alloc] init ];//WithFrame:CGRectMake(0, 0, 100, 100)];
+//        _glView.backgroundColor = [UIColor redColor];
+//    }
+//    return _glView;
+//}
+//
+//
+//- (void)setGlView:(GLViewProcessingTest *)glView2 {
+//    if (glView2) {
+//        self.glView = glView2;
+//    }
+//}
 
 
 #pragma mark - Actions
@@ -267,27 +267,27 @@
 
 - (void)clientDisconnect :(NSNotification *)noti {
     NSLog(@"clientDisconnect notification");
-    /*****TEST*****/
-    int aa = (int)[[[NSUserDefaults standardUserDefaults] objectForKey:NSUSERDEFAULT_DISCONNECT] integerValue];
-    aa ++;
-    NSString *tmpstring = [NSString stringWithFormat:@"断链次数:%d\n",aa];
-    
-    NSString* date;
-    NSDateFormatter* formatter = [[NSDateFormatter alloc]init];
-    [formatter setDateFormat:@"YYYY-MM-dd hh:mm:ss"];
-    date = [NSString stringWithFormat:@"%@\n", [formatter stringFromDate:[NSDate date]]];
-    
-    NSString *sss = [tmpstring stringByAppendingString:date];
-    
-    if (!ttt) {
-        ttt = @"";
-    }
-    ttt = [ttt stringByAppendingString:sss];
-    NSLog(@"%@",sss);
-    disconnectlabel.text = ttt;
-    [[NSUserDefaults standardUserDefaults] setObject:@(aa) forKey:NSUSERDEFAULT_DISCONNECT];
-    [schedulTimer invalidate];
-    /************/
+//    /*****TEST*****/
+//    int aa = (int)[[[NSUserDefaults standardUserDefaults] objectForKey:NSUSERDEFAULT_DISCONNECT] integerValue];
+//    aa ++;
+//    NSString *tmpstring = [NSString stringWithFormat:@"断链次数:%d\n",aa];
+//    
+//    NSString* date;
+//    NSDateFormatter* formatter = [[NSDateFormatter alloc]init];
+//    [formatter setDateFormat:@"YYYY-MM-dd hh:mm:ss"];
+//    date = [NSString stringWithFormat:@"%@\n", [formatter stringFromDate:[NSDate date]]];
+//    
+//    NSString *sss = [tmpstring stringByAppendingString:date];
+//    
+//    if (!ttt) {
+//        ttt = @"";
+//    }
+//    ttt = [ttt stringByAppendingString:sss];
+//    NSLog(@"%@",sss);
+//    disconnectlabel.text = ttt;
+//    [[NSUserDefaults standardUserDefaults] setObject:@(aa) forKey:NSUSERDEFAULT_DISCONNECT];
+//    [schedulTimer invalidate];
+//    /************/
     
     
     NSDictionary *dic = [noti userInfo];
@@ -349,9 +349,9 @@
     NSString *status = [dic objectForKey:@"status"];
     AsyncSocket *sokect = (AsyncSocket *)[dic objectForKey:@"socket"];
     
-    /**************/
-    schedulTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(compareMessage:) userInfo:@{@"sock":sokect} repeats:YES];
-    /*************/
+//    /**************/
+//    schedulTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(compareMessage:) userInfo:@{@"sock":sokect} repeats:YES];
+//    /*************/
     
     [self.view makeToast:[NSString stringWithFormat:@"连接%@成功", host] duration:1.5 position:CSToastPositionCenter];
     

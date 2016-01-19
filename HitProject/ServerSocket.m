@@ -9,7 +9,7 @@
 #import "ServerSocket.h"
 #import "SocketMessageModel.h"
 
-#define TIMEOUT_SECKENTS 12
+#define TIMEOUT_SECKENTS -1 //12
 
 @interface ServerSocket (){
     NSString *sendedMessage;
@@ -111,11 +111,11 @@ static ServerSocket* _instance = nil;
             }
             receiveMessage = nil;
             
-//            NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:TIMEOUT_SECKENTS target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
+            NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.22f target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
             
             if (s.isConnected) {
                 [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
-//                [timer fire];
+                [timer fire];
             }else
                 [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
         }
@@ -161,32 +161,32 @@ static ServerSocket* _instance = nil;
 
 - (void)compareMessage :(NSTimer  *) timer{
     AsyncSocket *S = (AsyncSocket *)[[timer userInfo] objectForKey:@"sock"];
-    [S writeData:[ServerSocket stringToData:@"A"] withTimeout:-1 tag:0];
-    NSLog(@"write A");
+//    [S writeData:[ServerSocket stringToData:@"A"] withTimeout:-1 tag:0];
+//    NSLog(@"write A");
     
-//    if (!receiveMessage) {//为空，没有读取到
-//        NSLog(@"has not receive");
-//        [self sendMessageAgain];
-//        times ++;
-//        if (times == 20) {
-//            NSLog(@"20 times return");
-//            [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_TRYAGIAN object:nil];//显示toast
-//            times = 0;
-//            [timer invalidate];
-//            timer = nil;
-//            return;
-//        }
-//        return;
-//    }
-//    
-//    if ([receiveMessage isEqualToString:@"o"] && [S isEqual:tmpSocket]) {
-//        times = 0;
-//        NSLog(@"socket the same ");
-//        [timer invalidate];
-//        timer = nil;
-//        return;
-//    }
-//    NSLog(@"receive others :%@",S);
+    if (!receiveMessage) {//为空，没有读取到
+        NSLog(@"has not receive");
+        [self sendMessageAgain];
+        times ++;
+        if (times == 20) {
+            NSLog(@"20 times return");
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_TRYAGIAN object:nil];//显示toast
+            times = 0;
+            [timer invalidate];
+            timer = nil;
+            return;
+        }
+        return;
+    }
+    
+    if ([receiveMessage isEqualToString:@"o"] && [S isEqual:tmpSocket]) {
+        times = 0;
+        NSLog(@"socket the same ");
+        [timer invalidate];
+        timer = nil;
+        return;
+    }
+    NSLog(@"receive others :%@",S);
     
 }
 

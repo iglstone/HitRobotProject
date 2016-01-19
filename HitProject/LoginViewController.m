@@ -54,7 +54,10 @@
     
     numberLabel = [UILabel new];
     [self.view addSubview:numberLabel];
-    numberLabel.text = @"账号";
+    numberLabel.text =  GLLocalizedString(@"账号");//@"账号";
+    
+    NSString *st1 = GLLocalizedString(@"账号");
+    NSString *st2 = NSLocalizedString(@"账号", nil);
     numberLabel.font = [UIFont systemFontOfSize:15];
     [numberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.passwordLabel);
@@ -74,6 +77,8 @@
         make.width.equalTo(self.userPassword);
         make.centerY.equalTo(numberLabel);
     }];
+    
+    self.passwordLabel.text = GLLocalizedString(@"密码");
     
 //    moveDownGroup
     rembtn = [UIButton new];

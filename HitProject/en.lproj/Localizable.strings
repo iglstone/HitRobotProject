@@ -1,0 +1,12 @@
+/* 
+  Localizable.strings
+  HitProject
+
+  Created by 郭龙 on 16/1/19.
+  Copyright © 2016年 郭龙. All rights reserved.
+*/
+"登陆"           = "Log In";
+"账号"           = "User Name";
+"密码"           = "Password";
+"记住密码"        = "Remember Password";
+"关于"           = "About";

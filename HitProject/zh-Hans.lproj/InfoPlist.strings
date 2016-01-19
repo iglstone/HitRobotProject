@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  HitProject
+
+  Created by 郭龙 on 16/1/19.
+  Copyright © 2016年 郭龙. All rights reserved.
+*/
+
+//中文 文字
+CFBundleDisplayName = "芜湖哈特";

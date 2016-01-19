@@ -34,6 +34,9 @@
 		E35D11AB1C0ECAD2009AF0BB /* ResetSecurityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11AA1C0ECAD2009AF0BB /* ResetSecurityViewController.m */; };
 		E35D11AE1C0EE0B8009AF0BB /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11AD1C0EE0B8009AF0BB /* WebViewController.m */; };
 		E35D11B21C0F1CC0009AF0BB /* PickDeskNumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11B11C0F1CC0009AF0BB /* PickDeskNumViewController.m */; };
+		E3768DC21C4E08290084916D /* InternationControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E3768DC11C4E08290084916D /* InternationControl.m */; };
+		E3768DCB1C4E0F310084916D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3768DCD1C4E0F310084916D /* InfoPlist.strings */; };
+		E3768DD11C4E11710084916D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3768DD31C4E11710084916D /* Localizable.strings */; };
 		E37BA5031BE462C700DB7A96 /* JSAnalogueStick.m in Sources */ = {isa = PBXBuildFile; fileRef = E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */; };
 		E37BA50A1BE7162500DB7A96 /* DeskView.m in Sources */ = {isa = PBXBuildFile; fileRef = E37BA5091BE7162500DB7A96 /* DeskView.m */; };
 		E39DA2161C3A1E5E002065BE /* DeskInfoHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DA2151C3A1E5E002065BE /* DeskInfoHelper.m */; };
@@ -135,6 +138,12 @@
 		E35D11AD1C0EE0B8009AF0BB /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		E35D11B01C0F1CC0009AF0BB /* PickDeskNumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickDeskNumViewController.h; sourceTree = "<group>"; };
 		E35D11B11C0F1CC0009AF0BB /* PickDeskNumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickDeskNumViewController.m; sourceTree = "<group>"; };
+		E3768DC01C4E08290084916D /* InternationControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InternationControl.h; sourceTree = "<group>"; };
+		E3768DC11C4E08290084916D /* InternationControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InternationControl.m; sourceTree = "<group>"; };
+		E3768DCC1C4E0F310084916D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E3768DCE1C4E0F340084916D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		E3768DD21C4E11710084916D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E3768DD41C4E11770084916D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E37BA5011BE462C700DB7A96 /* JSAnalogueStick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSAnalogueStick.h; sourceTree = "<group>"; };
 		E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSAnalogueStick.m; sourceTree = "<group>"; };
 		E37BA5081BE7162500DB7A96 /* DeskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeskView.h; sourceTree = "<group>"; };
@@ -248,6 +257,8 @@
 				E37BA5091BE7162500DB7A96 /* DeskView.m */,
 				E3FCC5EA1BF0924100FAB88C /* UIColor+Hex.h */,
 				E3FCC5EB1BF0924100FAB88C /* UIColor+Hex.m */,
+				E3768DC01C4E08290084916D /* InternationControl.h */,
+				E3768DC11C4E08290084916D /* InternationControl.m */,
 			);
 			name = Tools;
 			sourceTree = "<group>";
@@ -349,6 +360,8 @@
 			children = (
 				E3C0B5221BE1EAA5004437EC /* Info.plist */,
 				E3C0B5231BE1EAA5004437EC /* main.m */,
+				E3768DCD1C4E0F310084916D /* InfoPlist.strings */,
+				E3768DD31C4E11710084916D /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -494,6 +507,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = E3C0B5151BE1EAA5004437EC;
 			productRefGroup = E3C0B51F1BE1EAA5004437EC /* Products */;
@@ -520,6 +534,8 @@
 				E3E0F8B31C0E7A7A001CC06F /* login_textfield_top.png in Resources */,
 				E34C26621C2CDCE1007936D8 /* PopupView.xib in Resources */,
 				E3E0F8AB1C0E79BB001CC06F /* login_textfield_bottom.png in Resources */,
+				E3768DCB1C4E0F310084916D /* InfoPlist.strings in Resources */,
+				E3768DD11C4E11710084916D /* Localizable.strings in Resources */,
 				E3E0F8BC1C0E7ABA001CC06F /* login_btn_blue_press@2x.png in Resources */,
 				E3E0F8BF1C0E7B60001CC06F /* login_avatar_default.png in Resources */,
 				E3E0F8AF1C0E79CC001CC06F /* login_avatar.png in Resources */,
@@ -583,6 +599,7 @@
 				E357F6131BE20F8100AE9454 /* FourthViewController.m in Sources */,
 				E353A2C41C0FD4180058BC6A /* DataCenter.m in Sources */,
 				E3E91FCC1BEC8117003AE247 /* HitControl.m in Sources */,
+				E3768DC21C4E08290084916D /* InternationControl.m in Sources */,
 				E3C0B52D1BE1EAA5004437EC /* SecondViewController.m in Sources */,
 				E30EEC3E1C2532BD00352235 /* SocketMessageModel.m in Sources */,
 				E35D11B21C0F1CC0009AF0BB /* PickDeskNumViewController.m in Sources */,
@@ -640,6 +657,24 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		E3768DCD1C4E0F310084916D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E3768DCC1C4E0F310084916D /* en */,
+				E3768DCE1C4E0F340084916D /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		E3768DD31C4E11710084916D /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E3768DD21C4E11710084916D /* en */,
+				E3768DD41C4E11770084916D /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		E3C0B5331BE1EAA5004437EC /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
