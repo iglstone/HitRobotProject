@@ -55,9 +55,6 @@
     numberLabel = [UILabel new];
     [self.view addSubview:numberLabel];
     numberLabel.text =  GLLocalizedString(@"账号");//@"账号";
-    
-    NSString *st1 = GLLocalizedString(@"账号");
-    NSString *st2 = NSLocalizedString(@"账号", nil);
     numberLabel.font = [UIFont systemFontOfSize:15];
     [numberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.passwordLabel);
