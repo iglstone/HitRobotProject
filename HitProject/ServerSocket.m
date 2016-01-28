@@ -31,8 +31,8 @@ static ServerSocket* _instance = nil;
 {
     static dispatch_once_t onceToken ;
     dispatch_once(&onceToken, ^{
-        _instance = [[self alloc] init] ;
-    }) ;
+        _instance = [[self alloc] init];
+    });
     
     return _instance ;
 }
@@ -111,11 +111,11 @@ static ServerSocket* _instance = nil;
             }
             receiveMessage = nil;
             
-            NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.22f target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
+//            NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.22f target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
             
             if (s.isConnected) {
                 [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
-                [timer fire];
+//                [timer fire];
             }else
                 [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
         }
@@ -331,12 +331,29 @@ static ServerSocket* _instance = nil;
     [sock writeData:[ServerSocket stringToData:@"连接成功 !"] withTimeout:-1 tag:0];//返回
     [sock readDataWithTimeout:TIMEOUT_SECKENTS tag:0];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONNECTSUCCESS object:nil userInfo:@{@"port":@(port),
-                                                                                                           @"host":host,
-                                                                                                           @"status":@"已连接",
-                                                                                                           @"socket":sock}];
-//    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:20 target:self selector:@selector(aliveKeep:) userInfo:@{@"socket":sock} repeats:YES];
-//    [timer fire];
+    
+    
+    
+//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONNECTSUCCESS object:nil userInfo:@{@"port":@(port),
+//                                                                                                           @"host":host,
+//                                                                                                           @"status":@"已连接",
+//                                                                                                           @"socket":sock}];
+//    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(aliveKeep:) userInfo:@{@"socket":sock} repeats:NO];
+    
+    //为了解决断网问题，
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(dealyNoticeSuccess:) userInfo:@{
+                                                                                                                              @"port":@(port),
+                                                                                                                              @"host":host,
+                                                                                                                              @"status":@"已连接",
+                                                                                                                              @"socket":sock}
+                                                     repeats:NO];
+
+    
+}
+
+- (void)dealyNoticeSuccess:(NSTimer *)timer {
+    NSLog(@"dealyNoticeSuccess..");
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONNECTSUCCESS object:nil userInfo:[timer userInfo]];
 }
 
 //心跳包执行函数  十秒重联的话这个好像就没什么用了。。
@@ -417,7 +434,7 @@ static ServerSocket* _instance = nil;
 //        NSLog(@"socketMessageModlesArray nums :%lu",(unsigned long)socketMessageModlesArray.count);
         
         isShow = NO;
-    } else if ([msg hasPrefix:@"CARD"] || [msg hasPrefix:@"AT"] || [msg isEqualToString:@"A"]){//返回的card就不补充了。
+    } else if ([msg hasPrefix:@"CARD"] || [msg hasPrefix:@"AT"] || [msg isEqualToString:@"A"] || [msg isEqualToString:@"v"]){//返回的card就不补充了。
         isShow = NO;
     }
     else

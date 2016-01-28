@@ -18,6 +18,25 @@
 		E33DD38D1BF20DE40028FCBD /* SocketClientViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E33DD38B1BF20DE40028FCBD /* SocketClientViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E33DD38E1BF20DE40028FCBD /* SocketClientViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33DD38C1BF20DE40028FCBD /* SocketClientViewController_iPhone.xib */; };
 		E33DD3901BF20DED0028FCBD /* SocketClientViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E33DD38F1BF20DED0028FCBD /* SocketClientViewController_iPad.xib */; };
+		E34B9A2B1C5A4163009E4B78 /* JSDPad.m in Sources */ = {isa = PBXBuildFile; fileRef = E34B9A2A1C5A4163009E4B78 /* JSDPad.m */; };
+		E34B9A3F1C5A41A3009E4B78 /* dPad-Down.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A2D1C5A41A3009E4B78 /* dPad-Down.png */; };
+		E34B9A401C5A41A3009E4B78 /* dPad-Down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A2E1C5A41A3009E4B78 /* dPad-Down@2x.png */; };
+		E34B9A411C5A41A3009E4B78 /* dPad-DownLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A2F1C5A41A3009E4B78 /* dPad-DownLeft.png */; };
+		E34B9A421C5A41A3009E4B78 /* dPad-DownLeft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A301C5A41A3009E4B78 /* dPad-DownLeft@2x.png */; };
+		E34B9A431C5A41A3009E4B78 /* dPad-DownRight.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A311C5A41A3009E4B78 /* dPad-DownRight.png */; };
+		E34B9A441C5A41A3009E4B78 /* dPad-DownRight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A321C5A41A3009E4B78 /* dPad-DownRight@2x.png */; };
+		E34B9A451C5A41A3009E4B78 /* dPad-Left.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A331C5A41A3009E4B78 /* dPad-Left.png */; };
+		E34B9A461C5A41A3009E4B78 /* dPad-Left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A341C5A41A3009E4B78 /* dPad-Left@2x.png */; };
+		E34B9A471C5A41A3009E4B78 /* dPad-None.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A351C5A41A3009E4B78 /* dPad-None.png */; };
+		E34B9A481C5A41A3009E4B78 /* dPad-None@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A361C5A41A3009E4B78 /* dPad-None@2x.png */; };
+		E34B9A491C5A41A3009E4B78 /* dPad-Right.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A371C5A41A3009E4B78 /* dPad-Right.png */; };
+		E34B9A4A1C5A41A3009E4B78 /* dPad-Right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A381C5A41A3009E4B78 /* dPad-Right@2x.png */; };
+		E34B9A4B1C5A41A3009E4B78 /* dPad-Up.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A391C5A41A3009E4B78 /* dPad-Up.png */; };
+		E34B9A4C1C5A41A3009E4B78 /* dPad-Up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A3A1C5A41A3009E4B78 /* dPad-Up@2x.png */; };
+		E34B9A4D1C5A41A3009E4B78 /* dPad-UpLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A3B1C5A41A3009E4B78 /* dPad-UpLeft.png */; };
+		E34B9A4E1C5A41A3009E4B78 /* dPad-UpLeft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A3C1C5A41A3009E4B78 /* dPad-UpLeft@2x.png */; };
+		E34B9A4F1C5A41A3009E4B78 /* dPad-UpRight.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A3D1C5A41A3009E4B78 /* dPad-UpRight.png */; };
+		E34B9A501C5A41A3009E4B78 /* dPad-UpRight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E34B9A3E1C5A41A3009E4B78 /* dPad-UpRight@2x.png */; };
 		E34C26581C2CDCD3007936D8 /* LewPopupBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C264D1C2CDCD2007936D8 /* LewPopupBackgroundView.m */; };
 		E34C26591C2CDCD3007936D8 /* LewPopupViewAnimationDrop.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C264F1C2CDCD3007936D8 /* LewPopupViewAnimationDrop.m */; };
 		E34C265A1C2CDCD3007936D8 /* LewPopupViewAnimationFade.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C26511C2CDCD3007936D8 /* LewPopupViewAnimationFade.m */; };
@@ -106,6 +125,26 @@
 		E33DD38B1BF20DE40028FCBD /* SocketClientViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SocketClientViewController.m; sourceTree = "<group>"; };
 		E33DD38C1BF20DE40028FCBD /* SocketClientViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SocketClientViewController_iPhone.xib; sourceTree = "<group>"; };
 		E33DD38F1BF20DED0028FCBD /* SocketClientViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SocketClientViewController_iPad.xib; sourceTree = "<group>"; };
+		E34B9A291C5A4163009E4B78 /* JSDPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSDPad.h; sourceTree = "<group>"; };
+		E34B9A2A1C5A4163009E4B78 /* JSDPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSDPad.m; sourceTree = "<group>"; };
+		E34B9A2D1C5A41A3009E4B78 /* dPad-Down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-Down.png"; sourceTree = "<group>"; };
+		E34B9A2E1C5A41A3009E4B78 /* dPad-Down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-Down@2x.png"; sourceTree = "<group>"; };
+		E34B9A2F1C5A41A3009E4B78 /* dPad-DownLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-DownLeft.png"; sourceTree = "<group>"; };
+		E34B9A301C5A41A3009E4B78 /* dPad-DownLeft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-DownLeft@2x.png"; sourceTree = "<group>"; };
+		E34B9A311C5A41A3009E4B78 /* dPad-DownRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-DownRight.png"; sourceTree = "<group>"; };
+		E34B9A321C5A41A3009E4B78 /* dPad-DownRight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-DownRight@2x.png"; sourceTree = "<group>"; };
+		E34B9A331C5A41A3009E4B78 /* dPad-Left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-Left.png"; sourceTree = "<group>"; };
+		E34B9A341C5A41A3009E4B78 /* dPad-Left@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-Left@2x.png"; sourceTree = "<group>"; };
+		E34B9A351C5A41A3009E4B78 /* dPad-None.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-None.png"; sourceTree = "<group>"; };
+		E34B9A361C5A41A3009E4B78 /* dPad-None@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-None@2x.png"; sourceTree = "<group>"; };
+		E34B9A371C5A41A3009E4B78 /* dPad-Right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-Right.png"; sourceTree = "<group>"; };
+		E34B9A381C5A41A3009E4B78 /* dPad-Right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-Right@2x.png"; sourceTree = "<group>"; };
+		E34B9A391C5A41A3009E4B78 /* dPad-Up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-Up.png"; sourceTree = "<group>"; };
+		E34B9A3A1C5A41A3009E4B78 /* dPad-Up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-Up@2x.png"; sourceTree = "<group>"; };
+		E34B9A3B1C5A41A3009E4B78 /* dPad-UpLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-UpLeft.png"; sourceTree = "<group>"; };
+		E34B9A3C1C5A41A3009E4B78 /* dPad-UpLeft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-UpLeft@2x.png"; sourceTree = "<group>"; };
+		E34B9A3D1C5A41A3009E4B78 /* dPad-UpRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-UpRight.png"; sourceTree = "<group>"; };
+		E34B9A3E1C5A41A3009E4B78 /* dPad-UpRight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dPad-UpRight@2x.png"; sourceTree = "<group>"; };
 		E34C264B1C2CDCD2007936D8 /* LewPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LewPopupViewController.h; sourceTree = "<group>"; };
 		E34C264C1C2CDCD2007936D8 /* LewPopupBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LewPopupBackgroundView.h; sourceTree = "<group>"; };
 		E34C264D1C2CDCD2007936D8 /* LewPopupBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LewPopupBackgroundView.m; sourceTree = "<group>"; };
@@ -253,6 +292,9 @@
 				E3FC88871BEAF3750016376D /* RadioButton.m */,
 				E37BA5011BE462C700DB7A96 /* JSAnalogueStick.h */,
 				E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */,
+				E34B9A291C5A4163009E4B78 /* JSDPad.h */,
+				E34B9A2A1C5A4163009E4B78 /* JSDPad.m */,
+				E34B9A2C1C5A4178009E4B78 /* JsdpadImages */,
 				E37BA5081BE7162500DB7A96 /* DeskView.h */,
 				E37BA5091BE7162500DB7A96 /* DeskView.m */,
 				E3FCC5EA1BF0924100FAB88C /* UIColor+Hex.h */,
@@ -261,6 +303,31 @@
 				E3768DC11C4E08290084916D /* InternationControl.m */,
 			);
 			name = Tools;
+			sourceTree = "<group>";
+		};
+		E34B9A2C1C5A4178009E4B78 /* JsdpadImages */ = {
+			isa = PBXGroup;
+			children = (
+				E34B9A2D1C5A41A3009E4B78 /* dPad-Down.png */,
+				E34B9A2E1C5A41A3009E4B78 /* dPad-Down@2x.png */,
+				E34B9A2F1C5A41A3009E4B78 /* dPad-DownLeft.png */,
+				E34B9A301C5A41A3009E4B78 /* dPad-DownLeft@2x.png */,
+				E34B9A311C5A41A3009E4B78 /* dPad-DownRight.png */,
+				E34B9A321C5A41A3009E4B78 /* dPad-DownRight@2x.png */,
+				E34B9A331C5A41A3009E4B78 /* dPad-Left.png */,
+				E34B9A341C5A41A3009E4B78 /* dPad-Left@2x.png */,
+				E34B9A351C5A41A3009E4B78 /* dPad-None.png */,
+				E34B9A361C5A41A3009E4B78 /* dPad-None@2x.png */,
+				E34B9A371C5A41A3009E4B78 /* dPad-Right.png */,
+				E34B9A381C5A41A3009E4B78 /* dPad-Right@2x.png */,
+				E34B9A391C5A41A3009E4B78 /* dPad-Up.png */,
+				E34B9A3A1C5A41A3009E4B78 /* dPad-Up@2x.png */,
+				E34B9A3B1C5A41A3009E4B78 /* dPad-UpLeft.png */,
+				E34B9A3C1C5A41A3009E4B78 /* dPad-UpLeft@2x.png */,
+				E34B9A3D1C5A41A3009E4B78 /* dPad-UpRight.png */,
+				E34B9A3E1C5A41A3009E4B78 /* dPad-UpRight@2x.png */,
+			);
+			name = JsdpadImages;
 			sourceTree = "<group>";
 		};
 		E34C264A1C2CDCB6007936D8 /* PopView */ = {
@@ -527,25 +594,43 @@
 			files = (
 				E3E0F8BB1C0E7ABA001CC06F /* login_btn_blue_press.png in Resources */,
 				E33DD3901BF20DED0028FCBD /* SocketClientViewController_iPad.xib in Resources */,
+				E34B9A4F1C5A41A3009E4B78 /* dPad-UpRight.png in Resources */,
+				E34B9A401C5A41A3009E4B78 /* dPad-Down@2x.png in Resources */,
 				E33DD38E1BF20DE40028FCBD /* SocketClientViewController_iPhone.xib in Resources */,
 				E3E0F8C01C0E7B60001CC06F /* login_avatar_default@2x.png in Resources */,
+				E34B9A491C5A41A3009E4B78 /* dPad-Right.png in Resources */,
+				E34B9A411C5A41A3009E4B78 /* dPad-DownLeft.png in Resources */,
+				E34B9A4C1C5A41A3009E4B78 /* dPad-Up@2x.png in Resources */,
+				E34B9A4D1C5A41A3009E4B78 /* dPad-UpLeft.png in Resources */,
 				E3E0F8A81C0E7982001CC06F /* login_textfield_mid.png in Resources */,
 				E3C0B5351BE1EAA5004437EC /* LaunchScreen.xib in Resources */,
 				E3E0F8B31C0E7A7A001CC06F /* login_textfield_top.png in Resources */,
+				E34B9A481C5A41A3009E4B78 /* dPad-None@2x.png in Resources */,
+				E34B9A451C5A41A3009E4B78 /* dPad-Left.png in Resources */,
 				E34C26621C2CDCE1007936D8 /* PopupView.xib in Resources */,
 				E3E0F8AB1C0E79BB001CC06F /* login_textfield_bottom.png in Resources */,
+				E34B9A471C5A41A3009E4B78 /* dPad-None.png in Resources */,
 				E3768DCB1C4E0F310084916D /* InfoPlist.strings in Resources */,
+				E34B9A501C5A41A3009E4B78 /* dPad-UpRight@2x.png in Resources */,
 				E3768DD11C4E11710084916D /* Localizable.strings in Resources */,
 				E3E0F8BC1C0E7ABA001CC06F /* login_btn_blue_press@2x.png in Resources */,
+				E34B9A4E1C5A41A3009E4B78 /* dPad-UpLeft@2x.png in Resources */,
 				E3E0F8BF1C0E7B60001CC06F /* login_avatar_default.png in Resources */,
 				E3E0F8AF1C0E79CC001CC06F /* login_avatar.png in Resources */,
+				E34B9A4A1C5A41A3009E4B78 /* dPad-Right@2x.png in Resources */,
 				E3E0F8A61C0E77C1001CC06F /* LoginViewController.xib in Resources */,
 				E3C0B5321BE1EAA5004437EC /* Images.xcassets in Resources */,
 				E3E0F8B91C0E7ABA001CC06F /* login_btn_blue_nor.png in Resources */,
 				E3E0F8AC1C0E79BB001CC06F /* login_textfield_bottom@2x.png in Resources */,
 				E3E0F8B41C0E7A7A001CC06F /* login_textfield_top@2x.png in Resources */,
 				E3E0F8B01C0E79CC001CC06F /* login_avatar@2x.png in Resources */,
+				E34B9A461C5A41A3009E4B78 /* dPad-Left@2x.png in Resources */,
+				E34B9A3F1C5A41A3009E4B78 /* dPad-Down.png in Resources */,
+				E34B9A4B1C5A41A3009E4B78 /* dPad-Up.png in Resources */,
+				E34B9A421C5A41A3009E4B78 /* dPad-DownLeft@2x.png in Resources */,
 				E3E0F8BA1C0E7ABA001CC06F /* login_btn_blue_nor@2x.png in Resources */,
+				E34B9A431C5A41A3009E4B78 /* dPad-DownRight.png in Resources */,
+				E34B9A441C5A41A3009E4B78 /* dPad-DownRight@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -607,6 +692,7 @@
 				E34C265D1C2CDCD3007936D8 /* UIViewController+LewPopupViewController.m in Sources */,
 				E357F6101BE20F6500AE9454 /* ThirdViewController.m in Sources */,
 				E34C26581C2CDCD3007936D8 /* LewPopupBackgroundView.m in Sources */,
+				E34B9A2B1C5A4163009E4B78 /* JSDPad.m in Sources */,
 				E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */,
 				E34C26591C2CDCD3007936D8 /* LewPopupViewAnimationDrop.m in Sources */,
 				E37BA5031BE462C700DB7A96 /* JSAnalogueStick.m in Sources */,

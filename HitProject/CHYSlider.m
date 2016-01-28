@@ -204,6 +204,20 @@
 }
 
 #pragma mark - Touch events handling
+//这样设置之后，后面的beginTrackingWithTouch将不能设置了。
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    UITouch *touch = [touches anyObject];
+    if (_stepped) {
+        _thumbImageView.center = CGPointMake( [self stepMarkerXCloseToX:[touch locationInView:self].x], _thumbImageView.center.y);
+        [self setNeedsDisplay];
+    }
+    _value = [self valueForX:_thumbImageView.center.x];
+    _labelOnThumb.text = [NSString stringWithFormat:[self valueStringFormat], _value];
+    _labelAboveThumb.text = [NSString stringWithFormat:[self valueStringFormat], _value];
+    [self sendActionsForControlEvents:UIControlEventValueChanged];
+}
+
+
 -(BOOL) beginTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event{
     CGPoint touchPoint = [touch locationInView:self];
     if(CGRectContainsPoint(_thumbImageView.frame, touchPoint)){

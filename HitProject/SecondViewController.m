@@ -13,8 +13,9 @@
 #import "RadioButton.h"
 #import "MainViewController.h"
 #import "ConnectStatesCell.h"
+#import "JSDPad.h"
 
-@interface SecondViewController ()<JSAnalogueStickDelegate> {
+@interface SecondViewController ()<JSAnalogueStickDelegate, JSDPadDelegate> {
     UILabel *redVoiceLable;
     UILabel *redSpeedLabel;
     
@@ -25,6 +26,8 @@
     UIView *redMessageContainer;
     NSMutableArray *eleMutArray;
     int times;
+    
+    JSDPad *_jsDpadView;
 }
 
 @property (nonatomic) UILabel *analogueLabel;
@@ -101,6 +104,18 @@
         make.size.mas_equalTo(CGSizeMake(120, 120));
     }];
     self.analogueStick.delegate = self;
+    /**
+     *  test hisden analogue
+     */
+    self.analogueStick.hidden = YES;
+    
+    _jsDpadView = [[JSDPad alloc] initWithFrame:CGRectMake(100, 100, 120, 120)];
+    [self.view addSubview:_jsDpadView];
+    [_jsDpadView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(150, 150));
+    }];
+    _jsDpadView.delegate = self;
     
     self.velocityLabel = [UILabel new];
     self.velocityLabel.text = @"速度设置：3";
@@ -116,7 +131,6 @@
         }
         make.width.mas_equalTo(@150);
     }];
-    
     
     _steppedSlider = [[CHYSlider alloc] init];//WithFrame:CGRectMake(0, 0, 250, 30)];
     _steppedSlider.stepped = YES;
@@ -163,6 +177,55 @@
     [stopBtn addTarget:self action:@selector(stopRun:) forControlEvents:UIControlEventTouchUpInside];
     
 }
+
+
+-(void)dPad:(JSDPad *)dPad didPressDirection:(JSDPadDirection)direction2 {
+    NSString *string = nil;
+    switch (direction2) {
+        case JSDPadDirectionNone:
+            string = @"None";
+//            [control stopMove];
+            break;
+        case JSDPadDirectionUp:
+            string = @"Up";
+            [control forward];
+            break;
+        case JSDPadDirectionDown:
+            string = @"Down";
+            [control backward];
+            break;
+        case JSDPadDirectionLeft:
+            [control turnLeft];
+            string = @"Left";
+            break;
+        case JSDPadDirectionRight:
+            [control turnRight];
+            string = @"Right";
+            break;
+        case JSDPadDirectionUpLeft:
+            string = @"Up Left";
+            break;
+        case JSDPadDirectionUpRight:
+            string = @"Up Right";
+            break;
+        case JSDPadDirectionDownLeft:
+            string = @"Down Left";
+            break;
+        case JSDPadDirectionDownRight:
+            string = @"Down Right";
+            break;
+        default:
+            string = @"None";
+            break;
+    }
+    NSLog(@"%@",string);
+}
+
+- (void)dPadDidReleaseDirection:(JSDPad *)dPad {
+    NSLog(@"release button .. to stop");
+    [control stopMove];
+}
+
 
 //平均十次显示电量
 - (void)lvbo:(float)ele robot:(NSString *)robot{

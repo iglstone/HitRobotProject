@@ -231,9 +231,9 @@
         rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 5) * ((int)(self.TotaldeskNum/5) +1) + 20);
     } else {
         deskHeight = (self.view.bounds.size.height - 100 - 20 - 40)/5 + 20;
-        deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/7;
+        deskWidth = (self.view.bounds.size.width - screenWidth/4 -20)/5;
         contentWidth = [UIScreen mainScreen].bounds.size.width - 20 - screenWidth/4;
-        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/6) +1) + 10);
+        rawView.contentSize = CGSizeMake(contentWidth, (deskHeight + 10) * ((int)(self.TotaldeskNum/5) +1) + 10);
     }
 }
 

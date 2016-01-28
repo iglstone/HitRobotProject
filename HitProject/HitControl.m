@@ -140,7 +140,7 @@ static HitControl* _instance = nil;
     NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
     NSArray *messageArray = @[@"E", @"F", @"G", @"H", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y"];
     if (deskNumArray.count >= numeber) {
-        [server sendMessage:messageArray[numeber - 1] debugstring:[NSString stringWithFormat:@"%@桌",deskNumArray[numeber - 1]]];
+        [server sendMessage:messageArray[numeber] debugstring:[NSString stringWithFormat:@"%@桌",deskNumArray[numeber]]];
     }else {
         NSLog(@"desk num is less than input num");
         return;

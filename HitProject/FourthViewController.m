@@ -163,7 +163,6 @@
         make.size.mas_equalTo(CGSizeMake(60, 60));
     }];
     
-    
     NSInteger contentWidth ;
     NSInteger deskWidth,deskHeight;
     if ([CommonsFunc isDeviceIpad]) {
