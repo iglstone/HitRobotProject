@@ -331,15 +331,6 @@ static ServerSocket* _instance = nil;
     [sock writeData:[ServerSocket stringToData:@"连接成功 !"] withTimeout:-1 tag:0];//返回
     [sock readDataWithTimeout:TIMEOUT_SECKENTS tag:0];
     
-    
-    
-    
-//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONNECTSUCCESS object:nil userInfo:@{@"port":@(port),
-//                                                                                                           @"host":host,
-//                                                                                                           @"status":@"已连接",
-//                                                                                                           @"socket":sock}];
-//    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(aliveKeep:) userInfo:@{@"socket":sock} repeats:NO];
-    
     //为了解决断网问题，
     NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(dealyNoticeSuccess:) userInfo:@{
                                                                                                                               @"port":@(port),
@@ -347,8 +338,9 @@ static ServerSocket* _instance = nil;
                                                                                                                               @"status":@"已连接",
                                                                                                                               @"socket":sock}
                                                      repeats:NO];
-
-    
+    if (!timer) {
+        NSLog(@"time is null");
+    }
 }
 
 - (void)dealyNoticeSuccess:(NSTimer *)timer {

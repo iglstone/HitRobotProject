@@ -97,6 +97,9 @@
         make.centerY.equalTo(self.pForwardBtn).offset(100);
     }];
     
+    self.pForwardBtn.hidden = YES;
+    self.pBackwardBtn.hidden = YES;
+    
     self.analogueLabel = [UILabel new];
     self.analogueLabel.text = @"0 , 0";
     self.analogueLabel.textAlignment = NSTextAlignmentCenter;
@@ -119,16 +122,16 @@
     self.analogueStick = [[JSAnalogueStick alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
     [self.view addSubview:self.analogueStick];
     [self.analogueStick mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.center.equalTo(self.view);
-        make.centerX.equalTo(self.view).offset(-150);
-        make.bottom.equalTo(self.view).offset(-100);
+        make.center.equalTo(self.view);
+//        make.centerX.equalTo(self.view).offset(-150);
+//        make.bottom.equalTo(self.view).offset(-100);
         make.size.mas_equalTo(CGSizeMake(100, 100));
     }];
     self.analogueStick.delegate = self;
     /**
      *  test hisden analogue
      */
-    self.analogueStick.hidden = YES;
+    self.analogueStick.hidden = NO;
     
     _jsDpadView = [[JSDPad alloc] initWithFrame:CGRectMake(100, 100, 200, 200)];
     [self.view addSubview:_jsDpadView];
@@ -137,6 +140,7 @@
         make.size.mas_equalTo(CGSizeMake(200, 200));
     }];
     _jsDpadView.delegate = self;
+    _jsDpadView.hidden = YES;
     
     self.velocityLabel = [UILabel new];
     self.velocityLabel.text = @"速度设置：3";
@@ -186,9 +190,10 @@
     [self.view addSubview:stopBtn];
     [stopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         if ([CommonsFunc isDeviceIpad]) {
-            make.centerX.equalTo(self.analogueStick).offset(150);
-            make.centerY.equalTo(self.analogueStick);
-//            make.bottom.equalTo(self.view).offset(-40-40);
+            make.centerX.equalTo(self.analogueStick);
+//            make.centerX.equalTo(self.analogueStick).offset(150);
+//            make.centerY.equalTo(self.analogueStick);
+            make.bottom.equalTo(self.view).offset(-40-40);
         } else
         {
             make.right.equalTo(self.view).offset(-20);

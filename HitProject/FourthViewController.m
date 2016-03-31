@@ -283,6 +283,10 @@
 
 
 - (void)play:(UIButton *)btn {
+    if (self.deskNum == 0) {
+        [self.view makeToast:@"请选择歌曲" duration:1.0 position:CSToastPositionCenter];
+        return;
+    }
     if (self.deskNum <= 20) {
         [control singSong:(self.deskNum)];
     }else
