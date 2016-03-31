@@ -559,7 +559,7 @@
 				TargetAttributes = {
 					E3C0B51D1BE1EAA5004437EC = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = N7HPU2D4KX;
+						DevelopmentTeam = AG6MFPAW5J;
 					};
 					E3C0B5391BE1EAA6004437EC = {
 						CreatedOnToolsVersion = 6.4;
@@ -866,7 +866,7 @@
 				GCC_PREFIX_HEADER = /Users/li529700/Documents/HitRobot/HitProject/HitProject/PrefixHeader.pch;
 				INFOPLIST_FILE = HitProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.guolong.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sowedoit.HitProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -883,7 +883,7 @@
 				GCC_PREFIX_HEADER = /Users/li529700/Documents/HitRobot/HitProject/HitProject/PrefixHeader.pch;
 				INFOPLIST_FILE = HitProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.guolong.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sowedoit.HitProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -929,7 +929,7 @@
 				E3C0B5431BE1EAA6004437EC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		E3C0B5441BE1EAA6004437EC /* Build configuration list for PBXNativeTarget "HitProject" */ = {
 			isa = XCConfigurationList;
@@ -938,7 +938,7 @@
 				E3C0B5461BE1EAA6004437EC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		E3C0B5471BE1EAA6004437EC /* Build configuration list for PBXNativeTarget "HitProjectTests" */ = {
 			isa = XCConfigurationList;
@@ -947,7 +947,7 @@
 				E3C0B5491BE1EAA6004437EC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

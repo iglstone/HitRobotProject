@@ -366,7 +366,6 @@
     [m_modelsArray enumerateObjectsUsingBlock:^(ConnectModel *tmpModel, NSUInteger idx, BOOL *stop) {
         if ([model.hostIp isEqual:tmpModel.hostIp]) {
             [m_modelsArray removeObject:tmpModel];
-//            [m_modelsArray addObject:model];
         }
     }];
     [m_modelsArray addObject:model];

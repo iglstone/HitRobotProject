@@ -96,12 +96,12 @@ static HitControl* _instance = nil;
             [server sendMessage:@"l" debugstring:@"3档"];
             break;
         case 4:
-            [server sendMessage:nil debugstring:@"4档"];
-//            [server sendMessage:@"m" debugstring:@"4档"];
+//            [server sendMessage:nil debugstring:@"4档"];
+            [server sendMessage:@"m" debugstring:@"4档"];
             break;
         case 5:
-            [server sendMessage:nil debugstring:@"5档"];
-//            [server sendMessage:@"n" debugstring:@"5档"];
+//            [server sendMessage:nil debugstring:@"5档"];
+            [server sendMessage:@"n" debugstring:@"5档"];
             break;
         default:
             break;
