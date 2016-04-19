@@ -41,7 +41,6 @@
 NSString *const AsyncSocketException = @"AsyncSocketException";
 NSString *const AsyncSocketErrorDomain = @"AsyncSocketErrorDomain";
 
-
 enum AsyncSocketFlags
 {
 	kEnablePreBuffering      = 1 <<  0,  // If set, pre-buffering is enabled

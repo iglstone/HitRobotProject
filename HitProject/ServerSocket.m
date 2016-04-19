@@ -52,6 +52,7 @@ static ServerSocket* _instance = nil;
         isRunning = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toBackGround:) name:NOTICE_BACKGROUND object:nil];
         socketMessageModlesArray = [[NSMutableArray alloc] init];
+        self.messagesArray = [NSMutableArray new];
         times = 0;
     }
     return self;
@@ -110,14 +111,14 @@ static ServerSocket* _instance = nil;
                 continue;
             }
             receiveMessage = nil;
-            
 //            NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.22f target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
-            
             if (s.isConnected) {
                 [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
 //                [timer fire];
-            }else
-                [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
+            }else{
+                NSLog(@"s.isConnected == false");
+//                [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
+            }
         }
     }
 }
@@ -260,7 +261,7 @@ static ServerSocket* _instance = nil;
 - (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {
     NSLog(@"Server willDisconnectWithError :%@",err);
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
 }
 
 /**
@@ -275,8 +276,9 @@ static ServerSocket* _instance = nil;
 - (void)onSocketDidDisconnect:(AsyncSocket *)sock
 {
     NSLog(@"Server onSocketDidDisconnect");
-    [connectedSockets removeObject:sock];
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
+    [connectedSockets removeObject:sock];
+    [[self mutableArrayValueForKey:@"messagesArray"] removeAllObjects];
 }
 
 /**
@@ -387,6 +389,8 @@ static ServerSocket* _instance = nil;
     NSLog(@"Server didReadData = %@",[ServerSocket dataToString:data]);
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
     
+    [[self mutableArrayValueForKey:@"messagesArray"] addObject:msg2];
+    
     BOOL isShow = YES;
     
     if ([msg isEqualToString:@"RED"] || [msg isEqualToString:@"BLUE"]) {
@@ -437,6 +441,7 @@ static ServerSocket* _instance = nil;
         msg2 = nil;
         tmpSocket = sock;
     }
+    
     if (isShow) {
         if ([msg isEqualToString:@"o"]) {
             msg = @"完成";

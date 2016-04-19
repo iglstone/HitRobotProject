@@ -389,7 +389,7 @@
         [rb.button setTitle:arr[i] forState:UIControlStateNormal];
     }
     //默认列表循环
-    RadioButton *rb = (RadioButton *)[self.view viewWithTag:104];
+    RadioButton *rb = (RadioButton *)[self.view viewWithTag:101];
     [rb setChecked:YES];
     [RadioButton addObserverForGroupId:@"sencond group" observer:self];
 }

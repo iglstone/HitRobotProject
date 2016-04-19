@@ -15,6 +15,7 @@
 #import <Toast/UIView+Toast.h>
 #import "GLViewProcessingTest.h"
 
+#define DEBUGTAG 199
 #define NSUSERDEFAULT_DISCONNECT  @"NSUSERDEFAULT_DISCONNECT"
 
 @interface MainViewController () <UITableViewDataSource,UITableViewDelegate> {
@@ -25,6 +26,8 @@
     NSTimer *schedulTimer;
     NSString *ttt;
 //    GLViewProcessingTest *_glView;
+    
+    NSMutableArray *m_messagesArray;
 }
 
 @property (nonatomic) UITableView *m_tableView;
@@ -86,6 +89,8 @@
 ////    disconnectlabel.hidden = YES;
 ////    disconnectView.hidden = YES;
 //    /*********************/
+    
+    m_messagesArray = [NSMutableArray new];
     
     UIImage *image = [UIImage imageNamed:@"me.png"];
     tmpString = @"";
@@ -193,35 +198,42 @@
             make.width.mas_equalTo(@150);
         }];
     }
+    
+    UITableView *m_debugTabelView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 100, 100) style:UITableViewStylePlain];
+    [self.view addSubview:m_debugTabelView];
+    [m_debugTabelView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(m_debugLabel.mas_top);
+        make.left.equalTo(m_debugLabel);
+        make.width.mas_equalTo(m_debugLabel);
+        make.height.mas_equalTo(@80);
+    }];
+    m_debugTabelView.backgroundColor = [UIColor clearColor];
+    m_debugTabelView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    m_debugTabelView.tag = DEBUGTAG;
+    m_debugTabelView.delegate = self;
+    m_debugTabelView.dataSource = self;
+    
+    [server addObserver:self forKeyPath:@"messagesArray" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-//    [self.glView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.equalTo(self.view);
-//        make.left.equalTo(self.view);
-//        make.size.mas_equalTo(CGSizeMake(100, 200));
-//    }];
-    
 }
 
-//- (GLViewProcessingTest *)glView {
-//    if (_glView == nil) {
-//        NSLog(@".. glviewProcessing..");
-//        _glView = [[GLViewProcessingTest alloc] init ];//WithFrame:CGRectMake(0, 0, 100, 100)];
-//        _glView.backgroundColor = [UIColor redColor];
-//    }
-//    return _glView;
-//}
-//
-//
-//- (void)setGlView:(GLViewProcessingTest *)glView2 {
-//    if (glView2) {
-//        self.glView = glView2;
-//    }
-//}
-
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
+    if ([keyPath isEqualToString:@"messagesArray"]) {
+//        m_messagesArray = (NSMutableArray *)[change objectForKey:@"new"];
+        m_messagesArray = server.messagesArray;
+    }
+    UITableView *table = (UITableView *)[self.view viewWithTag:DEBUGTAG];
+//    [table setContentOffset:CGPointMake(0, table.contentSize.height - table.bounds.size.height) animated:NO];
+    [table reloadData];
+    if (m_messagesArray.count >= 1) {
+        [table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(m_messagesArray.count -1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }else{
+        return;
+    }
+}
 
 #pragma mark - Actions
 - (void )setStopBtnRed {
@@ -250,13 +262,6 @@
         m_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
     }
     tmpString = str;
-}
-
-- (void)stopBtnTaped :(UIButton *)btn {
-    NSLog(@"stopTaped");
-    for (ConnectModel *model in m_selecedModelsArray) {
-        [model.socket disconnect];
-    }
 }
 
 
@@ -289,42 +294,47 @@
 //    [schedulTimer invalidate];
 //    /************/
     
-    
     NSDictionary *dic = [noti userInfo];
     AsyncSocket *socket = (AsyncSocket *)[dic objectForKey:@"socket"];
+    
     //去除选中的socket
     [server.selectedSocketArray enumerateObjectsUsingBlock:^(AsyncSocket *S, NSUInteger idx, BOOL *stop) {
         if ([socket isEqual:S]) {
+            NSLog(@"remove socket from modelArrays");
             [server.selectedSocketArray removeObject:S];
-//            *stop = YES;
         }
     }];
     
-    //设置disconnect连接标志
-    [m_modelsArray enumerateObjectsUsingBlock:^(ConnectModel *model, NSUInteger idx, BOOL *stop) {
+    for (int i = 0; i < [m_modelsArray count]; i++) {
+        ConnectModel *model = [m_modelsArray objectAtIndex:i];
         if ([model.socket isEqual:socket]) {
-            *stop = YES;
-            model.status = @"未连接";
-            model.isCheck = NO;
-            [m_modelsArray removeObject:model];
-            [m_selecedModelsArray removeObject:model];
+//            [m_modelsArray removeObject:model];
+            [[self mutableArrayValueForKey:@"m_modelsArray"] removeObject:model];
             [self.view makeToast:[NSString stringWithFormat:@"失去%@连接", model.hostIp] duration:1.5 position:CSToastPositionCenter];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [m_tableView reloadData];
-            });
         }
-    }];
+    }
+    for (int i = 0; i < [m_selecedModelsArray count]; i++) {
+        ConnectModel *model = [m_selecedModelsArray objectAtIndex:i];
+        if ([model.socket isEqual:socket]) {
+            [m_selecedModelsArray removeObject:model];
+        }
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [m_tableView reloadData];
+    });
+}
+
+- (void)stopBtnTaped :(UIButton *)btn {
+    NSLog(@"stopTaped");
+    NSLog(@"selected count :%lu",(unsigned long)m_selecedModelsArray.count);
     
-//    for (ConnectModel *model in m_modelsArray) {
-//        if ([model.socket isEqual:socket]) {
-//            model.status = @"未连接";
-//            [self.view makeToast:[NSString stringWithFormat:@"失去%@连接", model.hostIp] duration:1.5 position:CSToastPositionCenter];
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                [m_tableView reloadData];
-//            });
-//        }
-//    }
-    
+    int i;
+    for ( i = 0 ; i<[m_selecedModelsArray count]; i++) {
+        NSLog(@"....");
+        ConnectModel *model = [m_selecedModelsArray objectAtIndex:i];
+        NSLog(@"..%@",model);
+        [model.socket disconnect];
+    }
 }
 
 - (void)changeName :(NSNotification *)noti {
@@ -363,12 +373,15 @@
     model.isCheck = NO;
     model.robotName = [ServerSocket getRobotNameByIp:host];
     
-    [m_modelsArray enumerateObjectsUsingBlock:^(ConnectModel *tmpModel, NSUInteger idx, BOOL *stop) {
-        if ([model.hostIp isEqual:tmpModel.hostIp]) {
-            [m_modelsArray removeObject:tmpModel];
+    for (int i = 0; i < m_modelsArray.count; i++) {
+        ConnectModel *tmpModel = [m_modelsArray objectAtIndex:i];
+        if ([tmpModel.hostIp isEqualToString:model.hostIp]) {
+            [[self mutableArrayValueForKey:@"m_modelsArray"] removeObject:tmpModel];
         }
-    }];
-    [m_modelsArray addObject:model];
+    }
+    
+//    [m_modelsArray addObject:model];
+    [[self mutableArrayValueForKey:@"m_modelsArray"] addObject:model];
     dispatch_async(dispatch_get_main_queue(), ^{
         [m_tableView reloadData];
     });
@@ -386,46 +399,51 @@
 
 #pragma mark - table delegete
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    static NSString * identity = @"ipsId";
-    ConnectStatesCell *cell = [tableView dequeueReusableCellWithIdentifier:identity];
-    if (cell == nil) {
-        cell = [[ConnectStatesCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity];
+    if (tableView.tag == DEBUGTAG) {
+        static NSString * identity = @"debugId";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identity];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity];
+            cell.backgroundColor = [UIColor redColor];
+        }
+        if (m_messagesArray.count != 0) {
+            NSString *test = [m_messagesArray objectAtIndex:indexPath.row];
+            cell.textLabel.text = test;
+            cell.textLabel.font = [UIFont systemFontOfSize:12];
+        }
+        return cell;
+    }else {
+        static NSString * identity = @"ipsId";
+        ConnectStatesCell *cell = [tableView dequeueReusableCellWithIdentifier:identity];
+        if (cell == nil) {
+            cell = [[ConnectStatesCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity];
+        }
+        
+        ConnectModel *model = [m_modelsArray objectAtIndex:indexPath.row];
+        [cell configModel:model];
+        [m_cellsArray addObject:cell];
+        
+        return cell;
     }
-    
-    ConnectModel *model = [m_modelsArray objectAtIndex:indexPath.row];
-    [cell configModel:model];
-    [m_cellsArray addObject:cell];
-    
-    return cell;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView.tag == DEBUGTAG) {
+        return 15;
+    }
     return 50;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if (tableView.tag == DEBUGTAG) {
+        return m_messagesArray.count;
+    }
     return m_modelsArray.count;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     tmpCell = (ConnectStatesCell *)[tableView cellForRowAtIndexPath:indexPath];
     ConnectModel *model = [m_modelsArray objectAtIndex:indexPath.row];
-    
-//    if ([model.status isEqualToString:@"未连接"]) {
-//        return;
-//    }
-    
-//    //不知道这一步有没有用
-//    [m_selecedModelsArray enumerateObjectsUsingBlock:^(ConnectModel *tmpModel, NSUInteger idx, BOOL *stop) {
-//        if ([model isEqual:tmpModel]) {
-//            *stop = YES;
-//            [m_selecedModelsArray removeObject:tmpModel];
-//            [m_selecedModelsArray addObject:model];
-//            [server.selectedSocketArray removeObject:tmpModel.socket];
-//            [server.selectedSocketArray addObject:model.socket];
-//            [self setStopBtnRed];
-//        }  
-//    }];
     
     NSLog(@"isCkecked before %d",tmpCell.isChecked);
     tmpCell.isChecked = !tmpCell.isChecked;

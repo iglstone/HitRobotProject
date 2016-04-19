@@ -17,6 +17,10 @@
 @property (nonatomic) AsyncSocket *socket;
 @property (nonatomic) BOOL isCheck;
 
+@property (nonatomic) NSString *robotPower;//50%
+@property (nonatomic) NSString *robotSpeed;//0.3
+@property (nonatomic) NSString *robotVoice;//50
+
 @end
 
 @interface ConnectStatesCell : UITableViewCell
