@@ -45,6 +45,16 @@ static HitControl* _instance = nil;
     [server stopListen];
 }
 
+- (void)sendCheckSigalWithSocket:(AsyncSocket *)sock {
+    [sock writeData:[@"&" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+    AppDelegate *dele = (AppDelegate *) [[UIApplication sharedApplication] delegate];
+    if ([dele.main isKindOfClass:[MainViewController class]]) {
+        MainViewController *main = (MainViewController *)dele.main;
+        [main setDebugLabelText:@"checkConfig" mode:0];
+    }
+    
+}
+
 - (void)mealMode {
     [server sendMessage:@"a" debugstring:@"送餐模式"];
 }
@@ -137,8 +147,18 @@ static HitControl* _instance = nil;
 }
 
 - (void)deskNumber:(NSInteger)numeber {
-    NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
-    NSArray *messageArray = @[@"E", @"F", @"G", @"H", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y"];
+    /**
+     *  罗欧桌号与控制代码
+     */
+//    NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
+//    NSArray *messageArray = @[@"E", @"F", @"G", @"H", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y"];
+    
+    /**
+     *  标准协议
+     */
+    NSArray *deskNumArray = @[@"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10", @"11", @"12", @"13", @"14",@"15", @"16", @"17", @"18", @"19", @"20", @"21", @"22", @"23", @"24", @"25", @"26", @"27", @"28", @"29", @"30"];
+    NSArray *messageArray = @[@"D", @"E", @"F", @"G", @"H", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z", @":", @"<", @"=", @">", @"?", @"0", @"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9"];
+    
     if (deskNumArray.count >= numeber) {
         [server sendMessage:messageArray[numeber] debugstring:[NSString stringWithFormat:@"%@桌",deskNumArray[numeber]]];
     }else {

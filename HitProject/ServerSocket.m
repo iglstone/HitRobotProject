@@ -410,28 +410,11 @@ static ServerSocket* _instance = nil;
         if ([[ServerSocket getRobotName:sock] isEqualToString:ROBOTNAME_BLUE]) {
             self.bluekvoPower = power;
         }
-        
-//        //当成心跳包来测试
-//        SocketMessageModel *model = [SocketMessageModel new];
-//        model.socket = sock;
-//        model.message = msg2;
-//        BOOL ischange = NO;
-//        for (SocketMessageModel *tmpModel in socketMessageModlesArray) {
-//            if ([tmpModel.socket isEqual:sock]) {//如果socket存在，message置空
-////                [socketMessageModlesArray removeObject:tmpModel];
-////                [socketMessageModlesArray addObject:model];
-//                tmpModel.message = nil;
-//                ischange = YES;
-//            }
-//        }
-//        if (ischange == NO) {//socket 不存在
-//            [socketMessageModlesArray addObject:model];
-//        }
-//        NSLog(@"socketMessageModlesArray nums :%lu",(unsigned long)socketMessageModlesArray.count);
-        
         isShow = NO;
     } else if ([msg hasPrefix:@"CARD"] || [msg hasPrefix:@"AT"] || [msg isEqualToString:@"A"] || [msg isEqualToString:@"v"]){//返回的card就不补充了。
         isShow = NO;
+    }else if ([msg hasPrefix:@"o"]&&[msg hasSuffix:@"e"]){
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONFIG_MODE_SPEEDN object:nil userInfo:@{@"ipAddr":sock.connectedHost, @"message":msg}];
     }
     else
     {

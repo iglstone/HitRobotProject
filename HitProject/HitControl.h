@@ -20,6 +20,8 @@
 
 - (void)stopListen ;
 
+- (void)sendCheckSigalWithSocket:(AsyncSocket *)sock ;
+
 - (void)mealMode ;
 
 - (void)controlMode ;

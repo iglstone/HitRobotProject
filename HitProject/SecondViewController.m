@@ -64,6 +64,7 @@
     self = [super init];
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(voiceChange:) name:NOTICE_VOICECHANGE object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configModelAndSpeed:) name:NOTICE_CONFIG_MODE_SPEEDN object:nil];
         eleMutArray = [[NSMutableArray alloc] initWithCapacity:10];
         times = 0;
     }
@@ -291,6 +292,33 @@
 }
 
 #pragma  mark - notis and observers
+- (void)configModelAndSpeed :(NSNotification *)noti {
+    NSString *string = [[noti userInfo] objectForKey:@"message"];
+    NSString *subModel = [string substringWithRange:NSMakeRange(1, 1)];
+    if ([subModel isEqualToString:@"a"]) {
+        //meal mode
+        RadioButton *btn = (RadioButton *)[self.view viewWithTag:100];
+        [btn setChecked:YES];
+    }else {
+        //control mode
+        RadioButton *btn = (RadioButton *)[self.view viewWithTag:101];
+        [btn setChecked:YES];
+    }
+    NSString *subSpeed = [string substringWithRange:NSMakeRange(2, 1)];
+    if ([subSpeed isEqualToString:@"j"]) {
+        _steppedSlider.value = 1;
+    }else if ([subSpeed isEqualToString:@"k"]){
+        _steppedSlider.value = 2;
+    }else if ([subSpeed isEqualToString:@"l"]){
+        _steppedSlider.value = 3;
+    }else if ([subSpeed isEqualToString:@"m"]){
+        _steppedSlider.value = 4;
+    }else {
+        _steppedSlider.value = 5;
+    }
+    
+}
+
 - (void)voiceChange :(NSNotification *)noti {
     NSString *voice = [[noti userInfo] objectForKey:@"voice"];
     MainViewController *main =(MainViewController *) self.tabBarController;
@@ -605,7 +633,6 @@
             make.width.mas_equalTo(@165);
             make.height.mas_equalTo(@120);
         }
-        
     }];
     
     UILabel *questionText = [[UILabel alloc] initWithFrame:CGRectMake(0,0,280,20)];

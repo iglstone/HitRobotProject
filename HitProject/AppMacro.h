@@ -69,6 +69,9 @@
 //popview歌曲确认修改按钮
 #define NOTICE_SONGPOPVIEW_CONFIRM          @"NOTICE_SONGPOPVIEW_CONFIRM"
 
+//change the socke mode and speed
+#define NOTICE_CONFIG_MODE_SPEEDN          @"NOTICE_CONFIG_MODE_SPEEDN"
+
 //nsdefaut KEY
 #define NSDEFAULT_REMEMBERCODE              @"NSDEFAULT_REMEMBERCODE"
 #define NSDEFAULT_USERNAME                  @"NSDEFAULT_USERNAME"
