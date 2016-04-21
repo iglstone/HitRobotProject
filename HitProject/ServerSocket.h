@@ -21,6 +21,7 @@
 @property (nonatomic,retain) NSMutableArray  *selectedSocketArray;
 @property (nonatomic,retain) NSString        *kvoPower;//红的电量
 @property (nonatomic,retain) NSString        *bluekvoPower;//蓝的电量
+@property (nonatomic,retain) NSString        *goldkvoPower;//gold的电量
 @property (nonatomic,retain) NSString        *receiveMessage;
 @property (nonatomic,retain) NSMutableArray *messagesArray;
 

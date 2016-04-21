@@ -32,6 +32,7 @@
     
     NSString *tempRedVotage;
     NSString *tempBlueVotage;
+    NSString *tempGoldVotage;
     
     UITableView *pTableView;
     NSMutableArray *pRobotStateModelsArray;
@@ -89,6 +90,7 @@
     direction = 0;
     [server addObserver:self forKeyPath:@"kvoPower" options:NSKeyValueObservingOptionNew context:nil];
     [server addObserver:self forKeyPath:@"bluekvoPower" options:NSKeyValueObservingOptionNew context:nil];
+    [server addObserver:self forKeyPath:@"goldkvoPower" options:NSKeyValueObservingOptionNew context:nil];
     
     self.pIsForwardPressed  = NO;
     self.pIsBackwardPressed = NO;
@@ -255,8 +257,11 @@
     for (ConnectModel *model in pRobotStateModelsArray) {
         if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
             model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,tempRedVotage];
-        }else
+        }else if ([model.robotName isEqualToString:ROBOTNAME_BLUE]){
             model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,tempBlueVotage];
+        }else
+            model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,tempGoldVotage];//gold or others
+        
     }
     [pTableView reloadData];
     
@@ -291,7 +296,7 @@
 //    }
 }
 
-#pragma  mark - notis and observers
+#pragma  mark - notis and observers oaje
 - (void)configModelAndSpeed :(NSNotification *)noti {
     NSString *string = [[noti userInfo] objectForKey:@"message"];
     NSString *subModel = [string substringWithRange:NSMakeRange(1, 1)];
@@ -329,7 +334,9 @@
     for (ConnectModel *model in pRobotStateModelsArray) {
         if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
             model.robotVoice = [NSString stringWithFormat:@"%@",voice];
-        }else model.robotVoice = [NSString stringWithFormat:@"%@",voice];
+        }else if ([model.robotName isEqualToString:ROBOTNAME_BLUE]){
+            model.robotVoice = [NSString stringWithFormat:@"%@",voice];
+        }else model.robotVoice = [NSString stringWithFormat:@"%@",voice];//小金或者其他
     }
     [pTableView reloadData];
 }
@@ -350,6 +357,14 @@
         float ele=(float) ((Powerfloat-22)/7.4)*100;
         [self lvbo:ele robot:ROBOTNAME_BLUE];
         tempBlueVotage = string;
+    }
+    
+    if ([keyPath isEqualToString:@"goldkvoPower"]) {
+        NSString *string = [change objectForKey:@"new"];
+        float Powerfloat = [string floatValue];
+        float ele=(float) ((Powerfloat-22)/7.4)*100;
+        [self lvbo:ele robot:ROBOTNAME_GOLD];
+        tempGoldVotage = string;
     }
     
     if ([keyPath isEqualToString:@"m_modelsArray"]) {
@@ -478,8 +493,10 @@
     for (ConnectModel *model in pRobotStateModelsArray) {
         if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
             model.robotSpeed = [NSString stringWithFormat:@"0.%.0f",slider.value];
-        }else {
+        }else if ([model.robotName isEqualToString:ROBOTNAME_BLUE]) {
             model.robotSpeed = [NSString stringWithFormat:@"0.%.0f",slider.value];
+        }else {
+            model.robotSpeed = [NSString stringWithFormat:@"0.%.0f",slider.value];//gold robot
         }
     }
     [pTableView reloadData];

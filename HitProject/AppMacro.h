@@ -19,6 +19,9 @@
 //小蓝
 #define ROBOTNAME_BLUE                      @"小蓝"
 
+//小金
+#define ROBOTNAME_GOLD                      @"小金"
+
 //notification
 //连接成功
 #define NOTICE_CONNECTSUCCESS               @"NOTICE_CONNECTSUCCESS"
@@ -77,6 +80,7 @@
 #define NSDEFAULT_USERNAME                  @"NSDEFAULT_USERNAME"
 #define NSDEFAULT_REDROBOTIP                @"NSDEFAULT_REDROBOTIP"
 #define NSDEFAULT_BLUEROBOTIP               @"NSDEFAULT_BLUEROBOTIP"
+#define NSDEFAULT_GOLDROBOTIP               @"NSDEFAULT_GOLDROBOTIP"
 #define NSDEFAULT_PickupDeskNum             @"NSDEFAULT_PickupDeskNum"
 #define NSDEFAULT_PickupSongsNum            @"NSDEFAULT_PickupSongsNum"
 

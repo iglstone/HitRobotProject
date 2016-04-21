@@ -393,12 +393,14 @@ static ServerSocket* _instance = nil;
     
     BOOL isShow = YES;
     
-    if ([msg isEqualToString:@"RED"] || [msg isEqualToString:@"BLUE"]) {
+    if ([msg isEqualToString:@"RED"] || [msg isEqualToString:@"BLUE"] || [msg isEqualToString:@"GOLD"]) {
         NSLog(@"sock.connect host is: %@", sock.connectedHost);
         if ([msg isEqualToString:@"RED"]) {
             [[NSUserDefaults standardUserDefaults] setObject:sock.connectedHost forKey:NSDEFAULT_REDROBOTIP];
-        }else
+        }else if ([msg isEqualToString:@"BUE"]) {
             [[NSUserDefaults standardUserDefaults] setObject:sock.connectedHost forKey:NSDEFAULT_BLUEROBOTIP];
+        }else
+            [[NSUserDefaults standardUserDefaults] setObject:sock.connectedHost forKey:NSDEFAULT_GOLDROBOTIP];
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CHANGEROBOTNAME object:nil userInfo:@{@"ipAddr":sock.connectedHost}];
         isShow = NO;
     }
@@ -406,9 +408,10 @@ static ServerSocket* _instance = nil;
         NSString *power = [msg substringWithRange:NSMakeRange(1, msg.length-2)];
         if ([[ServerSocket getRobotName:sock] isEqualToString:ROBOTNAME_RED]) {
             self.kvoPower = power;
-        }
-        if ([[ServerSocket getRobotName:sock] isEqualToString:ROBOTNAME_BLUE]) {
+        }else if ([[ServerSocket getRobotName:sock] isEqualToString:ROBOTNAME_BLUE]) {
             self.bluekvoPower = power;
+        }else if ([[ServerSocket getRobotName:sock] isEqualToString:ROBOTNAME_GOLD]) {
+            self.goldkvoPower = power;
         }
         isShow = NO;
     } else if ([msg hasPrefix:@"CARD"] || [msg hasPrefix:@"AT"] || [msg isEqualToString:@"A"] || [msg isEqualToString:@"v"]){//返回的card就不补充了。
@@ -463,16 +466,17 @@ static ServerSocket* _instance = nil;
     NSString *conectedip = ipaddr;
     NSString *redrobotip = [[NSUserDefaults standardUserDefaults] objectForKey:NSDEFAULT_REDROBOTIP];
     NSString *bluerobotip = [[NSUserDefaults standardUserDefaults] objectForKey:NSDEFAULT_BLUEROBOTIP];
+    NSString *goldrobotip = [[NSUserDefaults standardUserDefaults] objectForKey:NSDEFAULT_GOLDROBOTIP];
     if (!conectedip) {
         NSLog(@"connected ip is 空");
         return nil;
     }
     if ([conectedip isEqualToString:redrobotip]) {
-        NSString *RED = ROBOTNAME_RED;
-        return  RED;
-    } else if ([conectedip isEqualToString:bluerobotip])  {
-        NSString *Blue = ROBOTNAME_BLUE;
-        return  Blue;
+        return  (NSString *)ROBOTNAME_RED;
+    } else if ([conectedip isEqualToString:bluerobotip]){
+        return (NSString *)ROBOTNAME_BLUE;
+    }else if ([conectedip isEqualToString:goldrobotip]){
+        return (NSString *)ROBOTNAME_GOLD;
     }else {
         return conectedip;
     }
