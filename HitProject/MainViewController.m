@@ -229,7 +229,7 @@
 //    [table setContentOffset:CGPointMake(0, table.contentSize.height - table.bounds.size.height) animated:NO];
     [table reloadData];
     if (m_messagesArray.count >= 1) {
-//        [table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(m_messagesArray.count -1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        [table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(m_messagesArray.count -1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     }else{
         return;
     }

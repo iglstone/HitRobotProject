@@ -46,13 +46,12 @@ static HitControl* _instance = nil;
 }
 
 - (void)sendCheckSigalWithSocket:(AsyncSocket *)sock {
-    [sock writeData:[@"&" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
     AppDelegate *dele = (AppDelegate *) [[UIApplication sharedApplication] delegate];
     if ([dele.main isKindOfClass:[MainViewController class]]) {
         MainViewController *main = (MainViewController *)dele.main;
         [main setDebugLabelText:@"checkConfig" mode:0];
     }
-    
+    [sock writeData:[@"&" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:1.5 tag:1];
 }
 
 - (void)mealMode {

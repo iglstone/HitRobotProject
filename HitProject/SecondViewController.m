@@ -16,36 +16,39 @@
 #import "JSDPad.h"
 #import "RobotStateCell.h"
 
+//typedef NS_ENUM(NSInteger , RobotName) {
+//    RobotName_Red = 1,
+//    RobotName_Blue = 2,
+//    RobotName_Gold = 3,
+//} ;
+
 @interface SecondViewController ()<JSAnalogueStickDelegate, JSDPadDelegate, UITableViewDelegate, UITableViewDataSource> {
     UILabel *redVoiceLable;
     UILabel *redSpeedLabel;
-    
-    UILabel *bluePowerLabel;
-    UILabel *blueVoiceLable;
-    UILabel *blueSpeedLabel;
-    
-    NSMutableArray *eleMutArray;
-    int times;
-    
-    JSDPad *_jsDpadView;
+    UIView *radioContainer;
+    JSDPad *jsDpadView;
     NSDate *pressedDate;
+    ServerSocket    *server;
+    HitControl      *control;
     
     NSString *tempRedVotage;
     NSString *tempBlueVotage;
     NSString *tempGoldVotage;
+    NSMutableArray *redEleMutArray;
+    NSMutableArray *blueEleMutArray;
+    NSMutableArray *goldEleMutArray;
+    int redTimes;
+    int blueTimes;
+    int goldTimes;
     
-    UITableView *pTableView;
-    NSMutableArray *pRobotStateModelsArray;
+    UITableView *m_robotsDetailTableView;
+    NSMutableArray *m_robotStateModelsArray;
 }
 
 @property (nonatomic) UILabel         *analogueLabel;
 @property (nonatomic) JSAnalogueStick *analogueStick;
 @property (nonatomic) UILabel         *velocityLabel;
-@property (nonatomic) ServerSocket    *server;
-@property (nonatomic) HitControl      *control;
 @property (nonatomic) CHYSlider       *steppedSlider;
-@property (nonatomic) UIView          *radioContainer;
-@property (nonatomic) int             direction;
 @property (nonatomic) UILabel         *redPowerLabel;
 @property (nonatomic) UIButton        *pForwardBtn;
 @property (nonatomic) BOOL            pIsForwardPressed;
@@ -54,11 +57,6 @@
 @end
 
 @implementation SecondViewController
-@synthesize direction;
-@synthesize server;
-@synthesize control;
-@synthesize radioContainer;
-@synthesize redPowerLabel;
 
 #pragma mark - lifeCiclye
 - (instancetype)init {
@@ -66,8 +64,6 @@
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(voiceChange:) name:NOTICE_VOICECHANGE object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configModelAndSpeed:) name:NOTICE_CONFIG_MODE_SPEEDN object:nil];
-        eleMutArray = [[NSMutableArray alloc] initWithCapacity:10];
-        times = 0;
     }
     return self;
 }
@@ -83,74 +79,71 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    server = [ServerSocket sharedSocket];
+    control = [HitControl sharedControl];
+    self.pIsForwardPressed  = NO;
+    self.pIsBackwardPressed = NO;
+    redEleMutArray = [[NSMutableArray alloc] initWithCapacity:10];
+    blueEleMutArray = [[NSMutableArray alloc] initWithCapacity:10];
+    goldEleMutArray = [[NSMutableArray alloc] initWithCapacity:10];
+    redTimes = 0;
+    blueTimes = 0;
+    goldTimes = 0;
     self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
     
-    self.server = [ServerSocket sharedSocket];
-    control = [HitControl sharedControl];
-    direction = 0;
+    m_robotStateModelsArray = [NSMutableArray new];
+    if ([self.tabBarController isKindOfClass:[MainViewController class]]) {
+        MainViewController *main =(MainViewController *) self.tabBarController;
+        m_robotStateModelsArray = main.m_modelsArray;
+        [main addObserver:self forKeyPath:@"m_modelsArray" options:NSKeyValueObservingOptionNew context:nil];
+    }
+    
     [server addObserver:self forKeyPath:@"kvoPower" options:NSKeyValueObservingOptionNew context:nil];
     [server addObserver:self forKeyPath:@"bluekvoPower" options:NSKeyValueObservingOptionNew context:nil];
     [server addObserver:self forKeyPath:@"goldkvoPower" options:NSKeyValueObservingOptionNew context:nil];
     
-    self.pIsForwardPressed  = NO;
-    self.pIsBackwardPressed = NO;
+    [self addSubViews];
+    [self viewsMakeConstranins];
+}
+
+- (void)addSubViews {
     [self.view addSubview: self.pForwardBtn];
+    [self.view addSubview: self.pBackwardBtn];
+    [self.view addSubview: self.analogueLabel];
+    [self.view addSubview: self.analogueStick];
+    [self addJSDpad];
+    [self.view addSubview: self.velocityLabel];
+    [self.view addSubview: self.steppedSlider];
+    //添加单选模式
+    [self addRadioBtn];
+    [self addStopButton];
+    [self addRobotsDeatailTableView];
+}
+
+- (void)viewsMakeConstranins {
     [self.pForwardBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.view).offset(180);
         make.centerX.equalTo(self.view).offset(-120);
     }];
-    
-    [self.view addSubview:self.pBackwardBtn];
     [self.pBackwardBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.pForwardBtn);
         make.centerY.equalTo(self.pForwardBtn).offset(100);
     }];
-    
-    self.analogueLabel = [UILabel new];
-    self.analogueLabel.text = @"0 , 0";
-    self.analogueLabel.textAlignment = NSTextAlignmentCenter;
-    self.analogueLabel.numberOfLines = 0;
-    [self.view addSubview:self.analogueLabel];
-    if ([CommonsFunc isDeviceIpad]) {
-        [self.analogueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.view).offset(100);
-            make.centerX.equalTo(self.view);
-            make.size.mas_equalTo(CGSizeMake(120, 80));
-        }];
-    }else {
-        [self.analogueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.view).offset(30);
-            make.centerX.equalTo(self.view);
-            make.size.mas_equalTo(CGSizeMake(120, 80));
-        }];
-    }
-    
-    self.analogueStick = [[JSAnalogueStick alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
-    [self.view addSubview:self.analogueStick];
     [self.analogueStick mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.view).offset(-150);
         make.bottom.equalTo(self.view).offset(-100);
         make.size.mas_equalTo(CGSizeMake(100, 100));
     }];
-    self.analogueStick.delegate = self;
-    /**
-     *  test hisden analogue
-     */
-    self.analogueStick.hidden = YES;
-    
-    _jsDpadView = [[JSDPad alloc] initWithFrame:CGRectMake(100, 100, 200, 200)];
-    [self.view addSubview:_jsDpadView];
-    [_jsDpadView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self.view);
-        make.size.mas_equalTo(CGSizeMake(200, 200));
+    [self.analogueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(120, 80));
+        if ([CommonsFunc isDeviceIpad]) {
+            make.top.equalTo(self.view).offset(100);
+        }else {
+            make.top.equalTo(self.view).offset(30);
+        }
     }];
-    _jsDpadView.delegate = self;
-    _jsDpadView.hidden = NO;
-    
-    self.velocityLabel = [UILabel new];
-    self.velocityLabel.text = @"速度设置：3";
-    self.velocityLabel.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:self.velocityLabel];
     [self.velocityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         if ([CommonsFunc isDeviceIpad]) {
             make.centerY.equalTo(self.analogueLabel);
@@ -161,16 +154,7 @@
         }
         make.width.mas_equalTo(@150);
     }];
-    
-    _steppedSlider = [[CHYSlider alloc] init];//WithFrame:CGRectMake(0, 0, 250, 30)];
-    _steppedSlider.stepped = YES;
-    _steppedSlider.minimumValue = 0;
-    _steppedSlider.maximumValue = 5;
-    _steppedSlider.value = 2;
-    _steppedSlider.labelAboveThumb.font = [UIFont fontWithName:@"AmericanTypewriter-Bold" size:20.f];
-    _steppedSlider.labelAboveThumb.textColor = [UIColor blueColor];
-    [self.view addSubview:_steppedSlider];
-    [_steppedSlider mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.steppedSlider mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.velocityLabel);
         make.top.equalTo(self.velocityLabel.mas_bottom).offset(30);
         if ([CommonsFunc isDeviceIpad]) {
@@ -178,47 +162,6 @@
         }else
             make.size.mas_equalTo(CGSizeMake(220, 30));
     }];
-    
-    [_steppedSlider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
-    
-    //添加单选模式
-    [self addRadioBtn];
-    
-    UIButton *stopBtn = [UIButton new];
-    [stopBtn setTitle:@"STOP" forState:UIControlStateNormal];
-    [stopBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    [stopBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
-    [self.view addSubview:stopBtn];
-    [stopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        if ([CommonsFunc isDeviceIpad]) {
-            make.centerX.equalTo(self.analogueStick).offset(150);
-            make.centerY.equalTo(self.analogueStick);
-        } else
-        {
-            make.right.equalTo(self.view).offset(-20);
-            make.bottom.equalTo(self.view).offset(-40-40-30);
-        }
-    }];
-    [stopBtn addTarget:self action:@selector(stopRun:) forControlEvents:UIControlEventTouchUpInside];
-    
-    
-    pRobotStateModelsArray = [NSMutableArray new];
-    MainViewController *main =(MainViewController *) self.tabBarController;
-    pRobotStateModelsArray = main.m_modelsArray;
-    [main addObserver:self forKeyPath:@"m_modelsArray" options:NSKeyValueObservingOptionNew context:nil];
-    
-    pTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 100, 100) style:UITableViewStylePlain];
-    [self.view addSubview:pTableView];
-    pTableView.delegate = self;
-    pTableView.dataSource = self;
-    [pTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(radioContainer.mas_bottom).offset(20);
-        make.left.equalTo(radioContainer);
-        make.width.equalTo(radioContainer);
-        make.bottom.equalTo(self.view);
-    }];
-    pTableView.backgroundColor = [UIColor clearColor];
-    pTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 }
 
 - (void)dealloc{
@@ -228,86 +171,20 @@
     [main removeObserver:self forKeyPath:@"m_modelsArray"];
 }
 
-#pragma mark - private
-//平均十次显示电量
-- (void)lvbo:(float)ele robot:(NSString *)robot {
-    if (times < 4) {
-        if (times == 1) {//第二次显示电量
-            [self disPlayPower:robot power:ele];
-        }
-        times ++;
-        [eleMutArray addObject:@(ele)];
-    } else {
-        float sums = 0;
-        for (id obj in eleMutArray) {
-            float tpm =[obj floatValue];
-            sums += tpm;
-        }
-        float average = sums/times;
-        times = 0;
-        [eleMutArray removeAllObjects];
-        [self disPlayPower:robot power:average];
-        NSLog(@"average: %f",average);
-    }
-    NSLog(@"..%f",ele);
-}
-
-//显示电量
-- (void)disPlayPower :(NSString *)robot  power:(float )average {
-    for (ConnectModel *model in pRobotStateModelsArray) {
-        if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
-            model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,tempRedVotage];
-        }else if ([model.robotName isEqualToString:ROBOTNAME_BLUE]){
-            model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,tempBlueVotage];
-        }else
-            model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,tempGoldVotage];//gold or others
-        
-    }
-    [pTableView reloadData];
-    
-//    if ([robot isEqualToString:@"red"]) {
-//        redPowerLabel.text = [NSString stringWithFormat:@"剩余电量:%.0f%%(%@)",average,tempRedVotage];
-//        
-////        redPowerLabel.text = [NSString stringWithFormat:@"剩余电量： %.1f%%",average];
-////        if (average < 0) {
-////            redPowerLabel.text = [NSString stringWithFormat:@"剩余电量： 20%%"];
-////            redPowerLabel.textColor = [UIColor darkGrayColor];
-////        }else {
-////            if (average <= 15) {
-////                redPowerLabel.textColor = [UIColor redColor];
-////            }else {
-////                redPowerLabel.textColor = [UIColor darkGrayColor];
-////            }
-////        }
-//    } else {
-//        bluePowerLabel.text = [NSString stringWithFormat:@"剩余电量:%.0f%%(%@)",average,tempBlueVotage];
-//        
-////        bluePowerLabel.text = [NSString stringWithFormat:@"剩余电量： %.1f%%",average];
-////        if (average < 0) {
-////            bluePowerLabel.text = [NSString stringWithFormat:@"剩余电量： 20%%"];
-////            bluePowerLabel.textColor = [UIColor darkGrayColor];
-////        } else {
-////            if (average <= 15) {
-////                bluePowerLabel.textColor = [UIColor redColor];
-////            }else {
-////                bluePowerLabel.textColor = [UIColor darkGrayColor];
-////            }
-////        }
-//    }
-}
-
 #pragma  mark - notis and observers oaje
 - (void)configModelAndSpeed :(NSNotification *)noti {
     NSString *string = [[noti userInfo] objectForKey:@"message"];
     NSString *subModel = [string substringWithRange:NSMakeRange(1, 1)];
+    RadioButton *btn = (RadioButton *)[self.view viewWithTag:100];
+    RadioButton *btn2 = (RadioButton *)[self.view viewWithTag:101];
     if ([subModel isEqualToString:@"a"]) {
         //meal mode
-        RadioButton *btn = (RadioButton *)[self.view viewWithTag:100];
         [btn setChecked:YES];
+        [btn2 setChecked:NO];
     }else {
         //control mode
-        RadioButton *btn = (RadioButton *)[self.view viewWithTag:101];
-        [btn setChecked:YES];
+        [btn2 setChecked:YES];
+        [btn setChecked:NO];
     }
     NSString *subSpeed = [string substringWithRange:NSMakeRange(2, 1)];
     if ([subSpeed isEqualToString:@"j"]) {
@@ -331,14 +208,14 @@
     if (arr.count<=0) {
         return;
     }
-    for (ConnectModel *model in pRobotStateModelsArray) {
+    for (ConnectModel *model in m_robotStateModelsArray) {
         if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
             model.robotVoice = [NSString stringWithFormat:@"%@",voice];
         }else if ([model.robotName isEqualToString:ROBOTNAME_BLUE]){
             model.robotVoice = [NSString stringWithFormat:@"%@",voice];
         }else model.robotVoice = [NSString stringWithFormat:@"%@",voice];//小金或者其他
     }
-    [pTableView reloadData];
+    [m_robotsDetailTableView reloadData];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
@@ -347,7 +224,7 @@
         NSString *string = [change objectForKey:@"new"];
         float Powerfloat = [string floatValue];
         float ele=(float) ((Powerfloat-22)/7.4)*100;
-        [self lvbo:ele robot:ROBOTNAME_RED];
+        [self calcuPower:ele times:redTimes arr:redEleMutArray robot:ROBOTNAME_RED];
         tempRedVotage = string;
     }
     
@@ -355,7 +232,7 @@
         NSString *string = [change objectForKey:@"new"];
         float Powerfloat = [string floatValue];
         float ele=(float) ((Powerfloat-22)/7.4)*100;
-        [self lvbo:ele robot:ROBOTNAME_BLUE];
+        [self calcuPower:ele times:blueTimes arr:blueEleMutArray robot:ROBOTNAME_BLUE];
         tempBlueVotage = string;
     }
     
@@ -363,15 +240,47 @@
         NSString *string = [change objectForKey:@"new"];
         float Powerfloat = [string floatValue];
         float ele=(float) ((Powerfloat-22)/7.4)*100;
-        [self lvbo:ele robot:ROBOTNAME_GOLD];
+        [self calcuPower:ele times:goldTimes arr:goldEleMutArray robot:ROBOTNAME_GOLD];
         tempGoldVotage = string;
     }
     
     if ([keyPath isEqualToString:@"m_modelsArray"]) {
         MainViewController *main =(MainViewController *) self.tabBarController;
-        pRobotStateModelsArray = main.m_modelsArray;
-        [pTableView reloadData];
+        m_robotStateModelsArray = main.m_modelsArray;
+        [m_robotsDetailTableView reloadData];
     }
+}
+
+#pragma mark - private
+- (void)calcuPower:(float)ele times:(int)times arr:(NSMutableArray *)arr robot:(NSString *)robotName{
+    if (times < 4) {
+        times ++;
+        [arr addObject:@(ele)];
+    } else {
+        times = 0;
+        float sum = 0;
+        for (id obj in arr) {
+            float ele = [obj floatValue];
+            sum += ele;
+        }
+        float average = sum/arr.count;
+        NSLog(@"average: %f",average);
+        [self disPlayPower:robotName power:average];
+    }
+}
+
+//显示电量
+- (void)disPlayPower :(NSString *)robot  power:(float )average {
+    if (average <= 0) average = 20;
+    for (ConnectModel *model in m_robotStateModelsArray) {
+        if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
+            model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,tempRedVotage];
+        }else if ([model.robotName isEqualToString:ROBOTNAME_BLUE]){
+            model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,tempBlueVotage];
+        }else
+            model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,tempGoldVotage];//gold or others
+    }
+    [m_robotsDetailTableView reloadData];
 }
 
 #pragma mark - tableviewDelegates
@@ -386,8 +295,8 @@
     cell.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     cell.layer.borderWidth = 1.0;
     
-    if (pRobotStateModelsArray.count != 0) {
-        ConnectModel *model = [pRobotStateModelsArray objectAtIndex:indexPath.row];
+    if (m_robotStateModelsArray.count != 0) {
+        ConnectModel *model = [m_robotStateModelsArray objectAtIndex:indexPath.row];
         [cell configRobotState:model];
     }
     return cell;
@@ -425,7 +334,6 @@
 
 -(void)dPad:(JSDPad *)dPad didPressDirection:(JSDPadDirection)direction2 {
     pressedDate = [NSDate date];
-    //    tmpDirection = direction2;
     NSString *string = nil;
     switch (direction2) {
         case JSDPadDirectionNone:
@@ -490,7 +398,7 @@
         return;
     }
     
-    for (ConnectModel *model in pRobotStateModelsArray) {
+    for (ConnectModel *model in m_robotStateModelsArray) {
         if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
             model.robotSpeed = [NSString stringWithFormat:@"0.%.0f",slider.value];
         }else if ([model.robotName isEqualToString:ROBOTNAME_BLUE]) {
@@ -499,81 +407,56 @@
             model.robotSpeed = [NSString stringWithFormat:@"0.%.0f",slider.value];//gold robot
         }
     }
-    [pTableView reloadData];
-
-    if (slider.value == 0) {
+    [m_robotsDetailTableView reloadData];
+    
+    int tem = (int)slider.value;
+    if (tem == 0) {
         [control stopMove];
         [self updateAnalogueLabel:@"停止"];
-    }
-    if (slider.value == 1) {
-        [control speed:1];
-    }
-    if (slider.value == 2) {
-        [control speed:2];
-    }
-    if (slider.value == 3) {
-        [control speed:3];
-    }
-    if (slider.value == 4) {
-        [control speed:4];
-    }
-    if (slider.value == 5) {
-        [control speed:5];
-    }
+    }else
+        [control speed:tem];
 }
 
 - (void)analogueStickDidChangeValue:(JSAnalogueStick *)analogueStick {
     float x = analogueStick.xValue;
     float y = analogueStick.yValue;
+    int direction = 0;
     if ((0 < y) &&  (fabs(x) < fabs(y))) {
         direction = 1;//向上
     }
-    
     if ((0 > y) &&  (fabs(x) < fabs(y))) {
         direction = 2;//向下
     }
-    
     if ((0 < x) &&  (fabs(x) > fabs(y))) {
         direction = 3;//向右
     }
-    
     if ((0 > x) &&  (fabs(x) > fabs(y))) {
         direction = 4;//向左
     }
-    
-    NSString *turn = @"";
+    NSString *turn = [NSString new];
     if (analogueStick.xValue == 0 && analogueStick.yValue == 0) {
         NSLog(@"backToOrigine");
-        
         switch (direction) {
             case 1:
                 NSLog(@"前进");
                 turn = @"前进";
                 [control forward];
-                direction = 0;
                 break;
-            
             case 2:
                 NSLog(@"后退");
                 turn = @"后退";
                 [control backward];
-                direction = 0;
                 break;
-            
             case 3:
                 NSLog(@"右转");
                 turn = @"右转";
                 [control turnRight];
-                direction = 0;
                 break;
-                
             case 4:
                 NSLog(@"左转");
                 turn = @"左转";
                 [control turnLeft];
-                direction = 0;
                 break;
-                
             default:
                 break;
         }
@@ -613,6 +496,97 @@
 }
 
 #pragma mark - views
+- (void)addJSDpad {
+    jsDpadView = [[JSDPad alloc] initWithFrame:CGRectMake(100, 100, 200, 200)];
+    [self.view addSubview:jsDpadView];
+    [jsDpadView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(200, 200));
+    }];
+    jsDpadView.delegate = self;
+    jsDpadView.hidden = NO;
+}
+
+- (void) addStopButton {
+    UIButton *stopBtn = [UIButton new];
+    [stopBtn setTitle:@"STOP" forState:UIControlStateNormal];
+    [stopBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [stopBtn setBackgroundImage:[UIImage imageNamed:@"button.png"] forState:UIControlStateNormal];
+    [self.view addSubview:stopBtn];
+    [stopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        if ([CommonsFunc isDeviceIpad]) {
+            make.centerX.equalTo(self.analogueStick).offset(150);
+            make.centerY.equalTo(self.analogueStick);
+        } else
+        {
+            make.right.equalTo(self.view).offset(-20);
+            make.bottom.equalTo(self.view).offset(-40-40-30);
+        }
+    }];
+    [stopBtn addTarget:self action:@selector(stopRun:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)addRobotsDeatailTableView {
+    m_robotsDetailTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 100, 100) style:UITableViewStylePlain];
+    [self.view addSubview:m_robotsDetailTableView];
+    m_robotsDetailTableView.delegate = self;
+    m_robotsDetailTableView.dataSource = self;
+    [m_robotsDetailTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(radioContainer.mas_bottom).offset(20);
+        make.left.equalTo(radioContainer);
+        make.width.equalTo(radioContainer);
+        make.bottom.equalTo(self.view);
+    }];
+    m_robotsDetailTableView.backgroundColor = [UIColor clearColor];
+    m_robotsDetailTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+}
+
+- (JSAnalogueStick *)analogueStick {
+    if (!_analogueStick) {
+        _analogueStick = [[JSAnalogueStick alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
+        _analogueStick.delegate = self;
+        /**
+         *  test hisden analogue
+         */
+        _analogueStick.hidden = YES;
+    }
+    return _analogueStick;
+}
+
+- (CHYSlider* )steppedSlider {
+    if (!_steppedSlider) {
+        _steppedSlider = [[CHYSlider alloc] init];//WithFrame:CGRectMake(0, 0, 250, 30)];
+        _steppedSlider.stepped = YES;
+        _steppedSlider.minimumValue = 0;
+        _steppedSlider.maximumValue = 5;
+        _steppedSlider.value = 2;
+        _steppedSlider.labelAboveThumb.font = [UIFont fontWithName:@"AmericanTypewriter-Bold" size:20.f];
+        _steppedSlider.labelAboveThumb.textColor = [UIColor blueColor];
+        [_steppedSlider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+    }
+    return _steppedSlider;
+}
+
+-(UILabel *)velocityLabel {
+    if (!_velocityLabel) {
+        _velocityLabel = [UILabel new];
+        _velocityLabel.text = @"速度设置：3";
+        _velocityLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _velocityLabel;
+}
+
+-(UILabel *)analogueLabel {
+    if (!_analogueLabel) {
+        _analogueLabel  = [UILabel new];
+        _analogueLabel = [UILabel new];
+        _analogueLabel.text = @"0 , 0";
+        _analogueLabel.textAlignment = NSTextAlignmentCenter;
+        _analogueLabel.numberOfLines = 0;
+    }
+    return _analogueLabel;
+}
+
 - (UIButton *)pForwardBtn {
     if (!_pForwardBtn) {
         _pForwardBtn = [UIButton new];

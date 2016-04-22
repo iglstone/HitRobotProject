@@ -22,6 +22,11 @@
 //小金
 #define ROBOTNAME_GOLD                      @"小金"
 
+//typedef NS_ENUM(NSInteger, ROBOTNAME) {
+//    ROBOTNAME_
+//};
+
+
 //notification
 //连接成功
 #define NOTICE_CONNECTSUCCESS               @"NOTICE_CONNECTSUCCESS"
@@ -78,9 +83,9 @@
 //nsdefaut KEY
 #define NSDEFAULT_REMEMBERCODE              @"NSDEFAULT_REMEMBERCODE"
 #define NSDEFAULT_USERNAME                  @"NSDEFAULT_USERNAME"
-#define NSDEFAULT_REDROBOTIP                @"NSDEFAULT_REDROBOTIP"
-#define NSDEFAULT_BLUEROBOTIP               @"NSDEFAULT_BLUEROBOTIP"
-#define NSDEFAULT_GOLDROBOTIP               @"NSDEFAULT_GOLDROBOTIP"
+//#define NSDEFAULT_REDROBOTIP                @"NSDEFAULT_REDROBOTIP"
+//#define NSDEFAULT_BLUEROBOTIP               @"NSDEFAULT_BLUEROBOTIP"
+//#define NSDEFAULT_GOLDROBOTIP               @"NSDEFAULT_GOLDROBOTIP"
 #define NSDEFAULT_PickupDeskNum             @"NSDEFAULT_PickupDeskNum"
 #define NSDEFAULT_PickupSongsNum            @"NSDEFAULT_PickupSongsNum"
 
