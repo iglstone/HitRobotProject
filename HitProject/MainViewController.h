@@ -9,6 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "ServerSocket.h"
 
+typedef NS_ENUM(NSInteger, MESSAGEMODE) {
+    MESSAGEMODE_SEND = 0,
+    MESSAGEMODE_RECV = 1
+};
+
 @interface MainViewController : UITabBarController {
 
 }
@@ -19,5 +24,5 @@
 
 //mode :0 send
 //mode :1 recv
-- (void)setDebugLabelText:(NSString *)string mode:(int)mode;
+- (void)setDebugLabelText:(NSString *)string mode:(MESSAGEMODE)mode;
 @end

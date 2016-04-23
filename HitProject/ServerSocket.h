@@ -17,7 +17,7 @@
     BOOL isRunning;
 }
 
-@property (nonatomic,retain) NSMutableString *result;
+//@property (nonatomic,retain) NSMutableString *result;
 @property (nonatomic,retain) NSMutableArray  *selectedSocketArray;
 @property (nonatomic,retain) NSString        *receiveMessage;
 @property (nonatomic,retain) NSMutableArray *messagesArray;

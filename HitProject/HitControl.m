@@ -49,7 +49,7 @@ static HitControl* _instance = nil;
     AppDelegate *dele = (AppDelegate *) [[UIApplication sharedApplication] delegate];
     if ([dele.main isKindOfClass:[MainViewController class]]) {
         MainViewController *main = (MainViewController *)dele.main;
-        [main setDebugLabelText:@"checkConfig" mode:0];
+        [main setDebugLabelText:@"checkConfig" mode:MESSAGEMODE_SEND];
     }
     [sock writeData:[@"&" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:1.5 tag:1];
 }

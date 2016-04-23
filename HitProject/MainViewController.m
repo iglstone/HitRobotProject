@@ -126,7 +126,6 @@
     model.socket = sokect;
     model.isCheck = NO;
     model.robotName = [ServerSocket getRobotNameByIp:host];
-    
     for (int i = 0; i < m_modelsArray.count; i++) {
         ConnectModel *tmpModel = [m_modelsArray objectAtIndex:i];
         if ([tmpModel.hostIp isEqualToString:model.hostIp]) {
@@ -163,7 +162,6 @@
     [[NSUserDefaults standardUserDefaults] setObject:@(aa) forKey:NSUSERDEFAULT_DISCONNECT];
     [schedulTimer invalidate];
     ***********/
-    
     NSDictionary *dic = [noti userInfo];
     AsyncSocket *socket = (AsyncSocket *)[dic objectForKey:@"socket"];
     //去除选中的socket
@@ -175,6 +173,8 @@
     }];
     for (int i = 0; i < [m_modelsArray count]; i++) {
         ConnectModel *model = [m_modelsArray objectAtIndex:i];
+        model.isCheck = NO;
+        model.status = @"断开连接";
         if ([model.socket isEqual:socket]) {
             //[m_modelsArray removeObject:model];
             [[self mutableArrayValueForKey:@"m_modelsArray"] removeObject:model];// for kvo
@@ -301,15 +301,19 @@
 
 //mode :0 send
 //mode :1 recv
-- (void)setDebugLabelText:(NSString *)string mode:(int)mode{
+- (void)setDebugLabelText:(NSString *)string mode:(MESSAGEMODE)mode{
     _p_debugLabel.text = nil;
     NSString *str;
-    if ( !mode) {
-        str = [NSString stringWithFormat:@"发送: %@",string];
-        _p_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
-    }else{
-        str = [NSString stringWithFormat:@"接收: %@",string];
-        _p_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
+    switch (mode) {
+        case MESSAGEMODE_SEND:
+            str = [NSString stringWithFormat:@"发送: %@",string];
+            _p_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
+            break;
+        case MESSAGEMODE_RECV:
+            str = [NSString stringWithFormat:@"接收: %@",string];
+            _p_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
+        default:
+            break;
     }
     tmpString = str;
 }

@@ -12,9 +12,7 @@
 #define TIMEOUT_SECKENTS -1 //12
 
 @interface ServerSocket (){
-    NSString *sendedMessage;
-//    NSString *receiveMessage;
-//    NSTimer *timer;
+    NSString *sendedMessageTwice;
     NSInteger times;
     AsyncSocket *tmpSocket;
     NSMutableArray *socketMessageModlesArray;
@@ -22,7 +20,6 @@
 @end
 
 @implementation ServerSocket
-@synthesize result;
 @synthesize receiveMessage;
 
 static ServerSocket* _instance = nil;
@@ -33,7 +30,6 @@ static ServerSocket* _instance = nil;
     dispatch_once(&onceToken, ^{
         _instance = [[self alloc] init];
     });
-    
     return _instance ;
 }
 
@@ -42,9 +38,7 @@ static ServerSocket* _instance = nil;
     self = [super init];
     if (self)
     {
-        result = [[NSMutableString alloc] init];
         listenSocket = [[AsyncSocket alloc] initWithDelegate:self];
-//        connectedSockets = [[NSMutableArray alloc] initWithCapacity:1];
         connectedSockets = [[NSMutableArray alloc] init];
         self.selectedSocketArray = [[NSMutableArray alloc] init];
         [listenSocket setRunLoopModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
@@ -60,11 +54,9 @@ static ServerSocket* _instance = nil;
 
 - (void)dealloc
 {
-    [result release];
     [listenSocket disconnect];
     listenSocket.delegate = nil;
     [listenSocket release];
-    
     for (AsyncSocket *s in self.selectedSocketArray)
     {
         [s disconnect];
@@ -78,17 +70,166 @@ static ServerSocket* _instance = nil;
     [super dealloc];
 }
 
+#pragma mark - AsyncSocketDelegate
+/**
+ * Called when a socket accepts a connection.  Another socket is spawned to handle it. The new socket will have
+ * the same delegate and will call "onSocket:didConnectToHost:port:".
+ **/
+
+/*监听到新连接时被调用，这个新socket的代理和listen socket相同*/
+- (void)onSocket:(AsyncSocket *)sock didAcceptNewSocket:(AsyncSocket *)newSocket
+{
+    NSLog(@"Server didAcceptNewSocket");
+    [connectedSockets addObject:newSocket];
+}
+
+/**
+ * Called when a new socket is spawned to handle a connection.  This method should return the run-loop of the
+ * thread on which the new socket and its delegate should operate. If omitted, [NSRunLoop currentRunLoop] is used.
+ **/
+- (NSRunLoop *)onSocket:(AsyncSocket *)sock wantsRunLoopForNewSocket:(AsyncSocket *)newSocket
+{
+    NSLog(@"Server wantsRunLoopForNewSocket");
+    return [NSRunLoop currentRunLoop];
+}
+
+/**
+ * Called when a socket is about to connect. This method should return YES to continue, or NO to abort.
+ * If aborted, will result in AsyncSocketCanceledError.
+ *
+ * If the connectToHost:onPort:error: method was called, the delegate will be able to access and configure the
+ * CFReadStream and CFWriteStream as desired prior to connection.
+ *
+ * If the connectToAddress:error: method was called, the delegate will be able to access and configure the
+ * CFSocket and CFSocketNativeHandle (BSD socket) as desired prior to connection. You will be able to access and
+ * configure the CFReadStream and CFWriteStream in the onSocket:didConnectToHost:port: method.
+ **/
+- (BOOL)onSocketWillConnect:(AsyncSocket *)sock
+{
+    NSLog(@"Server onSocketWillConnect");
+    return YES;
+}
+
+/**
+ * Called when a socket connects and is ready for reading and writing.
+ * The host parameter will be an IP address, not a DNS name.
+ **/
+- (void)onSocket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
+{
+    NSLog(@"Server didConnectToHost on socket:%@, port:@%d",host,port);
+    [sock writeData:[ServerSocket stringToData:@"连接成功 !"] withTimeout:2 tag:0];//返回
+    [sock readDataWithTimeout:TIMEOUT_SECKENTS tag:0];
+    //为了解决断网问题，
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(dealyNoticeSuccess:) userInfo:@{
+                                                                                                                              @"port":@(port),
+                                                                                                                              @"host":host,
+                                                                                                                              @"status":@"已连接",
+                                                                                                                              @"socket":sock}
+                                                     repeats:NO];
+    if (!timer) {
+        NSLog(@"time is nil");
+    }
+}
+
+- (void)dealyNoticeSuccess:(NSTimer *)timer {
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONNECTSUCCESS object:nil userInfo:[timer userInfo]];
+}
+
+- (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
+{
+    NSString *msg = [ServerSocket dataToString:data];
+    NSLog(@"Server didReadData = %@",[ServerSocket dataToString:data]);
+    
+    [[self mutableArrayValueForKey:@"messagesArray"] addObject:msg];
+    BOOL isShow = [self dealWithReceivedMessage:msg socket:sock];
+    if (isShow) {
+        if ([msg isEqualToString:@"o"]) {
+            msg = @"完成";
+        }
+        AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
+        if ([dele.main isKindOfClass:[MainViewController class]]) {
+            MainViewController *tmpMain = (MainViewController *)dele.main;
+            [tmpMain setDebugLabelText:msg mode:MESSAGEMODE_RECV];
+        }
+    }
+    msg = nil;
+    [sock readDataWithTimeout:TIMEOUT_SECKENTS tag:0];
+}
+
+/**
+ * In the event of an error, the socket is closed.
+ * You may call "unreadData" during this call-back to get the last bit of data off the socket.
+ * When connecting, this delegate method may be called
+ * before"onSocket:didAcceptNewSocket:" or "onSocket:didConnectToHost:".
+ **/
+/* socket发生错误时,socket关闭；连接时可能被调用，主要用于socket连接错误时读取错误发生前的数据*/
+- (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
+{
+    NSLog(@"Server willDisconnectWithError :%@",err);
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
+}
+
+/**
+ * Called when a socket disconnects with or without error.  If you want to release a socket after it disconnects,
+ * do so here. It is not safe to do that during "onSocket:willDisconnectWithError:".
+ *
+ * If you call the disconnect method, and the socket wasn't already disconnected,
+ * this delegate method will be called before the disconnect method returns.
+ **/
+/*socket断开连接后被调用，你调用disconnect方法，还没有断开连接，只有调用这个方法时，才断开连接；可以在这个方法中release 一个 socket*/
+- (void)onSocketDidDisconnect:(AsyncSocket *)sock
+{
+    NSLog(@"Server onSocketDidDisconnect");
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
+    [connectedSockets removeObject:sock];
+    [[self mutableArrayValueForKey:@"messagesArray"] removeAllObjects];
+}
+
 #pragma mark - Private Methods
 /**
+ *  处理接收到的数据
+ *  @param msg  待处理数据
+ *  @param sock 对应的socket
+ *  @return 是否需要显示在debugLabel上
+ */
+- (BOOL)dealWithReceivedMessage :(NSString *) msg socket:(AsyncSocket *)sock{
+    BOOL willShowOnLabel = YES;
+    
+    if ([msg isEqualToString:@"RED"] || [msg isEqualToString:@"BLUE"] || [msg isEqualToString:@"GOLD"]) {
+        NSString *tmp = [@"ROBOTNAME_" stringByAppendingString:msg];//每次新添加机器人就只需要在AppMacro.h中添加一个ROBOTNAME_开头的就行了。
+        [[NSUserDefaults standardUserDefaults] setObject:tmp forKey:sock.connectedHost];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CHANGEROBOTNAME object:nil userInfo:@{@"ipAddr":sock.connectedHost}];
+        willShowOnLabel = NO;
+        
+    }else if ([msg hasPrefix:@"v"] && [msg hasSuffix:@"e"]) {
+        NSString *power = [msg substringWithRange:NSMakeRange(1, msg.length-2)];
+        NSString *roboName = [ServerSocket getRobotName:sock];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_POWERNOTIFICATION object:nil userInfo:@{@"power":power, @"roboName":roboName}];
+        willShowOnLabel = NO;
+        
+    }else if ([msg hasPrefix:@"CARD"] || [msg hasPrefix:@"AT"] || [msg isEqualToString:@"A"] || [msg isEqualToString:@"v"]){//返回的card就不补充了。
+        willShowOnLabel = NO;
+        
+    }else if ([msg hasPrefix:@"o"]&&[msg hasSuffix:@"e"]){
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONFIG_MODE_SPEEDN object:nil userInfo:@{@"ipAddr":sock.connectedHost, @"message":msg}];
+        
+    }else{
+        //用来检测信息是否发送过去了，即检测发送的信号是否是msg == o;
+        receiveMessage = msg;
+        tmpSocket = sock;
+    }
+    return willShowOnLabel;
+}
+
+/**
  *  发送到client的数据，
- *  @param string <#string description#>
- *  @param debugs <#debugs description#>
+ *  @param string :data need send to ip addr
+ *  @param debugs :display on mainview debuglabel
  */
 - (void)sendMessage :(NSString *)string debugstring:(NSString *)debugs
 {
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
-    NSLog(@"selected sockets array num: %lu",(unsigned long)self.selectedSocketArray.count);
-    if (self.selectedSocketArray.count == 0 ) {
+    if (self.selectedSocketArray.count == 0 ) { //filtering the stopmove and stopSingSongs cmd.
         if ([string isEqualToString:@"g"] || [string isEqualToString:@"P"]) {
             //g:stopmove  P:stopSingSong
         } else {
@@ -98,29 +239,47 @@ static ServerSocket* _instance = nil;
     }
     if ([dele.main isKindOfClass:[MainViewController class]]) {
         MainViewController *tmpMain = (MainViewController *)dele.main;
-        [tmpMain setDebugLabelText:debugs mode:0];
+        [tmpMain setDebugLabelText:debugs mode:MESSAGEMODE_SEND];
     }
-    
     @autoreleasepool {
-        //二进制数转换成string
-//        string = [self stringFromHexString:string];
         for (AsyncSocket * s in self.selectedSocketArray)
         {
-            sendedMessage = string;
+            sendedMessageTwice = string;
             if (!string) {
                 continue;
             }
             receiveMessage = nil;
-//            NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:0.22f target:self selector:@selector(compareMessage:) userInfo:@{@"sock":s} repeats:YES];
             if (s.isConnected) {
                 [s writeData:[ServerSocket stringToData:string] withTimeout:-1 tag:0];
-//                [timer fire];
             }else{
                 NSLog(@"s.isConnected == false");
-//                [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":s}];
             }
         }
     }
+}
+
+/**
+ *  原理：连接一个socket，等待接收 RED / BLUE 消息来nsuserdefault 存储
+ *  其ip，后面根据其ip来找到对应的小红小兰。
+ *  @param sock
+ *  @return 小红，小蓝
+ */
++ (NSString *)getRobotName :(AsyncSocket *)sock {
+    if (!sock.isConnected) {
+        NSLog(@"sock 断连了");
+        return nil;
+    }
+    NSString *conectedip = sock.connectedHost;
+    NSString *string = [ServerSocket getRobotNameByIp:conectedip];
+    return string;
+}
+
++ (NSString *)getRobotNameByIp :(NSString *)ipaddr {
+    NSString *robotName =  [[NSUserDefaults standardUserDefaults] objectForKey:ipaddr];
+    if (robotName) {
+        return robotName;
+    }else
+        return ipaddr;
 }
 
 /**
@@ -147,7 +306,6 @@ static ServerSocket* _instance = nil;
     return unicodeString;
 }
 
-
 - (void)sendMessageAgain{
     for (AsyncSocket * s in self.selectedSocketArray)
     {
@@ -155,16 +313,13 @@ static ServerSocket* _instance = nil;
             NSLog(@"开玩笑吗？有数据怎么还来玩 receive :%@",receiveMessage);
             return;
         }
-        [s writeData:[ServerSocket stringToData:sendedMessage] withTimeout:-1 tag:0];
+        [s writeData:[ServerSocket stringToData:sendedMessageTwice] withTimeout:-1 tag:0];
         NSLog(@"send message again");
     }
 }
 
 - (void)compareMessage :(NSTimer  *) timer{
     AsyncSocket *S = (AsyncSocket *)[[timer userInfo] objectForKey:@"sock"];
-//    [S writeData:[ServerSocket stringToData:@"A"] withTimeout:-1 tag:0];
-//    NSLog(@"write A");
-    
     if (!receiveMessage) {//为空，没有读取到
         NSLog(@"has not receive");
         [self sendMessageAgain];
@@ -214,12 +369,10 @@ static ServerSocket* _instance = nil;
     if (isRunning)
     {
         [listenSocket disconnect];
-        
         for (AsyncSocket *socket in connectedSockets)
         {
             [socket disconnect];
         }
-        
         isRunning = NO;
     }
 }
@@ -234,252 +387,4 @@ static ServerSocket* _instance = nil;
     return [string dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-//- (void)lock
-//{
-//    for (AsyncSocket * s in connectedSockets)
-//    {
-//        [s writeData:[ServerSocket stringToData:@"9999"] withTimeout:-1 tag:0];
-//    }
-//}
-//
-//- (void)unlock
-//{
-//    for (AsyncSocket * s in connectedSockets)
-//    {
-//        [s writeData:[ServerSocket stringToData:@"10000"] withTimeout:-1 tag:0];
-//    }
-//}
-
-#pragma mark - AsyncSocketDelegate
-/**
- * In the event of an error, the socket is closed.
- * You may call "unreadData" during this call-back to get the last bit of data off the socket.
- * When connecting, this delegate method may be called
- * before"onSocket:didAcceptNewSocket:" or "onSocket:didConnectToHost:".
- **/
-/* socket发生错误时,socket关闭；连接时可能被调用，主要用于socket连接错误时读取错误发生前的数据*/
-- (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
-{
-    NSLog(@"Server willDisconnectWithError :%@",err);
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
-}
-
-/**
- * Called when a socket disconnects with or without error.  If you want to release a socket after it disconnects,
- * do so here. It is not safe to do that during "onSocket:willDisconnectWithError:".
- *
- * If you call the disconnect method, and the socket wasn't already disconnected,
- * this delegate method will be called before the disconnect method returns.
- **/
-
-/*socket断开连接后被调用，你调用disconnect方法，还没有断开连接，只有调用这个方法时，才断开连接；可以在这个方法中release 一个 socket*/
-- (void)onSocketDidDisconnect:(AsyncSocket *)sock
-{
-    NSLog(@"Server onSocketDidDisconnect");
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":sock}];
-    [connectedSockets removeObject:sock];
-    [[self mutableArrayValueForKey:@"messagesArray"] removeAllObjects];
-}
-
-/**
- * Called when a socket accepts a connection.  Another socket is spawned to handle it. The new socket will have
- * the same delegate and will call "onSocket:didConnectToHost:port:".
- **/
-
-/*监听到新连接时被调用，这个新socket的代理和listen socket相同*/
-- (void)onSocket:(AsyncSocket *)sock didAcceptNewSocket:(AsyncSocket *)newSocket
-{
-    NSLog(@"Server didAcceptNewSocket");
-    [connectedSockets addObject:newSocket];
-}
-
-/**
- * Called when a new socket is spawned to handle a connection.  This method should return the run-loop of the
- * thread on which the new socket and its delegate should operate. If omitted, [NSRunLoop currentRunLoop] is used.
- **/
-- (NSRunLoop *)onSocket:(AsyncSocket *)sock wantsRunLoopForNewSocket:(AsyncSocket *)newSocket
-{
-    NSLog(@"Server wantsRunLoopForNewSocket");
-    return [NSRunLoop currentRunLoop]; 
-}
-
-/**
- * Called when a socket is about to connect. This method should return YES to continue, or NO to abort.
- * If aborted, will result in AsyncSocketCanceledError.
- *
- * If the connectToHost:onPort:error: method was called, the delegate will be able to access and configure the
- * CFReadStream and CFWriteStream as desired prior to connection.
- *
- * If the connectToAddress:error: method was called, the delegate will be able to access and configure the
- * CFSocket and CFSocketNativeHandle (BSD socket) as desired prior to connection. You will be able to access and
- * configure the CFReadStream and CFWriteStream in the onSocket:didConnectToHost:port: method.
- **/
-- (BOOL)onSocketWillConnect:(AsyncSocket *)sock
-{
-    NSLog(@"Server onSocketWillConnect");
-    return YES;
-}
-
-/**
- * Called when a socket connects and is ready for reading and writing.
- * The host parameter will be an IP address, not a DNS name.
- **/
-- (void)onSocket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
-{
-    NSLog(@"Server didConnectToHost");
-    NSLog(@"主机 %@ 已连接上服务器",host);
-    NSLog(@"端口:%hu",port);
-    
-    [sock writeData:[ServerSocket stringToData:@"连接成功 !"] withTimeout:-1 tag:0];//返回
-    [sock readDataWithTimeout:TIMEOUT_SECKENTS tag:0];
-    
-    //为了解决断网问题，
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(dealyNoticeSuccess:) userInfo:@{
-                                                                                                                              @"port":@(port),
-                                                                                                                              @"host":host,
-                                                                                                                              @"status":@"已连接",
-                                                                                                                              @"socket":sock}
-                                                     repeats:NO];
-    if (!timer) {
-        NSLog(@"time is null");
-    }
-}
-
-- (void)dealyNoticeSuccess:(NSTimer *)timer {
-    NSLog(@"dealyNoticeSuccess..");
-    [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONNECTSUCCESS object:nil userInfo:[timer userInfo]];
-}
-
-//心跳包执行函数  十秒重联的话这个好像就没什么用了。。
-- (void) aliveKeep :(NSTimer *)timer {
-    AsyncSocket *socket = (AsyncSocket *)[[timer userInfo] objectForKey:@"socket"];
-    
-    for (SocketMessageModel *model in socketMessageModlesArray) {
-        if ([model.socket isEqual:socket]) {//s
-            if ([model.message hasPrefix:@"v"] && [model.message hasSuffix:@"e"]) {//控制model 的msg 来判断是否断开
-                NSLog(@"socket alive");
-                model.message = nil;
-            } else {
-                NSLog(@"socket die");
-                [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_DISCONNECT object:nil userInfo:@{@"socket":socket}];
-//                [socketMessageModlesArray removeObject:model];
-                [timer invalidate];
-                timer = nil;
-            }
-        }
-    }
-}
-
-/**
- * Called when a socket has completed reading the requested data into memory.
- * Not called if there is an error.
- **/
-- (void)update
-{
-    static int a = 0;
-    a++;
-    [[connectedSockets lastObject] writeData:[ServerSocket stringToData:[NSString stringWithFormat:@"a = %d",a]] withTimeout:-1 tag:0];
-}
-
-- (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
-{
-    NSString *msg = [ServerSocket dataToString:data];
-    NSString *msg2 = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    
-    NSLog(@"Server didReadData = %@",[ServerSocket dataToString:data]);
-    AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
-    [[self mutableArrayValueForKey:@"messagesArray"] addObject:msg2];
-    BOOL isShow = YES;
-    
-    if ([msg isEqualToString:@"RED"] || [msg isEqualToString:@"BLUE"] || [msg isEqualToString:@"GOLD"]) {
-        NSString *tmp = [@"ROBOTNAME_" stringByAppendingString:msg];//每次新添加机器人就只需要在AppMacro.h中添加一个ROBOTNAME_开头的就行了。
-        [[NSUserDefaults standardUserDefaults] setObject:tmp forKey:sock.connectedHost];
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CHANGEROBOTNAME object:nil userInfo:@{@"ipAddr":sock.connectedHost}];
-        isShow = NO;
-    }
-    else if ([msg hasPrefix:@"v"] && [msg hasSuffix:@"e"]) {
-        NSString *power = [msg substringWithRange:NSMakeRange(1, msg.length-2)];
-        NSString *roboName = [ServerSocket getRobotName:sock];
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_POWERNOTIFICATION object:nil userInfo:@{@"power":power, @"roboName":roboName}];
-        isShow = NO;
-    } else if ([msg hasPrefix:@"CARD"] || [msg hasPrefix:@"AT"] || [msg isEqualToString:@"A"] || [msg isEqualToString:@"v"]){//返回的card就不补充了。
-        isShow = NO;
-    }else if ([msg hasPrefix:@"o"]&&[msg hasSuffix:@"e"]){
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONFIG_MODE_SPEEDN object:nil userInfo:@{@"ipAddr":sock.connectedHost, @"message":msg}];
-    }
-    else
-    {
-        //用来检测信息是否发送过去了，即检测发送的信号是否是msg2 == o;
-        receiveMessage = msg2;
-        [msg2 release];
-        msg2 = nil;
-        tmpSocket = sock;
-    }
-    
-    if (isShow) {
-        if ([msg isEqualToString:@"o"]) {
-            msg = @"完成";
-        }
-        if ([dele.main isKindOfClass:[MainViewController class]]) {
-            MainViewController *tmpMain = (MainViewController *)dele.main;
-            [tmpMain setDebugLabelText:msg mode:1];
-        }
-    }
-    
-//    [result appendString:[ServerSocket dataToString:data]];
-//    [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(update) userInfo:nil repeats:YES];
-    [result appendString:[NSString stringWithFormat:@"%@:%@\n",[sock connectedHost],[ServerSocket dataToString:data]]];
-    
-//    [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_RESULT_NOTIFICATION object:nil];
-    [sock readDataWithTimeout:TIMEOUT_SECKENTS tag:0];
-}
-
-/**
- *  原理：连接一个socket，等待接收 RED / BLUE 消息来nsuserdefault 存储
- *  其ip，后面根据其ip来找到对应的小红小兰。
- *  @param sock
- *  @return 小红，小蓝
- */
-+ (NSString *)getRobotName :(AsyncSocket *)sock {
-    if (!sock.isConnected) {
-        NSLog(@"sock 断连了");
-        return nil;
-    }
-    NSString *conectedip = sock.connectedHost;
-    NSString *string = [ServerSocket getRobotNameByIp:conectedip];
-    return string;
-}
-
-+ (NSString *)getRobotNameByIp :(NSString *)ipaddr {
-    NSString *robotName =  [[NSUserDefaults standardUserDefaults] objectForKey:ipaddr];
-    if (robotName) {
-        return robotName;
-    }else
-        return ipaddr;
-}
-
-/**
- * Called when a socket has read in data, but has not yet completed the read.
- * This would occur if using readToData: or readToLength: methods.
- * It may be used to for things such as updating progress bars.
- **/
-- (void)onSocket:(AsyncSocket *)sock didReadPartialDataOfLength:(NSUInteger)partialLength tag:(long)tag
-{
-    NSLog(@"Server didReadPartialDataOfLength = %lu",(unsigned long)partialLength);
-}
-
-/**
- * Called when a socket has completed writing the requested data. Not called if there is an error.
- **/
-- (void)onSocket:(AsyncSocket *)sock didWriteDataWithTag:(long)tag
-{
-    
-}
-
-/**
- * Called when a socket has written some data, but has not yet completed the entire write.
- * It may be used to for things such as updating progress bars.
- **/
-- (void)onSocket:(AsyncSocket *)sock didWritePartialDataOfLength:(NSUInteger)partialLength tag:(long)tag
-{}
 @end
