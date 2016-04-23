@@ -19,9 +19,6 @@
 
 @property (nonatomic,retain) NSMutableString *result;
 @property (nonatomic,retain) NSMutableArray  *selectedSocketArray;
-@property (nonatomic,retain) NSString        *kvoPower;//红的电量
-@property (nonatomic,retain) NSString        *bluekvoPower;//蓝的电量
-@property (nonatomic,retain) NSString        *goldkvoPower;//gold的电量
 @property (nonatomic,retain) NSString        *receiveMessage;
 @property (nonatomic,retain) NSMutableArray *messagesArray;
 
@@ -42,7 +39,7 @@
 /**
  *  根据socket来获取机器人name
  *  @param sock 具体的sock
- *  @return 返回具体的机器人名字 :ROBOTNAME_RED || ROBOTNAME_BLUE
+ *  @return 返回具体的机器人名字 :小红 小蓝
  */
 + (NSString *)getRobotName :(AsyncSocket *)sock ;
 

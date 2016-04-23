@@ -65,8 +65,8 @@
     [super viewWillAppear:animated];
     MainViewController *main =(MainViewController *) self.tabBarController;
     if (![CommonsFunc isDeviceIpad]) {
-        main.views.hidden = YES;
-        main.m_debugLabel.hidden = NO;
+        main.rightsideContainer.hidden = YES;
+        main.p_debugLabel.hidden = NO;
     }
     [self deskView];
 }

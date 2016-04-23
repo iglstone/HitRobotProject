@@ -62,8 +62,9 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(voiceChange:) name:NOTICE_VOICECHANGE object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configModelAndSpeed:) name:NOTICE_CONFIG_MODE_SPEEDN object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(voiceNoti:) name:NOTICE_VOICECHANGE object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelAndSpeedNoti:) name:NOTICE_CONFIG_MODE_SPEEDN object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(powerNoti:) name:NOTICE_POWERNOTIFICATION object:nil];
     }
     return self;
 }
@@ -72,8 +73,8 @@
     [super viewWillAppear:animated];
     MainViewController *main =(MainViewController *) self.tabBarController;
     if (![CommonsFunc isDeviceIpad]) {
-        main.views.hidden = YES;
-        main.m_debugLabel.hidden = NO;
+        main.rightsideContainer.hidden = YES;
+        main.p_debugLabel.hidden = NO;
     }
 }
 
@@ -92,16 +93,13 @@
     goldTimes = 0;
     self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
     
+    //observer
     m_robotStateModelsArray = [NSMutableArray new];
     if ([self.tabBarController isKindOfClass:[MainViewController class]]) {
         MainViewController *main =(MainViewController *) self.tabBarController;
         m_robotStateModelsArray = main.m_modelsArray;
         [main addObserver:self forKeyPath:@"m_modelsArray" options:NSKeyValueObservingOptionNew context:nil];
     }
-    
-    [server addObserver:self forKeyPath:@"kvoPower" options:NSKeyValueObservingOptionNew context:nil];
-    [server addObserver:self forKeyPath:@"bluekvoPower" options:NSKeyValueObservingOptionNew context:nil];
-    [server addObserver:self forKeyPath:@"goldkvoPower" options:NSKeyValueObservingOptionNew context:nil];
     
     [self addSubViews];
     [self viewsMakeConstranins];
@@ -165,14 +163,13 @@
 }
 
 - (void)dealloc{
-    [server removeObserver:self forKeyPath:@"kvoPower"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     MainViewController *main =(MainViewController *) self.tabBarController;
     [main removeObserver:self forKeyPath:@"m_modelsArray"];
 }
 
 #pragma  mark - notis and observers oaje
-- (void)configModelAndSpeed :(NSNotification *)noti {
+- (void)modelAndSpeedNoti :(NSNotification *)noti {
     NSString *string = [[noti userInfo] objectForKey:@"message"];
     NSString *subModel = [string substringWithRange:NSMakeRange(1, 1)];
     RadioButton *btn = (RadioButton *)[self.view viewWithTag:100];
@@ -201,49 +198,20 @@
     
 }
 
-- (void)voiceChange :(NSNotification *)noti {
+- (void)voiceNoti :(NSNotification *)noti {
     NSString *voice = [[noti userInfo] objectForKey:@"voice"];
-    MainViewController *main =(MainViewController *) self.tabBarController;
-    NSArray *arr = main.m_modelsArray;
-    if (arr.count<=0) {
+    if (m_robotStateModelsArray.count<=0) {
         return;
     }
     for (ConnectModel *model in m_robotStateModelsArray) {
-        if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
+        if (model.isCheck) {
             model.robotVoice = [NSString stringWithFormat:@"%@",voice];
-        }else if ([model.robotName isEqualToString:ROBOTNAME_BLUE]){
-            model.robotVoice = [NSString stringWithFormat:@"%@",voice];
-        }else model.robotVoice = [NSString stringWithFormat:@"%@",voice];//小金或者其他
+        }
     }
     [m_robotsDetailTableView reloadData];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
-    //bluekvoPower
-    if ([keyPath isEqualToString:@"kvoPower"]) {
-        NSString *string = [change objectForKey:@"new"];
-        float Powerfloat = [string floatValue];
-        float ele=(float) ((Powerfloat-22)/7.4)*100;
-        [self calcuPower:ele times:redTimes arr:redEleMutArray robot:ROBOTNAME_RED];
-        tempRedVotage = string;
-    }
-    
-    if ([keyPath isEqualToString:@"bluekvoPower"]) {
-        NSString *string = [change objectForKey:@"new"];
-        float Powerfloat = [string floatValue];
-        float ele=(float) ((Powerfloat-22)/7.4)*100;
-        [self calcuPower:ele times:blueTimes arr:blueEleMutArray robot:ROBOTNAME_BLUE];
-        tempBlueVotage = string;
-    }
-    
-    if ([keyPath isEqualToString:@"goldkvoPower"]) {
-        NSString *string = [change objectForKey:@"new"];
-        float Powerfloat = [string floatValue];
-        float ele=(float) ((Powerfloat-22)/7.4)*100;
-        [self calcuPower:ele times:goldTimes arr:goldEleMutArray robot:ROBOTNAME_GOLD];
-        tempGoldVotage = string;
-    }
-    
     if ([keyPath isEqualToString:@"m_modelsArray"]) {
         MainViewController *main =(MainViewController *) self.tabBarController;
         m_robotStateModelsArray = main.m_modelsArray;
@@ -251,8 +219,35 @@
     }
 }
 
+- (void)powerNoti :(NSNotification *)noti{
+    NSString *power = [[noti userInfo] objectForKey:@"power"];
+    NSString *roboName = [[noti userInfo] objectForKey:@"roboName"];
+    float Powerfloat = [power floatValue];
+    float ele=(float) ((Powerfloat-22)/7.4)*100;
+    BOOL update = false;
+    for (ConnectModel *model in m_robotStateModelsArray) {
+        if ([model.robotName isEqualToString:roboName]) {
+            float average = [self calcuPower:ele times:model.times arr:model.multPowerArray];
+            if (average != 0) {
+                model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,model.robotTemPower];
+                update = true;
+            }
+        }
+    }
+    if (update) {
+        [m_robotsDetailTableView reloadData];
+    }
+}
+
 #pragma mark - private
-- (void)calcuPower:(float)ele times:(int)times arr:(NSMutableArray *)arr robot:(NSString *)robotName{
+/**
+ *  平滑滤波机器人的电量
+ *  @param ele       电量
+ *  @param times     滤波框
+ *  @param arr       待滤波数组
+ *  @return 平均电量
+ */
+- (float)calcuPower:(float)ele times:(int)times arr:(NSMutableArray *)arr{
     if (times < 4) {
         times ++;
         [arr addObject:@(ele)];
@@ -265,22 +260,10 @@
         }
         float average = sum/arr.count;
         NSLog(@"average: %f",average);
-        [self disPlayPower:robotName power:average];
+        [arr removeAllObjects];
+        return average;
     }
-}
-
-//显示电量
-- (void)disPlayPower :(NSString *)robot  power:(float )average {
-    if (average <= 0) average = 20;
-    for (ConnectModel *model in m_robotStateModelsArray) {
-        if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
-            model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,tempRedVotage];
-        }else if ([model.robotName isEqualToString:ROBOTNAME_BLUE]){
-            model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,tempBlueVotage];
-        }else
-            model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,tempGoldVotage];//gold or others
-    }
-    [m_robotsDetailTableView reloadData];
+    return 0;
 }
 
 #pragma mark - tableviewDelegates
@@ -338,7 +321,7 @@
     switch (direction2) {
         case JSDPadDirectionNone:
             string = @"None";
-            //            [control stopMove];
+            [control stopMove];
             break;
         case JSDPadDirectionUp:
             string = @"Up";
@@ -391,20 +374,12 @@
 - (void)sliderValueChanged :(CHYSlider *)slider {
     NSLog(@"change %f",slider.value);
     self.velocityLabel.text = [NSString stringWithFormat:@"速度设置：%.0f",slider.value];
-    
-    MainViewController *main =(MainViewController *) self.tabBarController;
-    NSArray *arr = main.m_selecedModelsArray;
-    if (arr.count<=0) {
+    if (m_robotStateModelsArray.count<=0) {
         return;
     }
-    
     for (ConnectModel *model in m_robotStateModelsArray) {
-        if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
+        if (model.isCheck) {
             model.robotSpeed = [NSString stringWithFormat:@"0.%.0f",slider.value];
-        }else if ([model.robotName isEqualToString:ROBOTNAME_BLUE]) {
-            model.robotSpeed = [NSString stringWithFormat:@"0.%.0f",slider.value];
-        }else {
-            model.robotSpeed = [NSString stringWithFormat:@"0.%.0f",slider.value];//gold robot
         }
     }
     [m_robotsDetailTableView reloadData];

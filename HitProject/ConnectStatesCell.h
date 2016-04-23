@@ -21,6 +21,9 @@
 @property (nonatomic) NSString *robotSpeed;//0.3
 @property (nonatomic) NSString *robotVoice;//50
 
+@property (nonatomic) NSString *robotTemPower;//27.2v
+@property (nonatomic) int      times;//累加次数
+@property (nonatomic) NSMutableArray *multPowerArray;//电量数组
 
 @end
 

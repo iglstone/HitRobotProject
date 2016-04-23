@@ -80,6 +80,9 @@
 //change the socke mode and speed
 #define NOTICE_CONFIG_MODE_SPEEDN          @"NOTICE_CONFIG_MODE_SPEEDN"
 
+//post power notification
+#define NOTICE_POWERNOTIFICATION           @"NOTICE_POWERNOTIFICATION"
+
 //nsdefaut KEY
 #define NSDEFAULT_REMEMBERCODE              @"NSDEFAULT_REMEMBERCODE"
 #define NSDEFAULT_USERNAME                  @"NSDEFAULT_USERNAME"

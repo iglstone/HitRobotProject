@@ -13,19 +13,10 @@
     ServerSocket *server;
 }
 
-@property (nonatomic, strong) UIView *views;
-@property (nonatomic, strong) UILabel *m_debugLabel;
-@property (nonatomic, strong) NSMutableArray *m_selecedModelsArray;
-@property (nonatomic, strong) NSMutableArray *m_modelsArray;
-
-@property (nonatomic, strong) NSMutableArray *messageArray;
-
-@property (assign) NSInteger tmpTest;
-@property (copy, nonatomic) NSString *tmpTest1;
-@property (strong, nonatomic) NSString *tmpTest2;
-
-//red blue both
-//@property (nonatomic, strong) NSString *selectedNames;
+@property (nonatomic, strong) NSMutableArray *m_selecedModelsArray; //选中的models
+@property (nonatomic, strong) NSMutableArray *m_modelsArray;//连接上的 models
+@property (nonatomic, strong) UIView         *rightsideContainer;
+@property (nonatomic, strong) UILabel        *p_debugLabel;
 
 //mode :0 send
 //mode :1 recv

@@ -19,79 +19,45 @@
 #define NSUSERDEFAULT_DISCONNECT  @"NSUSERDEFAULT_DISCONNECT"
 
 @interface MainViewController () <UITableViewDataSource,UITableViewDelegate> {
-
     NSMutableArray *m_cellsArray;
-    UILabel *disconnectlabel;
     int disconectTimes;
     NSTimer *schedulTimer;
     NSString *ttt;
-//    GLViewProcessingTest *_glView;
-    
     NSMutableArray *m_messagesArray;
+    NSString *tmpString;
+    
+    UILabel *disconnectlabel;
+    UITableView *m_tableView;
+    UIButton *stopBtn;
+    ConnectStatesCell *tmpCell;
+    HitControl *control;
+    UIView *tableViewHeader;
 }
-
-@property (nonatomic) UITableView *m_tableView;
-//@property (nonatomic) NSMutableArray *m_selecedModelsArray;
-@property (nonatomic) UIButton *stopBtn;
-@property (nonatomic) NSString *tmpString;
-@property (nonatomic) ConnectStatesCell *tmpCell;
-@property (nonatomic) HitControl *control;
-//@property (nonatomic, strong) GLViewProcessingTest *glView ;
 
 @end
 
 @implementation MainViewController
-@synthesize m_tableView;
 @synthesize m_modelsArray;
 @synthesize m_selecedModelsArray;
-@synthesize stopBtn;
-@synthesize m_debugLabel;
-@synthesize tmpString;
-@synthesize tmpCell;
-@synthesize control;
-@synthesize views;
+@synthesize rightsideContainer;
 
 #pragma mark - lifecicle
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectSuccess:) name:NOTICE_CONNECTSUCCESS object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientDisconnect:) name:NOTICE_DISCONNECT object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryAgain:) name:NOTICE_TRYAGIAN object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeName:) name:NOTICE_CHANGEROBOTNAME object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noRobotToast:) name:NOTICE_NOROBOT object:nil];
+        return self;
+    }
+    return nil;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    //test
-//    NSInteger a = 10;
-//    self.tmpTest = a;
-//    NSLog(@"%ld",(long)self.tmpTest);
-//    a = 12;
-//    NSLog(@"%ld",(long)self.tmpTest);
-//    
-//    NSString *tt = @"123";
-//    self.tmpTest1 = tt;
-//    NSLog(@"%p",self.tmpTest1);
-    
-//    [self.view addSubview:self.glView];
-    
-//    /*********TEST***********/
-//    ttt = nil;
-//    UIView *disconnectView = [UIView new];
-//    [self.view addSubview:disconnectView];
-//    [disconnectView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(100, 300, 300, 500));
-//    }];
-//    disconnectView.backgroundColor = [UIColor whiteColor];
-//    disconnectlabel = [UILabel new];
-//    NSInteger TIME =[[[NSUserDefaults standardUserDefaults] objectForKey:NSUSERDEFAULT_DISCONNECT] integerValue];
-//    disconnectlabel.text = [NSString stringWithFormat:@"断连次数:%ld",TIME];// @"0";
-//    [disconnectView addSubview:disconnectlabel];
-//    disconnectlabel.numberOfLines = 0;
-//    [disconnectlabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.centerX.equalTo(disconnectView);
-//        make.top.equalTo(disconnectView);
-//    }];
-//    
-////    disconnectlabel.hidden = YES;
-////    disconnectView.hidden = YES;
-//    /*********************/
-    
     m_messagesArray = [NSMutableArray new];
-    
     UIImage *image = [UIImage imageNamed:@"me.png"];
     tmpString = @"";
     m_modelsArray = [[NSMutableArray alloc] init];
@@ -104,120 +70,40 @@
     image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UITabBarItem *itm = [[UITabBarItem alloc]initWithTitle:@"欢迎界面" image:image selectedImage:nil];
     first.tabBarItem = itm;
-    
     SecondViewController *second = [SecondViewController new];
     second.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"操作界面" image:image selectedImage:nil];
-    
     ThirdViewController *third = [ThirdViewController new];
     third.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"送餐界面" image:image selectedImage:nil];
-    
     FourthViewController *fourth = [FourthViewController new];
     fourth.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"语音界面" image:image selectedImage:nil];
-    
     self.viewControllers = @[first, second, third, fourth];
     
-    views = [UIView new];
-    [self.view addSubview:views];
-    views.backgroundColor = [UIColor lightGrayColor];
-    [views mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.view).offset(-5);
-        make.width.mas_equalTo(@300);
-        if ([CommonsFunc isDeviceIpad]) {
-            make.height.mas_equalTo(@(250+30));
-            make.bottom.equalTo(self.view).offset(-50-5);
-        }else{
-            make.bottom.equalTo(self.view).offset(-50);
-            make.height.mas_equalTo(@(100+30));
-        }
-    }];
+    [self addRightSideViewContainer];
+    [self.view addSubview:self.p_debugLabel];
+    [self subViewsMakeConstrains];
     
-    m_tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, 100, 40) style:UITableViewStylePlain];
-    [m_tableView setBackgroundColor:[CommonsFunc colorOfLight]];
-    m_tableView.delegate = self;
-    m_tableView.dataSource = self;
-    [views addSubview:m_tableView];
-    [m_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(views);
-        make.width.equalTo(views);
-        make.bottom.equalTo(views);
-        if ([CommonsFunc isDeviceIpad]) {
-            make.height.mas_equalTo(@250);
-        }else
-            make.height.mas_equalTo(@100);
-    }];
-    m_tableView.tableFooterView =[[UIView alloc] initWithFrame:CGRectZero];
-    
-    UIView *header = [self tableHeaderView];
-    [views addSubview:header];
-    [header mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(views);
-        make.left.equalTo(m_tableView);
-        make.width.equalTo(m_tableView);
-        make.height.mas_equalTo(@30);
-    }];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectSuccess:) name:NOTICE_CONNECTSUCCESS object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientDisconnect:) name:NOTICE_DISCONNECT object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryAgain:) name:NOTICE_TRYAGIAN object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeName:) name:NOTICE_CHANGEROBOTNAME object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noRobotToast:) name:NOTICE_NOROBOT object:nil];
-    
-    stopBtn = [UIButton new];
-    [views addSubview:stopBtn];
-    [stopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(views);
-        make.centerX.equalTo(views);
-        make.width.mas_equalTo(@110);
-    }];
-    stopBtn.backgroundColor = [UIColor lightGrayColor];
-    stopBtn.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    stopBtn.layer.borderWidth = 1.0;
-    stopBtn.layer.masksToBounds = YES;
-    stopBtn.layer.cornerRadius = 5.0;
-    [self setStopBtnGray];
-    [stopBtn setTitle:@"断开连接" forState:UIControlStateNormal];
-    stopBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-    [stopBtn addTarget:self action:@selector(stopBtnTaped:) forControlEvents:UIControlEventTouchUpInside];
-    
-    m_debugLabel = [UILabel new];
-    m_debugLabel.backgroundColor = [UIColor lightGrayColor];
-    [self.view addSubview:m_debugLabel];
-    m_debugLabel.numberOfLines = 0;
-    if ([CommonsFunc isDeviceIpad]) {
-        [m_debugLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(header.mas_top).offset(-10);
-            make.width.equalTo(m_tableView);
-            make.height.mas_equalTo(@50);
-            make.left.equalTo(m_tableView);
-        }];
-    }else{
-        [m_debugLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(views);
-            make.right.equalTo(m_tableView);
-            make.height.mas_equalTo(@50);
-            make.width.mas_equalTo(@150);
-        }];
-    }
-    
-    UITableView *m_debugTabelView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 100, 100) style:UITableViewStylePlain];
-    [self.view addSubview:m_debugTabelView];
-    [m_debugTabelView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(m_debugLabel.mas_top);
-        make.left.equalTo(m_debugLabel);
-        make.width.mas_equalTo(m_debugLabel);
-        make.height.mas_equalTo(@80);
-    }];
-    m_debugTabelView.backgroundColor = [UIColor clearColor];
-    m_debugTabelView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    m_debugTabelView.tag = DEBUGTAG;
-    m_debugTabelView.delegate = self;
-    m_debugTabelView.dataSource = self;
-    
+    [self addDebugTableView];
     [server addObserver:self forKeyPath:@"messagesArray" options:NSKeyValueObservingOptionNew context:nil];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)subViewsMakeConstrains{
+    [self.p_debugLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(@50);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.bottom.equalTo(tableViewHeader.mas_top).offset(-10);
+            make.width.equalTo(m_tableView);
+            make.left.equalTo(m_tableView);
+        }else{
+            make.bottom.equalTo(rightsideContainer);
+            make.right.equalTo(m_tableView);
+            make.width.mas_equalTo(@150);
+        }
+    }];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [server removeObserver:self forKeyPath:@"messagesArray"];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
@@ -226,7 +112,6 @@
         m_messagesArray = server.messagesArray;
     }
     UITableView *table = (UITableView *)[self.view viewWithTag:DEBUGTAG];
-//    [table setContentOffset:CGPointMake(0, table.contentSize.height - table.bounds.size.height) animated:NO];
     [table reloadData];
     if (m_messagesArray.count >= 1) {
         [table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(m_messagesArray.count -1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
@@ -252,14 +137,14 @@
 //mode :0 send
 //mode :1 recv
 - (void)setDebugLabelText:(NSString *)string mode:(int)mode{
-    m_debugLabel.text = nil;
+    _p_debugLabel.text = nil;
     NSString *str;
     if ( !mode) {
         str = [NSString stringWithFormat:@"发送: %@",string];
-        m_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
+        _p_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
     }else{
         str = [NSString stringWithFormat:@"接收: %@",string];
-        m_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
+        _p_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
     }
     tmpString = str;
 }
@@ -272,27 +157,27 @@
 
 - (void)clientDisconnect :(NSNotification *)noti {
     NSLog(@"clientDisconnect notification");
-//    /*****TEST*****/
-//    int aa = (int)[[[NSUserDefaults standardUserDefaults] objectForKey:NSUSERDEFAULT_DISCONNECT] integerValue];
-//    aa ++;
-//    NSString *tmpstring = [NSString stringWithFormat:@"断链次数:%d\n",aa];
-//    
-//    NSString* date;
-//    NSDateFormatter* formatter = [[NSDateFormatter alloc]init];
-//    [formatter setDateFormat:@"YYYY-MM-dd hh:mm:ss"];
-//    date = [NSString stringWithFormat:@"%@\n", [formatter stringFromDate:[NSDate date]]];
-//    
-//    NSString *sss = [tmpstring stringByAppendingString:date];
-//    
-//    if (!ttt) {
-//        ttt = @"";
-//    }
-//    ttt = [ttt stringByAppendingString:sss];
-//    NSLog(@"%@",sss);
-//    disconnectlabel.text = ttt;
-//    [[NSUserDefaults standardUserDefaults] setObject:@(aa) forKey:NSUSERDEFAULT_DISCONNECT];
-//    [schedulTimer invalidate];
-//    /************/
+     /*****TEST** 测试断链次数 **
+    int aa = (int)[[[NSUserDefaults standardUserDefaults] objectForKey:NSUSERDEFAULT_DISCONNECT] integerValue];
+    aa ++;
+    NSString *tmpstring = [NSString stringWithFormat:@"断链次数:%d\n",aa];
+    
+    NSString* date;
+    NSDateFormatter* formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"YYYY-MM-dd hh:mm:ss"];
+    date = [NSString stringWithFormat:@"%@\n", [formatter stringFromDate:[NSDate date]]];
+    
+    NSString *sss = [tmpstring stringByAppendingString:date];
+    
+    if (!ttt) {
+        ttt = @"";
+    }
+    ttt = [ttt stringByAppendingString:sss];
+    NSLog(@"%@",sss);
+    disconnectlabel.text = ttt;
+    [[NSUserDefaults standardUserDefaults] setObject:@(aa) forKey:NSUSERDEFAULT_DISCONNECT];
+    [schedulTimer invalidate];
+    ***********/
     
     NSDictionary *dic = [noti userInfo];
     AsyncSocket *socket = (AsyncSocket *)[dic objectForKey:@"socket"];
@@ -327,7 +212,6 @@
 - (void)stopBtnTaped :(UIButton *)btn {
     NSLog(@"stopTaped");
     NSLog(@"selected count :%lu",(unsigned long)m_selecedModelsArray.count);
-    
     int i;
     for ( i = 0 ; i<[m_selecedModelsArray count]; i++) {
         NSLog(@"....");
@@ -379,7 +263,6 @@
             [[self mutableArrayValueForKey:@"m_modelsArray"] removeObject:tmpModel];
         }
     }
-    
 //    [m_modelsArray addObject:model];
     [[self mutableArrayValueForKey:@"m_modelsArray"] addObject:model];
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -391,10 +274,6 @@
     AsyncSocket *S = (AsyncSocket *)[[timer userInfo] objectForKey:@"sock"];
     [S writeData:[@"A" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
     NSLog(@"write A");
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - table delegete
@@ -468,6 +347,90 @@
 }
 
 #pragma mark - Add views
+- (UILabel *)p_debugLabel {
+    if (!_p_debugLabel) {
+        _p_debugLabel = [UILabel new];
+        _p_debugLabel.backgroundColor = [UIColor lightGrayColor];
+        _p_debugLabel.numberOfLines = 0;
+    }
+    return _p_debugLabel;
+}
+
+- (void) addDebugTableView {
+    UITableView *m_debugTabelView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 100, 100) style:UITableViewStylePlain];
+    [self.view addSubview:m_debugTabelView];
+    [m_debugTabelView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.p_debugLabel.mas_top);
+        make.left.equalTo(self.p_debugLabel);
+        make.width.mas_equalTo(self.p_debugLabel);
+        make.height.mas_equalTo(@80);
+    }];
+    m_debugTabelView.backgroundColor = [UIColor clearColor];
+    m_debugTabelView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    m_debugTabelView.tag = DEBUGTAG;
+    m_debugTabelView.delegate = self;
+    m_debugTabelView.dataSource = self;
+}
+
+- (void) addRightSideViewContainer {
+    rightsideContainer = [UIView new];
+    [self.view addSubview:rightsideContainer];
+    rightsideContainer.backgroundColor = [UIColor lightGrayColor];
+    [rightsideContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.view).offset(-5);
+        make.width.mas_equalTo(@300);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.height.mas_equalTo(@(250+30));
+            make.bottom.equalTo(self.view).offset(-50-5);
+        }else{
+            make.bottom.equalTo(self.view).offset(-50);
+            make.height.mas_equalTo(@(100+30));
+        }
+    }];
+    
+    m_tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, 100, 40) style:UITableViewStylePlain];
+    [m_tableView setBackgroundColor:[CommonsFunc colorOfLight]];
+    m_tableView.delegate = self;
+    m_tableView.dataSource = self;
+    [rightsideContainer addSubview:m_tableView];
+    [m_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(rightsideContainer);
+        make.width.equalTo(rightsideContainer);
+        make.bottom.equalTo(rightsideContainer);
+        if ([CommonsFunc isDeviceIpad]) {
+            make.height.mas_equalTo(@250);
+        }else
+            make.height.mas_equalTo(@100);
+    }];
+    m_tableView.tableFooterView =[[UIView alloc] initWithFrame:CGRectZero];
+    
+    tableViewHeader = [self tableHeaderView];
+    [rightsideContainer addSubview:tableViewHeader];
+    [tableViewHeader mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(rightsideContainer);
+        make.left.equalTo(m_tableView);
+        make.width.equalTo(m_tableView);
+        make.height.mas_equalTo(@30);
+    }];
+    
+    stopBtn = [UIButton new];
+    [rightsideContainer addSubview:stopBtn];
+    [stopBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(rightsideContainer);
+        make.centerX.equalTo(rightsideContainer);
+        make.width.mas_equalTo(@110);
+    }];
+    stopBtn.backgroundColor = [UIColor lightGrayColor];
+    stopBtn.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    stopBtn.layer.borderWidth = 1.0;
+    stopBtn.layer.masksToBounds = YES;
+    stopBtn.layer.cornerRadius = 5.0;
+    [self setStopBtnGray];
+    [stopBtn setTitle:@"断开连接" forState:UIControlStateNormal];
+    stopBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+    [stopBtn addTarget:self action:@selector(stopBtnTaped:) forControlEvents:UIControlEventTouchUpInside];
+}
+
 - (UIView *)tableHeaderView {
     UIView *headerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 300, 30)];
     headerview.backgroundColor = [UIColor orangeColor];

@@ -388,25 +388,19 @@ static ServerSocket* _instance = nil;
     
     NSLog(@"Server didReadData = %@",[ServerSocket dataToString:data]);
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
-    
     [[self mutableArrayValueForKey:@"messagesArray"] addObject:msg2];
-    
     BOOL isShow = YES;
     
     if ([msg isEqualToString:@"RED"] || [msg isEqualToString:@"BLUE"] || [msg isEqualToString:@"GOLD"]) {
-        [[NSUserDefaults standardUserDefaults] setObject:msg forKey:sock.connectedHost];
+        NSString *tmp = [@"ROBOTNAME_" stringByAppendingString:msg];//每次新添加机器人就只需要在AppMacro.h中添加一个ROBOTNAME_开头的就行了。
+        [[NSUserDefaults standardUserDefaults] setObject:tmp forKey:sock.connectedHost];
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CHANGEROBOTNAME object:nil userInfo:@{@"ipAddr":sock.connectedHost}];
         isShow = NO;
     }
     else if ([msg hasPrefix:@"v"] && [msg hasSuffix:@"e"]) {
         NSString *power = [msg substringWithRange:NSMakeRange(1, msg.length-2)];
-        if ([[ServerSocket getRobotName:sock] isEqualToString:ROBOTNAME_RED]) {
-            self.kvoPower = power;
-        }else if ([[ServerSocket getRobotName:sock] isEqualToString:ROBOTNAME_BLUE]) {
-            self.bluekvoPower = power;
-        }else if ([[ServerSocket getRobotName:sock] isEqualToString:ROBOTNAME_GOLD]) {
-            self.goldkvoPower = power;
-        }
+        NSString *roboName = [ServerSocket getRobotName:sock];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_POWERNOTIFICATION object:nil userInfo:@{@"power":power, @"roboName":roboName}];
         isShow = NO;
     } else if ([msg hasPrefix:@"CARD"] || [msg hasPrefix:@"AT"] || [msg isEqualToString:@"A"] || [msg isEqualToString:@"v"]){//返回的card就不补充了。
         isShow = NO;
@@ -459,15 +453,6 @@ static ServerSocket* _instance = nil;
 + (NSString *)getRobotNameByIp :(NSString *)ipaddr {
     NSString *robotName =  [[NSUserDefaults standardUserDefaults] objectForKey:ipaddr];
     if (robotName) {
-        if ([robotName isEqualToString:@"RED"]) {
-            return ROBOTNAME_RED;
-        }
-        if ([robotName isEqualToString:@"BLUE"]) {
-            return ROBOTNAME_BLUE;
-        }
-        if ([robotName isEqualToString:@"GOLD"]) {
-            return ROBOTNAME_GOLD;
-        }
         return robotName;
     }else
         return ipaddr;

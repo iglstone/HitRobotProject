@@ -15,10 +15,14 @@
 @synthesize socket;
 @synthesize isCheck;
 @synthesize robotName;
+@synthesize times;
+@synthesize multPowerArray;
 
 - (instancetype)init {
     self = [super init];
     if (self) {
+        times = 0;
+        multPowerArray = [NSMutableArray new];
         return self;
     }
     return nil;

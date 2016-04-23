@@ -58,8 +58,8 @@
     [super viewWillAppear:animated];
     MainViewController *main =(MainViewController *) self.tabBarController;
     if (![CommonsFunc isDeviceIpad]) {
-        main.views.hidden = YES;
-        main.m_debugLabel.hidden = NO;
+        main.rightsideContainer.hidden = YES;
+        main.p_debugLabel.hidden = NO;
     }
     [self initDeskView];
 }
@@ -260,7 +260,6 @@
     if (voice <= 90) {
         voice += 10;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_VOICECHANGE object:nil userInfo:@{@"voice":@(voice)}];
-//        self.voiceLabel.text = [NSString stringWithFormat:@"音量设置：%ld",(long)voice];
     }
     [control voiceUp];
 }
@@ -270,7 +269,6 @@
     if (voice >= 10) {
         voice -= 10;
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_VOICECHANGE object:nil userInfo:@{@"voice":@(voice)}];
-//        self.voiceLabel.text = [NSString stringWithFormat:@"音量设置：%ld",(long)voice];
     }
     [control voiceDown];
 }
