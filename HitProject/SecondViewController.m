@@ -195,7 +195,6 @@
     }else {
         _steppedSlider.value = 5;
     }
-    
 }
 
 - (void)voiceNoti :(NSNotification *)noti {

@@ -31,6 +31,7 @@
     UIButton *stopBtn;
     ConnectStatesCell *tmpCell;
     HitControl *control;
+    ServerSocket *server;
     UIView *tableViewHeader;
 }
 
@@ -38,18 +39,17 @@
 
 @implementation MainViewController
 @synthesize m_modelsArray;
-@synthesize m_selecedModelsArray;
 @synthesize rightsideContainer;
 
 #pragma mark - lifecicle
 - (instancetype)init {
     self = [super init];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectSuccess:) name:NOTICE_CONNECTSUCCESS object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clientDisconnect:) name:NOTICE_DISCONNECT object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryAgain:) name:NOTICE_TRYAGIAN object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeName:) name:NOTICE_CHANGEROBOTNAME object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noRobotToast:) name:NOTICE_NOROBOT object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiConnect:) name:NOTICE_CONNECTSUCCESS object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiDisconnect:) name:NOTICE_DISCONNECT object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiTryAgain:) name:NOTICE_TRYAGIAN object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiChangeName:) name:NOTICE_CHANGEROBOTNAME object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiNoRobotToast:) name:NOTICE_NOROBOT object:nil];
         return self;
     }
     return nil;
@@ -61,7 +61,6 @@
     UIImage *image = [UIImage imageNamed:@"me.png"];
     tmpString = @"";
     m_modelsArray = [[NSMutableArray alloc] init];
-    m_selecedModelsArray = [[NSMutableArray alloc] init];
     control = [HitControl sharedControl];
     server = [ServerSocket sharedSocket];
     m_cellsArray = [[NSMutableArray alloc] init];
@@ -106,56 +105,42 @@
     [server removeObserver:self forKeyPath:@"messagesArray"];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
-    if ([keyPath isEqualToString:@"messagesArray"]) {
-//        m_messagesArray = (NSMutableArray *)[change objectForKey:@"new"];
-        m_messagesArray = server.messagesArray;
+#pragma mark - Notification & observers
+- (void)notiConnect:(NSNotification *)noti {
+    NSLog(@"connectSuccess notification");
+    
+    NSDictionary *dic = [noti userInfo];
+    NSString *host = [dic objectForKey:@"host"];
+    NSInteger port = [(NSNumber *)[dic objectForKey:@"port"] integerValue];
+    NSString *status = [dic objectForKey:@"status"];
+    AsyncSocket *sokect = (AsyncSocket *)[dic objectForKey:@"socket"];
+    /**************
+     schedulTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(compareMessage:) userInfo:@{@"sock":sokect} repeats:YES];
+     *************/
+    [self.view makeToast:[NSString stringWithFormat:@"连接%@成功", host] duration:1.5 position:CSToastPositionCenter];
+    
+    ConnectModel *model = [ConnectModel new];
+    model.port = port;
+    model.hostIp = host;
+    model.status = status;
+    model.socket = sokect;
+    model.isCheck = NO;
+    model.robotName = [ServerSocket getRobotNameByIp:host];
+    
+    for (int i = 0; i < m_modelsArray.count; i++) {
+        ConnectModel *tmpModel = [m_modelsArray objectAtIndex:i];
+        if ([tmpModel.hostIp isEqualToString:model.hostIp]) {
+            [[self mutableArrayValueForKey:@"m_modelsArray"] removeObject:tmpModel];
+        }
     }
-    UITableView *table = (UITableView *)[self.view viewWithTag:DEBUGTAG];
-    [table reloadData];
-    if (m_messagesArray.count >= 1) {
-        [table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(m_messagesArray.count -1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-    }else{
-        return;
-    }
+    //    [m_modelsArray addObject:model];
+    [[self mutableArrayValueForKey:@"m_modelsArray"] addObject:model];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [m_tableView reloadData];
+    });
 }
 
-#pragma mark - Actions
-- (void )setStopBtnRed {
-    [stopBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-}
-
-- (void )setStopBtnGray {
-    [stopBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-}
-
-- (void)noRobotToast :(NSNotification *)noti {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请选择机器人" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-    [alert show];
-}
-
-//mode :0 send
-//mode :1 recv
-- (void)setDebugLabelText:(NSString *)string mode:(int)mode{
-    _p_debugLabel.text = nil;
-    NSString *str;
-    if ( !mode) {
-        str = [NSString stringWithFormat:@"发送: %@",string];
-        _p_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
-    }else{
-        str = [NSString stringWithFormat:@"接收: %@",string];
-        _p_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
-    }
-    tmpString = str;
-}
-
-
-#pragma mark - Notification
-- (void)tryAgain :(NSNotification *)noti {
-    [self.view makeToast:@"指令发送失败，请重新发送" duration:1.2f position:CSToastPositionCenter];
-}
-
-- (void)clientDisconnect :(NSNotification *)noti {
+- (void)notiDisconnect :(NSNotification *)noti {
     NSLog(@"clientDisconnect notification");
      /*****TEST** 测试断链次数 **
     int aa = (int)[[[NSUserDefaults standardUserDefaults] objectForKey:NSUSERDEFAULT_DISCONNECT] integerValue];
@@ -181,7 +166,6 @@
     
     NSDictionary *dic = [noti userInfo];
     AsyncSocket *socket = (AsyncSocket *)[dic objectForKey:@"socket"];
-    
     //去除选中的socket
     [server.selectedSocketArray enumerateObjectsUsingBlock:^(AsyncSocket *S, NSUInteger idx, BOOL *stop) {
         if ([socket isEqual:S]) {
@@ -189,19 +173,12 @@
             [server.selectedSocketArray removeObject:S];
         }
     }];
-    
     for (int i = 0; i < [m_modelsArray count]; i++) {
         ConnectModel *model = [m_modelsArray objectAtIndex:i];
         if ([model.socket isEqual:socket]) {
-//            [m_modelsArray removeObject:model];
-            [[self mutableArrayValueForKey:@"m_modelsArray"] removeObject:model];
+            //[m_modelsArray removeObject:model];
+            [[self mutableArrayValueForKey:@"m_modelsArray"] removeObject:model];// for kvo
             [self.view makeToast:[NSString stringWithFormat:@"失去%@连接", model.hostIp] duration:1.5 position:CSToastPositionCenter];
-        }
-    }
-    for (int i = 0; i < [m_selecedModelsArray count]; i++) {
-        ConnectModel *model = [m_selecedModelsArray objectAtIndex:i];
-        if ([model.socket isEqual:socket]) {
-            [m_selecedModelsArray removeObject:model];
         }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -209,71 +186,40 @@
     });
 }
 
-- (void)stopBtnTaped :(UIButton *)btn {
-    NSLog(@"stopTaped");
-    NSLog(@"selected count :%lu",(unsigned long)m_selecedModelsArray.count);
-    int i;
-    for ( i = 0 ; i<[m_selecedModelsArray count]; i++) {
-        NSLog(@"....");
-        ConnectModel *model = [m_selecedModelsArray objectAtIndex:i];
-        NSLog(@"..%@",model);
-        [model.socket disconnect];
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
+    if ([keyPath isEqualToString:@"messagesArray"]) {
+        //        m_messagesArray = (NSMutableArray *)[change objectForKey:@"new"];
+        m_messagesArray = server.messagesArray;
+    }
+    UITableView *table = (UITableView *)[self.view viewWithTag:DEBUGTAG];
+    [table reloadData];
+    if (m_messagesArray.count >= 1) {
+        [table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(m_messagesArray.count -1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }else{
+        return;
     }
 }
 
-- (void)changeName :(NSNotification *)noti {
+- (void)notiChangeName :(NSNotification *)noti {
     NSString *ipaddr = (NSString *) [[noti userInfo] objectForKey:@"ipAddr"];
     [m_modelsArray enumerateObjectsUsingBlock:^(ConnectModel *tmpModel, NSUInteger idx, BOOL *stop) {
         if ([ipaddr isEqualToString:tmpModel.hostIp]) {
             NSString *name = [ServerSocket getRobotNameByIp:ipaddr];
             tmpModel.robotName = name;
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [m_tableView reloadData];
-        });
     }];
-}
-
-- (void)connectSuccess:(NSNotification *)noti {
-    NSLog(@"connectSuccess notification");
-    
-    NSDictionary *dic = [noti userInfo];
-    NSString *host = [dic objectForKey:@"host"];
-    NSInteger port = [(NSNumber *)[dic objectForKey:@"port"] integerValue];
-    NSString *status = [dic objectForKey:@"status"];
-    AsyncSocket *sokect = (AsyncSocket *)[dic objectForKey:@"socket"];
-    
-//    /**************/
-//    schedulTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(compareMessage:) userInfo:@{@"sock":sokect} repeats:YES];
-//    /*************/
-    
-    [self.view makeToast:[NSString stringWithFormat:@"连接%@成功", host] duration:1.5 position:CSToastPositionCenter];
-    
-    ConnectModel *model = [ConnectModel new];
-    model.port = port;
-    model.hostIp = host;
-    model.status = status;
-    model.socket = sokect;
-    model.isCheck = NO;
-    model.robotName = [ServerSocket getRobotNameByIp:host];
-    
-    for (int i = 0; i < m_modelsArray.count; i++) {
-        ConnectModel *tmpModel = [m_modelsArray objectAtIndex:i];
-        if ([tmpModel.hostIp isEqualToString:model.hostIp]) {
-            [[self mutableArrayValueForKey:@"m_modelsArray"] removeObject:tmpModel];
-        }
-    }
-//    [m_modelsArray addObject:model];
-    [[self mutableArrayValueForKey:@"m_modelsArray"] addObject:model];
     dispatch_async(dispatch_get_main_queue(), ^{
         [m_tableView reloadData];
     });
 }
 
-- (void)compareMessage :(NSTimer  *) timer{
-    AsyncSocket *S = (AsyncSocket *)[[timer userInfo] objectForKey:@"sock"];
-    [S writeData:[@"A" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
-    NSLog(@"write A");
+- (void)notiTryAgain :(NSNotification *)noti {
+    [self.view makeToast:@"指令发送失败，请重新发送" duration:1.2f position:CSToastPositionCenter];
+}
+
+- (void)notiNoRobotToast :(NSNotification *)noti {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请选择机器人" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+    [alert show];
 }
 
 #pragma mark - table delegete
@@ -328,7 +274,6 @@
     tmpCell.isChecked = !tmpCell.isChecked;
     NSLog(@"isCkecked after  %d",tmpCell.isChecked);
     if (tmpCell.isChecked == YES) {
-        [m_selecedModelsArray addObject:model];
         [server.selectedSocketArray addObject:model.socket];
         [self setStopBtnRed];
         model.isCheck = YES;
@@ -336,14 +281,55 @@
     }
     else
     {
-        [m_selecedModelsArray removeObject:model];
         [server.selectedSocketArray removeObject:model.socket];
         model.isCheck = NO;
-        if (m_selecedModelsArray.count == 0) {
+        if (server.selectedSocketArray.count == 0) {
             [self setStopBtnGray];
         }else
             [self setStopBtnRed];
     }
+}
+
+#pragma mark - Actions
+- (void )setStopBtnRed {
+    [stopBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+}
+
+- (void )setStopBtnGray {
+    [stopBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+}
+
+//mode :0 send
+//mode :1 recv
+- (void)setDebugLabelText:(NSString *)string mode:(int)mode{
+    _p_debugLabel.text = nil;
+    NSString *str;
+    if ( !mode) {
+        str = [NSString stringWithFormat:@"发送: %@",string];
+        _p_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
+    }else{
+        str = [NSString stringWithFormat:@"接收: %@",string];
+        _p_debugLabel.text = [NSString stringWithFormat:@"%@ \n%@",tmpString,str];
+    }
+    tmpString = str;
+}
+
+- (void)stopBtnTaped :(UIButton *)btn {
+    NSLog(@"stopTaped");
+    NSLog(@"selected count :%lu",(unsigned long)m_modelsArray.count);
+    int i;
+    for ( i = 0 ; i<[m_modelsArray count]; i++) {
+        ConnectModel *model = [m_modelsArray objectAtIndex:i];
+        if (model.isCheck == YES) {
+            [model.socket disconnect];
+        }
+    }
+}
+
+- (void)compareMessage :(NSTimer  *) timer{
+    AsyncSocket *S = (AsyncSocket *)[[timer userInfo] objectForKey:@"sock"];
+    [S writeData:[@"A" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1 tag:0];
+    NSLog(@"write A");
 }
 
 #pragma mark - Add views

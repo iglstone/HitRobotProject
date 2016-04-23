@@ -10,10 +10,9 @@
 #import "ServerSocket.h"
 
 @interface MainViewController : UITabBarController {
-    ServerSocket *server;
+
 }
 
-@property (nonatomic, strong) NSMutableArray *m_selecedModelsArray; //选中的models
 @property (nonatomic, strong) NSMutableArray *m_modelsArray;//连接上的 models
 @property (nonatomic, strong) UIView         *rightsideContainer;
 @property (nonatomic, strong) UILabel        *p_debugLabel;
