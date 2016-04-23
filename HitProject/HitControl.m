@@ -51,6 +51,7 @@ static HitControl* _instance = nil;
         MainViewController *main = (MainViewController *)dele.main;
         [main setDebugLabelText:@"checkConfig" mode:MESSAGEMODE_SEND];
     }
+    [[server mutableArrayValueForKey:@"messagesArray"] addObject:@"&"];
     [sock writeData:[@"&" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:1.5 tag:1];
 }
 

@@ -226,7 +226,9 @@
     BOOL update = false;
     for (ConnectModel *model in m_robotStateModelsArray) {
         if ([model.robotName isEqualToString:roboName]) {
-            float average = [self calcuPower:ele times:model.times arr:model.multPowerArray];
+            float average = [self calcuPower:ele connectModel:model];//times:model.times arr:model.multPowerArray];
+            model.robotTemPower = power;
+            NSLog(@"average == %f",average);
             if (average != 0) {
                 model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,model.robotTemPower];
                 update = true;
@@ -246,6 +248,27 @@
  *  @param arr       待滤波数组
  *  @return 平均电量
  */
+- (float)calcuPower:(float)ele connectModel:(ConnectModel *)model{
+    if (model.times < 4) {
+        if (model.times == 0) {
+            return ele;
+        }
+        model.times ++;
+        [model.multPowerArray addObject:@(ele)];
+    } else {
+        model.times = 0;
+        float sum = 0;
+        for (id obj in model.multPowerArray) {
+            float ele = [obj floatValue];
+            sum += ele;
+        }
+        float average = sum/model.multPowerArray.count;
+        NSLog(@"average: %f",average);
+        [model.multPowerArray removeAllObjects];
+        return average;
+    }
+    return 0;
+}
 - (float)calcuPower:(float)ele times:(int)times arr:(NSMutableArray *)arr{
     if (times < 4) {
         times ++;

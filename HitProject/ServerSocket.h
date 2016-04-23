@@ -9,6 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "AsyncSocket.h"
 
+//typedef enum {
+//    ROBOTNAME_RED,
+//    ROBOTNAME_BLUE,
+//    ROBOTNAME_GOLD,
+//} kImageType;
+//#define kImageTypeArray @"小红", @"小蓝", @"小金", nil
 
 @interface ServerSocket : NSObject <AsyncSocketDelegate>
 {

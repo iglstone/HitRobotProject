@@ -13,7 +13,6 @@
 
 @interface ServerSocket (){
     NSString *sendedMessageTwice;
-    NSInteger times;
     AsyncSocket *tmpSocket;
     NSMutableArray *socketMessageModlesArray;
 }
@@ -47,7 +46,6 @@ static ServerSocket* _instance = nil;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toBackGround:) name:NOTICE_BACKGROUND object:nil];
         socketMessageModlesArray = [[NSMutableArray alloc] init];
         self.messagesArray = [NSMutableArray new];
-        times = 0;
     }
     return self;
 }
@@ -120,11 +118,10 @@ static ServerSocket* _instance = nil;
     [sock writeData:[ServerSocket stringToData:@"连接成功 !"] withTimeout:2 tag:0];//返回
     [sock readDataWithTimeout:TIMEOUT_SECKENTS tag:0];
     //为了解决断网问题，
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(dealyNoticeSuccess:) userInfo:@{
-                                                                                                                              @"port":@(port),
-                                                                                                                              @"host":host,
-                                                                                                                              @"status":@"已连接",
-                                                                                                                              @"socket":sock}
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:3
+                                                      target:self
+                                                    selector:@selector(dealyNoticeSuccess:)
+                                                    userInfo:@{@"port":@(port),@"host":host,@"status":@"已连接",@"socket":sock}
                                                      repeats:NO];
     if (!timer) {
         NSLog(@"time is nil");
@@ -196,7 +193,13 @@ static ServerSocket* _instance = nil;
     BOOL willShowOnLabel = YES;
     
     if ([msg isEqualToString:@"RED"] || [msg isEqualToString:@"BLUE"] || [msg isEqualToString:@"GOLD"]) {
-        NSString *tmp = [@"ROBOTNAME_" stringByAppendingString:msg];//每次新添加机器人就只需要在AppMacro.h中添加一个ROBOTNAME_开头的就行了。
+        NSString *tmp ;//= [@"ROBOTNAME_" stringByAppendingString:msg];//每次新添加机器人就只需要在AppMacro.h中添加一个ROBOTNAME_开头的就行了。
+        if ([msg isEqualToString:@"RED"]) {
+            tmp = ROBOTNAME_RED;
+        }else if([msg isEqualToString:@"BLUE"])
+            tmp = ROBOTNAME_BLUE;
+        else if ([msg isEqualToString:@"GOLD"])
+            tmp = ROBOTNAME_GOLD;
         [[NSUserDefaults standardUserDefaults] setObject:tmp forKey:sock.connectedHost];
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CHANGEROBOTNAME object:nil userInfo:@{@"ipAddr":sock.connectedHost}];
         willShowOnLabel = NO;
@@ -228,6 +231,7 @@ static ServerSocket* _instance = nil;
  */
 - (void)sendMessage :(NSString *)string debugstring:(NSString *)debugs
 {
+    [[self mutableArrayValueForKey:@"messagesArray"] addObject:string];
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
     if (self.selectedSocketArray.count == 0 ) { //filtering the stopmove and stopSingSongs cmd.
         if ([string isEqualToString:@"g"] || [string isEqualToString:@"P"]) {
@@ -319,6 +323,7 @@ static ServerSocket* _instance = nil;
 }
 
 - (void)compareMessage :(NSTimer  *) timer{
+    static int times = 0;
     AsyncSocket *S = (AsyncSocket *)[[timer userInfo] objectForKey:@"sock"];
     if (!receiveMessage) {//为空，没有读取到
         NSLog(@"has not receive");
