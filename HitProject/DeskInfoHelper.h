@@ -22,13 +22,14 @@
  *  @param name    桌的名字
  */
 - (void) changeDeskModelByTag :(int)deskNum name:(NSString *)name isSong:(BOOL)issong;
-
+- (void) changeDeskModelByTag :(int)deskNum name:(NSString *)name turn:(NSInteger)turn isSong:(BOOL)issong;
 /**
  *  获得到指定桌号数的名称。
  *  @param tag
  *  @return
  */
 - (NSArray <NSString *> *)getDeskNamesFromUserdefaultByTag:(int) tag isSong:(BOOL)issong;
+- (NSArray <NSNumber *> *)getDeskTurnFromUserdefaultByTag:(int) deskNum isSong:(BOOL)issong;
 
 /**
  *  将deskNameArray存储到userinfo

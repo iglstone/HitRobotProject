@@ -9,6 +9,8 @@
 #import "SettingViewController.h"
 #import "LoginViewController.h"
 #import "PickDeskNumViewController.h"
+//#import "StarGazerViewController.h"
+#import "StarGazerViewController2.h"
 
 @interface SettingViewController () <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate>
 @property (nonatomic) UITableView *p_tableView;
@@ -73,6 +75,9 @@
         cell.textLabel.text =@"设置音乐首数";
     }
     if (indexPath.row == 2) {
+        cell.textLabel.text =@"StarGazer地图建立";
+    }
+    if (indexPath.row == 3) {
         cell.textLabel.text =@"退出登陆";
     }
     cell.backgroundColor = [CommonsFunc colorOfSystemBackground];
@@ -90,6 +95,10 @@
         [self.navigationController pushViewController:pickVC animated:YES];
     }
     if (indexPath.row == 2) {
+        StarGazerViewController2 *starGazer = [StarGazerViewController2 new];
+        [self.navigationController pushViewController:starGazer animated:YES];
+    }
+    if (indexPath.row == 3) {
         UIAlertView *alet = [[UIAlertView alloc] initWithTitle:@"确定退出登录？" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
         [alet show];
     }
@@ -125,7 +134,7 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 3;
+    return 4;
 }
 
 - (void)didReceiveMemoryWarning {

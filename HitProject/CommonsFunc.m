@@ -17,6 +17,31 @@
 
 @implementation CommonsFunc
 
++(NSString *)stringFromHexString:(NSString *)hexString { //
+    hexString = [hexString stringByReplacingOccurrencesOfString:@"0x" withString:@""];
+    char *myBuffer = (char *)malloc((int)[hexString length] / 2 + 1);
+    bzero(myBuffer, [hexString length] / 2 + 1);
+    for (int i = 0; i < [hexString length] - 1; i += 2) {
+        unsigned int anInt;
+        NSString * hexCharStr = [hexString substringWithRange:NSMakeRange(i, 2)];
+        NSScanner * scanner = [[NSScanner alloc] initWithString:hexCharStr] ;
+        [scanner scanHexInt:&anInt];
+        myBuffer[i / 2] = (char)anInt;
+    }
+    NSString *unicodeString = [NSString stringWithCString:myBuffer encoding:4];
+//    NSLog(@"------字符串=======%@",unicodeString);
+    return unicodeString;
+}
+
++ (NSString *)stringToHexString:(int)number{
+    NSString *hexString;
+    if (number < 16) {
+        hexString = [NSString stringWithFormat:@"%@",[[NSString alloc] initWithFormat:@"0%x",number]];
+    }else
+        hexString = [NSString stringWithFormat:@"%@",[[NSString alloc] initWithFormat:@"%x",number]];
+    return hexString;
+}
+
 + (BOOL)isFirstLaunch {
     if (![UD boolForKey:@"everLaunched"]) {
         [UD setBool:YES forKey:@"everLaunched"];

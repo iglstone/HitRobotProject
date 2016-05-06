@@ -20,11 +20,9 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
     }
     return self;
 }
-
 
 - (void)addInnerView {
     _innerView = [UIView new];
@@ -62,8 +60,10 @@
     }else
         arr = @[@"*桌号",@"*信号",@"备注",@"其他"];
     NSArray *arr2 = @[self.deskName,self.signal,@"备注",@"其他"];
-    for (int i =0; i<4; i++) {
-        UIView *labelView = [self labelAndTextfield:100+i label:arr[i] textFeild:arr2[i]];
+    int num = self.isSong == TRUE ? 4 :1;
+    UIView *labelView;
+    for (int i =0; i<num; i++) {
+        labelView = [self labelAndTextfield:100+i label:arr[i] textFeild:arr2[i]];
         [view addSubview:labelView];
         [labelView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(view).offset(i*50 + 60);
@@ -72,8 +72,32 @@
             make.right.equalTo(view);
         }];
     }
+    if (num ==1) {
+        NSArray *arr = @[@"左转",@"右转",@"不转"];
+        for (int i = 0; i < [arr count]; i++) {
+            RadioButton *rb = [[RadioButton alloc] initWithGroupId:@"turn group" index:i];
+            rb.tag = i + 1000;
+            [view addSubview:rb];
+            [rb mas_makeConstraints:^(MASConstraintMaker *make) {
+                if ([CommonsFunc isDeviceIpad]) {
+                    make.top.equalTo(labelView.mas_bottom).offset(40 + 50*i);
+                }else
+                    make.top.equalTo(labelView).offset(20 + 35*i);
+                make.centerX.equalTo(view);
+                make.size.mas_equalTo(CGSizeMake(100, 22));
+            }];
+            [rb.button setTitle:arr[i] forState:UIControlStateNormal];
+        }
+        
+        RadioButton *rb = (RadioButton *)[view viewWithTag:1000+self.turn-1];
+        [rb setChecked:YES];
+        [RadioButton addObserverForGroupId:@"turn group" observer:self];
+    }
 }
 
+-(void)radioButtonSelectedAtIndex:(NSUInteger)index inGroup:(NSString *)groupId{
+    self.turn = index+1;
+}
 
 - (UITextField *)getTextViewByTag:(NSInteger)tag {
     UIView *subView = [self viewWithTag:tag];
@@ -96,7 +120,7 @@
     if (isSong) {
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_SONGPOPVIEW_CONFIRM object:nil userInfo:@{@"deskName":string, @"deskTag":@(self.deskTag)}];
     }else
-        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_POPVIEW_CONFIRM object:nil userInfo:@{@"deskName":string, @"deskTag":@(self.deskTag)}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_POPVIEW_CONFIRM object:nil userInfo:@{@"deskName":string, @"deskTag":@(self.deskTag),@"turn":@(self.turn)}];
     [_parentVC lew_dismissPopupViewWithanimation:[LewPopupViewAnimationFade new]];
 }
 

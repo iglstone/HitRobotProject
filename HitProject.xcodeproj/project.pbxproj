@@ -58,6 +58,9 @@
 		E3768DD11C4E11710084916D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3768DD31C4E11710084916D /* Localizable.strings */; };
 		E37BA5031BE462C700DB7A96 /* JSAnalogueStick.m in Sources */ = {isa = PBXBuildFile; fileRef = E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */; };
 		E37BA50A1BE7162500DB7A96 /* DeskView.m in Sources */ = {isa = PBXBuildFile; fileRef = E37BA5091BE7162500DB7A96 /* DeskView.m */; };
+		E39560DC1CCE13D10059372B /* StarGazerViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = E39560DA1CCE13D10059372B /* StarGazerViewController2.m */; };
+		E39560DD1CCE13D10059372B /* StarGazerViewController2.xib in Resources */ = {isa = PBXBuildFile; fileRef = E39560DB1CCE13D10059372B /* StarGazerViewController2.xib */; };
+		E3995C151CDC26B400834ADB /* HitNewControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E3995C141CDC26B400834ADB /* HitNewControl.m */; };
 		E39DA2161C3A1E5E002065BE /* DeskInfoHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DA2151C3A1E5E002065BE /* DeskInfoHelper.m */; };
 		E39DA2171C3A1E5E002065BE /* DeskInfoHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DA2151C3A1E5E002065BE /* DeskInfoHelper.m */; };
 		E39EEF741CC5C24D00A812BF /* RobotStateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E39EEF731CC5C24D00A812BF /* RobotStateCell.m */; };
@@ -188,6 +191,11 @@
 		E37BA5021BE462C700DB7A96 /* JSAnalogueStick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSAnalogueStick.m; sourceTree = "<group>"; };
 		E37BA5081BE7162500DB7A96 /* DeskView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeskView.h; sourceTree = "<group>"; };
 		E37BA5091BE7162500DB7A96 /* DeskView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeskView.m; sourceTree = "<group>"; };
+		E39560D91CCE13D10059372B /* StarGazerViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StarGazerViewController2.h; sourceTree = "<group>"; };
+		E39560DA1CCE13D10059372B /* StarGazerViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StarGazerViewController2.m; sourceTree = "<group>"; };
+		E39560DB1CCE13D10059372B /* StarGazerViewController2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StarGazerViewController2.xib; sourceTree = "<group>"; };
+		E3995C131CDC26B400834ADB /* HitNewControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitNewControl.h; sourceTree = "<group>"; };
+		E3995C141CDC26B400834ADB /* HitNewControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HitNewControl.m; sourceTree = "<group>"; };
 		E39DA2141C3A1E5E002065BE /* DeskInfoHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeskInfoHelper.h; sourceTree = "<group>"; };
 		E39DA2151C3A1E5E002065BE /* DeskInfoHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeskInfoHelper.m; sourceTree = "<group>"; };
 		E39EEF721CC5C24D00A812BF /* RobotStateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotStateCell.h; sourceTree = "<group>"; };
@@ -281,6 +289,17 @@
 				397759819632A14F21F4B158 /* Pods.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		E3106ED71CCDAF290031659A /* StarGazer */ = {
+			isa = PBXGroup;
+			children = (
+				E39560D91CCE13D10059372B /* StarGazerViewController2.h */,
+				E39560DA1CCE13D10059372B /* StarGazerViewController2.m */,
+				E39560DB1CCE13D10059372B /* StarGazerViewController2.xib */,
+			);
+			name = StarGazer;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		E31636791BF07ACC002EB100 /* Tools */ = {
@@ -394,6 +413,7 @@
 		E3C0B5201BE1EAA5004437EC /* HitProject */ = {
 			isa = PBXGroup;
 			children = (
+				E3106ED71CCDAF290031659A /* StarGazer */,
 				E31636791BF07ACC002EB100 /* Tools */,
 				E3FC888E1BEB52EE0016376D /* AsyncSocket */,
 				E3E91FC91BEC7795003AE247 /* AppMacro.h */,
@@ -503,6 +523,8 @@
 				E30EEC3D1C2532BD00352235 /* SocketMessageModel.m */,
 				E3E91FCA1BEC8117003AE247 /* HitControl.h */,
 				E3E91FCB1BEC8117003AE247 /* HitControl.m */,
+				E3995C131CDC26B400834ADB /* HitNewControl.h */,
+				E3995C141CDC26B400834ADB /* HitNewControl.m */,
 				E3D671E01C3DEC3F00AF3391 /* HitControlHex.h */,
 				E3D671E11C3DEC3F00AF3391 /* HitControlHex.m */,
 				E33DD38A1BF20DE40028FCBD /* SocketClientViewController.h */,
@@ -564,7 +586,7 @@
 				TargetAttributes = {
 					E3C0B51D1BE1EAA5004437EC = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = AG6MFPAW5J;
+						DevelopmentTeam = 72WKJ8DSMQ;
 					};
 					E3C0B5391BE1EAA6004437EC = {
 						CreatedOnToolsVersion = 6.4;
@@ -628,6 +650,7 @@
 				E3E0F8B91C0E7ABA001CC06F /* login_btn_blue_nor.png in Resources */,
 				E3E0F8AC1C0E79BB001CC06F /* login_textfield_bottom@2x.png in Resources */,
 				E3E0F8B41C0E7A7A001CC06F /* login_textfield_top@2x.png in Resources */,
+				E39560DD1CCE13D10059372B /* StarGazerViewController2.xib in Resources */,
 				E3E0F8B01C0E79CC001CC06F /* login_avatar@2x.png in Resources */,
 				E34B9A461C5A41A3009E4B78 /* dPad-Left@2x.png in Resources */,
 				E34B9A3F1C5A41A3009E4B78 /* dPad-Down.png in Resources */,
@@ -703,6 +726,7 @@
 				E37BA5031BE462C700DB7A96 /* JSAnalogueStick.m in Sources */,
 				E31636751BF0428F002EB100 /* AsyncSocket.m in Sources */,
 				E316366F1BEDA80A002EB100 /* ConnectStatesCell.m in Sources */,
+				E39560DC1CCE13D10059372B /* StarGazerViewController2.m in Sources */,
 				E3C0B5271BE1EAA5004437EC /* AppDelegate.m in Sources */,
 				E3FC88881BEAF3750016376D /* RadioButton.m in Sources */,
 				E3C0B52A1BE1EAA5004437EC /* FirstViewController.m in Sources */,
@@ -713,6 +737,7 @@
 				E3C0B5241BE1EAA5004437EC /* main.m in Sources */,
 				E316367C1BF07AE4002EB100 /* CHYSlider.m in Sources */,
 				E31636721BEDAA5D002EB100 /* CommonsFunc.m in Sources */,
+				E3995C151CDC26B400834ADB /* HitNewControl.m in Sources */,
 				E35D11A81C0ECAA3009AF0BB /* SettingViewController.m in Sources */,
 				E3E0F8A51C0E77C1001CC06F /* LoginViewController.m in Sources */,
 				E30B62AD1C40AAE5006712F1 /* GLViewProcessingTest.m in Sources */,
@@ -875,6 +900,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hitrobot.wuhuhate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -892,6 +918,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hitrobot.wuhuhate;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

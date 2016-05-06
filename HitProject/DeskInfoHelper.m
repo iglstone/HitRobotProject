@@ -65,6 +65,23 @@
     [self setDeskModelsToUserdefault:[NSArray arrayWithArray:modlesArr] isSong:YES];
 }
 
+- (void) changeDeskModelByTag :(int)deskNum name:(NSString *)name turn:(NSInteger)turn isSong:(BOOL)issong{
+    NSArray <DeskInfoModel *> *arr = [self getDeskModelsFromUserdefault :issong];
+    if (deskNum > arr.count) {
+        NSLog(@"beyound the array count");
+        return;
+    }
+    DeskInfoModel *model = arr[deskNum-1];
+    if (issong) {
+        model.p_deskNum = name;
+    }else{
+        model.p_deskNum = [name hasSuffix:@"桌"] ? name : [NSString stringWithFormat:@"%@桌",name];
+        model.p_turn = turn;
+    }
+
+    [self setDeskModelsToUserdefault:arr isSong:issong];
+}
+
 - (void) changeDeskModelByTag :(int)deskNum name:(NSString *)name isSong:(BOOL)issong{
     NSArray <DeskInfoModel *> *arr = [self getDeskModelsFromUserdefault :issong];
     if (deskNum > arr.count) {
@@ -85,6 +102,16 @@
     for (int i = 0; i < deskNum; i++) {
         DeskInfoModel *model = arr[i];
         [namesArr addObject:model.p_deskNum];
+    }
+    return [NSArray arrayWithArray:namesArr];
+}
+
+- (NSArray <NSNumber *> *)getDeskTurnFromUserdefaultByTag:(int) deskNum isSong:(BOOL)issong{
+    NSArray <DeskInfoModel *> *arr = [self getDeskModelsFromUserdefault :issong];
+    NSMutableArray <NSNumber *> *namesArr = [NSMutableArray new];
+    for (int i = 0; i < deskNum; i++) {
+        DeskInfoModel *model = arr[i];
+        [namesArr addObject:@(model.p_turn)];
     }
     return [NSArray arrayWithArray:namesArr];
 }

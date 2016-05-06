@@ -10,6 +10,10 @@
 #import <UIKit/UIKit.h>
 
 @interface CommonsFunc : NSObject
+//十六进制转nsstring
++(NSString *)stringFromHexString:(NSString *)hexString;
++(NSString *)stringToHexString:(int)number;
+
 +(BOOL)isDeviceIpad;
 /**
  *  判断程序整个生命周期都只执行一次

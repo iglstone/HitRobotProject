@@ -19,7 +19,7 @@
 //typedef NS_ENUM(NSInteger , RobotName) {
 //    RobotName_Red = 1,
 //    RobotName_Blue = 2,
-//    RobotName_Gold = 3,
+//    RobotName_Gold = 3
 //} ;
 
 @interface SecondViewController ()<JSAnalogueStickDelegate, JSDPadDelegate, UITableViewDelegate, UITableViewDataSource> {
@@ -88,9 +88,6 @@
     redEleMutArray = [[NSMutableArray alloc] initWithCapacity:10];
     blueEleMutArray = [[NSMutableArray alloc] initWithCapacity:10];
     goldEleMutArray = [[NSMutableArray alloc] initWithCapacity:10];
-    redTimes = 0;
-    blueTimes = 0;
-    goldTimes = 0;
     self.view.backgroundColor = [CommonsFunc colorOfSystemBackground];
     
     //observer
@@ -117,6 +114,7 @@
     [self addRadioBtn];
     [self addStopButton];
     [self addRobotsDeatailTableView];
+    [self addSpeedControlBtn];
 }
 
 - (void)viewsMakeConstranins {
@@ -144,8 +142,8 @@
     }];
     [self.velocityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         if ([CommonsFunc isDeviceIpad]) {
-            make.centerY.equalTo(self.analogueLabel);
-            make.left.equalTo(self.analogueLabel.mas_right).offset(200);
+            make.centerY.equalTo(self.analogueLabel).offset(-30);
+            make.left.equalTo(self.analogueLabel.mas_right).offset(180);
         } else {
             make.centerY.equalTo(self.analogueLabel).offset(-20);
             make.right.equalTo(self.view).offset(-50);
@@ -223,6 +221,9 @@
     NSString *roboName = [[noti userInfo] objectForKey:@"roboName"];
     float Powerfloat = [power floatValue];
     float ele=(float) ((Powerfloat-22)/7.4)*100;
+    if (ele < 0) {
+        ele  = 5;
+    }
     BOOL update = false;
     for (ConnectModel *model in m_robotStateModelsArray) {
         if ([model.robotName isEqualToString:roboName]) {
@@ -232,7 +233,10 @@
             if (average != 0) {
                 model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,model.robotTemPower];
                 update = true;
+            }else {
+                update = false;
             }
+            break;
         }
     }
     if (update) {
@@ -249,44 +253,44 @@
  *  @return 平均电量
  */
 - (float)calcuPower:(float)ele connectModel:(ConnectModel *)model{
-    if (model.times < 4) {
+    if (model.times <= 8) {
         if (model.times == 0) {
+            model.times = 1;
             return ele;
         }
         model.times ++;
         [model.multPowerArray addObject:@(ele)];
+        return 0;
     } else {
-        model.times = 0;
+        model.times = 1;
         float sum = 0;
         for (id obj in model.multPowerArray) {
             float ele = [obj floatValue];
             sum += ele;
         }
         float average = sum/model.multPowerArray.count;
-        NSLog(@"average: %f",average);
         [model.multPowerArray removeAllObjects];
         return average;
     }
-    return 0;
 }
-- (float)calcuPower:(float)ele times:(int)times arr:(NSMutableArray *)arr{
-    if (times < 4) {
-        times ++;
-        [arr addObject:@(ele)];
-    } else {
-        times = 0;
-        float sum = 0;
-        for (id obj in arr) {
-            float ele = [obj floatValue];
-            sum += ele;
-        }
-        float average = sum/arr.count;
-        NSLog(@"average: %f",average);
-        [arr removeAllObjects];
-        return average;
-    }
-    return 0;
-}
+//- (float)calcuPower:(float)ele times:(int)times arr:(NSMutableArray *)arr{
+//    if (times < 4) {
+//        times ++;
+//        [arr addObject:@(ele)];
+//    } else {
+//        times = 0;
+//        float sum = 0;
+//        for (id obj in arr) {
+//            float ele = [obj floatValue];
+//            sum += ele;
+//        }
+//        float average = sum/arr.count;
+//        NSLog(@"average: %f",average);
+//        [arr removeAllObjects];
+//        return average;
+//    }
+//    return 0;
+//}
 
 #pragma mark - tableviewDelegates
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -467,8 +471,29 @@
 }
 
 #pragma mark - action
+- (void)speedControl:(UIButton *)btn {
+    int tem = (int)_steppedSlider.value;
+    if (btn.tag == 300) {
+        if (tem > 5) {
+            return;
+        }
+        tem ++;
+    }else {
+        tem --;
+        if (tem < 0) {
+            return;
+        }
+    }
+    _steppedSlider.value = tem;
+    if (tem == 0) {
+        [control stopMove];
+    }else
+        [control speed:tem];
+}
+
 -(void)timeNotEnoughStop:(NSTimer *)timer {
     NSLog(@"timeNotEnough Stop");
+    [timer invalidate];
     [control stopMove];
 }
 
@@ -493,6 +518,7 @@
 }
 
 #pragma mark - views
+
 - (void)addJSDpad {
     jsDpadView = [[JSDPad alloc] initWithFrame:CGRectMake(100, 100, 200, 200)];
     [self.view addSubview:jsDpadView];
@@ -532,7 +558,7 @@
         make.top.equalTo(radioContainer.mas_bottom).offset(20);
         make.left.equalTo(radioContainer);
         make.width.equalTo(radioContainer);
-        make.bottom.equalTo(self.view);
+        make.bottom.equalTo(self.view).offset(-50);
     }];
     m_robotsDetailTableView.backgroundColor = [UIColor clearColor];
     m_robotsDetailTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -562,6 +588,28 @@
         [_steppedSlider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     }
     return _steppedSlider;
+}
+
+- (void)addSpeedControlBtn{
+    UIButton *btPlus = [UIButton new];
+    [self.view addSubview:btPlus];
+    [btPlus setImage:[UIImage imageNamed:@"voiceUp.png"] forState:UIControlStateNormal];
+    btPlus.tag = 300;
+    [btPlus mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(_steppedSlider);
+        make.left.equalTo(_steppedSlider.mas_right).offset(18);
+    }];
+    [btPlus addTarget:self action:@selector(speedControl:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIButton *btMin = [UIButton new];
+    [self.view addSubview:btMin];
+    [btMin setImage:[UIImage imageNamed:@"voiceDown.png"] forState:UIControlStateNormal];
+    btMin.tag = 301;
+    [btMin mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(_steppedSlider);
+        make.right.equalTo(_steppedSlider.mas_left).offset(-18);
+    }];
+    [btMin addTarget:self action:@selector(speedControl:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 -(UILabel *)velocityLabel {

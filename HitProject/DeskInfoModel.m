@@ -13,6 +13,7 @@
 @synthesize p_info;
 @synthesize p_other;
 @synthesize p_sign;
+@synthesize p_turn;
 
 - (instancetype)init {
     self = [super init];
@@ -34,6 +35,7 @@
     [aCoder encodeObject:p_info     forKey:@"info"];
     [aCoder encodeObject:p_other    forKey:@"other"];
     [aCoder encodeObject:p_sign     forKey:@"sign"];
+    [aCoder encodeObject:@(p_turn)  forKey:@"turn"];
 }
 
 /**
@@ -48,6 +50,7 @@
     self.p_info    = [aDecoder decodeObjectForKey:@"info"];
     self.p_other   = [aDecoder decodeObjectForKey:@"other"];
     self.p_sign    = [aDecoder decodeObjectForKey:@"sign"];
+    self.p_turn    = [[aDecoder decodeObjectForKey:@"turn"] integerValue];
     return self;
 }
 

@@ -6,12 +6,12 @@
 //  Copyright (c) 2015年 郭龙. All rights reserved.
 //
 
-#import "HitControl.h"
+#import "HitNewControl.h"
 
-@implementation HitControl
+@implementation HitNewControl
 @synthesize server;
 
-static HitControl* _instance = nil;
+static HitNewControl* _instance = nil;
 
 + (instancetype) sharedControl
 {
@@ -52,44 +52,53 @@ static HitControl* _instance = nil;
         [main setDebugLabelText:@"checkConfig" mode:MESSAGEMODE_SEND];
     }
     [[server mutableArrayValueForKey:@"messagesArray"] addObject:@"&"];
-    NSString *st = [CommonsFunc stringFromHexString:@"0x600101"];
-    [sock writeData:[st dataUsingEncoding:NSUTF8StringEncoding] withTimeout:1.5 tag:1];
+    [sock writeData:[@"&" dataUsingEncoding:NSUTF8StringEncoding] withTimeout:1.5 tag:1];
 }
 
 - (void)mealMode {
-    [server sendMessage:@"0x200101" debugstring:@"送餐模式"];
+    NSString *st = [CommonsFunc stringFromHexString:@"200101"];
+    [server sendMessage:st debugstring:@"送餐模式"];
+    //    [server sendMessage:@"0x200x030x10" debugstring:@"送餐模式"];
+    
+    NSLog(@"xxx:%@",st);
 }
 
 - (void)controlMode {
-    [server sendMessage:@"0x010101" debugstring:@"控制模式"];
+    //    [server sendMessage:@"b" debugstring:@"控制模式"];
+    [server sendMessage:[CommonsFunc stringFromHexString:@"010101"] debugstring:@"控制模式"];
 }
 
 - (void)forward {
-    [server sendMessage:@"0x020101" debugstring:@"前进"];
+    //    [server sendMessage:@"c" debugstring:@"前进"];
+    [server sendMessage:[CommonsFunc stringFromHexString:@"020101"] debugstring:@"控制模式"];
 }
 
 - (void)backward {
-    [server sendMessage:@"0x030101" debugstring:@"后退"];
+    //    [server sendMessage:@"d" debugstring:@"后退"];
+    [server sendMessage:[CommonsFunc stringFromHexString:@"030101"] debugstring:@"控制模式"];
 }
 
 - (void)turnLeft {
-    [server sendMessage:@"0x040101" debugstring:@"左转"];
+    //    [server sendMessage:@"e" debugstring:@"左转"];
+    [server sendMessage:[CommonsFunc stringFromHexString:@"040101"] debugstring:@"控制模式"];
 }
 
 - (void)turnRight {
-    [server sendMessage:@"0x050101" debugstring:@"右转"];
+    //    [server sendMessage:@"f" debugstring:@"右转"];
+    [server sendMessage:[CommonsFunc stringFromHexString:@"050101"] debugstring:@"控制模式"];
 }
 
 - (void)stopMove {
-    [server sendMessage:@"0x060101" debugstring:@"停止"];
+    //    [server sendMessage:@"g" debugstring:@"停止"];
+    [server sendMessage:[CommonsFunc stringFromHexString:@"060101"] debugstring:@"控制模式"];
 }
 
 - (void)voiceUp {
-    [server sendMessage:@"0x420101" debugstring:@"音量+"];
+    [server sendMessage:@"h" debugstring:@"音量+"];
 }
 
 - (void)voiceDown {
-    [server sendMessage:@"0x430101" debugstring:@"音量-"];
+    [server sendMessage:@"i" debugstring:@"音量-"];
 }
 
 - (void)speed:(NSInteger)dang {
@@ -98,20 +107,20 @@ static HitControl* _instance = nil;
             [server sendMessage:nil debugstring:@"0档"];
             break;
         case 1:
-            [server sendMessage:@"0x070101" debugstring:@"1档"];
+            [server sendMessage:@"j" debugstring:@"1档"];
             break;
         case 2:
-            [server sendMessage:@"0x070201" debugstring:@"2档"];
+            [server sendMessage:@"k" debugstring:@"2档"];
             break;
         case 3:
-            [server sendMessage:@"0x070301" debugstring:@"3档"];
+            [server sendMessage:@"l" debugstring:@"3档"];
             break;
         case 4:
-            [server sendMessage:@"0x070401" debugstring:@"4档"];
+            [server sendMessage:@"m" debugstring:@"4档"];
             break;
         case 5:
             [server sendMessage:nil debugstring:@"5档"];
-//            [server sendMessage:@"0x070501" debugstring:@"5档"];
+            //            [server sendMessage:@"n" debugstring:@"5档"];
             break;
         default:
             break;
@@ -141,36 +150,26 @@ static HitControl* _instance = nil;
                         @"See You Again"
                         ];
     NSString *songname = musics[numeber-1];
-    
-    NSString *cmd = [NSString stringWithFormat:@"0x40%@01",[CommonsFunc stringToHexString:(int)numeber]];
-    [server sendMessage:cmd debugstring:songname];
-//    NSArray *messageArray = @[@"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z", @"A", @"B", @"C", @"(", @")", @"*", @"+", @"-"];
-//    NSString *msg = messageArray[numeber -1];
-//    [server sendMessage:msg debugstring:songname];
+    NSArray *messageArray = @[@"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z", @"A", @"B", @"C", @"(", @")", @"*", @"+", @"-"];
+    NSString *msg = messageArray[numeber -1];
+    [server sendMessage:msg debugstring:songname];
 }
 
 - (void)deskNumber:(NSInteger)numeber {
-    [self deskNumber:numeber turn:0];
-}
-
-- (void)deskNumber:(NSInteger)numeber turn:(int)turn{
     /**
      *  罗欧桌号与控制代码
      */
-//    NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
-//    NSArray *messageArray = @[@"E", @"F", @"G", @"H", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y"];
+    //    NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
+    //    NSArray *messageArray = @[@"E", @"F", @"G", @"H", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y"];
     
     /**
      *  标准协议
      */
-    if (!turn || turn == 0 ||turn != 1 || turn != 2) {
-        turn = 3;
-    }
     NSArray *deskNumArray = @[@"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10", @"11", @"12", @"13", @"14",@"15", @"16", @"17", @"18", @"19", @"20", @"21", @"22", @"23", @"24", @"25", @"26", @"27", @"28", @"29", @"30"];
+    NSArray *messageArray = @[@"D", @"E", @"F", @"G", @"H", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z", @":", @"<", @"=", @">", @"?", @"0", @"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9"];
     
     if (deskNumArray.count >= numeber) {
-        NSString *cmd = [NSString stringWithFormat:@"0x21%@%@",[CommonsFunc stringToHexString:(int)(numeber+1)],[CommonsFunc stringToHexString:(int)turn]];
-        [server sendMessage:cmd debugstring:[NSString stringWithFormat:@"%@桌",deskNumArray[numeber]]];
+        [server sendMessage:messageArray[numeber] debugstring:[NSString stringWithFormat:@"%@桌",deskNumArray[numeber]]];
     }else {
         NSLog(@"desk num is less than input num");
         return;
@@ -178,33 +177,33 @@ static HitControl* _instance = nil;
 }
 
 - (void)cancelSendMeal {
-    [server sendMessage:@"0x220101" debugstring:@"取消送餐"];
+    [server sendMessage:@"@" debugstring:@"取消送餐"];
 }
 
 - (void)backToOrigin {
-    [server sendMessage:@"0x230101" debugstring:@"回到初始点"];
+    [server sendMessage:@"I" debugstring:@"回到初始点"];
 }
 
 - (void)loopRun {
-    [server sendMessage:@"0x240101" debugstring:@"循环运行"];
+    [server sendMessage:@"J" debugstring:@"循环运行"];
 }
 
 - (void)songMode:(NSInteger)numeber {
     switch (numeber) {
         case 1:
-            [server sendMessage:@"0x440101" debugstring:@"单曲播放"];
+            [server sendMessage:@"K" debugstring:@"单曲播放"];
             break;
         case 2:
-            [server sendMessage:@"0x440201" debugstring:@"顺序播放"];
+            [server sendMessage:@"L" debugstring:@"顺序播放"];
             break;
         case 3:
-            [server sendMessage:@"0x440301" debugstring:@"随机播放"];
+            [server sendMessage:@"M" debugstring:@"随机播放"];
             break;
         case 4:
-            [server sendMessage:@"0x440401" debugstring:@"单曲循环"];
+            [server sendMessage:@"N" debugstring:@"单曲循环"];
             break;
         case 5:
-            [server sendMessage:@"0x440501" debugstring:@"列表循环"];
+            [server sendMessage:@"O" debugstring:@"列表循环"];
             break;
         default:
             break;
@@ -212,7 +211,7 @@ static HitControl* _instance = nil;
 }
 
 - (void)stopSingSong {
-    [server sendMessage:@"0x410101" debugstring:@"停止播放"];
+    [server sendMessage:@"P" debugstring:@"停止播放"];
 }
 
 

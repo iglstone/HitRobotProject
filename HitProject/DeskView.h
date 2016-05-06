@@ -13,5 +13,5 @@
 @property (nonatomic) UILabel *deskName;
 @property (nonatomic) UIImageView *img;
 @property (nonatomic) BOOL selected;
-
+@property (nonatomic) NSInteger turn;//1,left,,2,right,,3,not
 @end

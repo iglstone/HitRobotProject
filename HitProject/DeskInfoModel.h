@@ -14,4 +14,5 @@
 @property (nonatomic) NSString *p_sign;
 @property (nonatomic) NSString *p_info;
 @property (nonatomic) NSString *p_other;
+@property (nonatomic) NSInteger p_turn;
 @end

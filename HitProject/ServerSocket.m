@@ -231,7 +231,12 @@ static ServerSocket* _instance = nil;
  */
 - (void)sendMessage :(NSString *)string debugstring:(NSString *)debugs
 {
-    [[self mutableArrayValueForKey:@"messagesArray"] addObject:string];
+    if ([string hasPrefix:@"0x"]) {
+        string = [CommonsFunc stringFromHexString:string];
+    }
+    if (string) {
+        [[self mutableArrayValueForKey:@"messagesArray"] addObject:string];
+    }
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
     if (self.selectedSocketArray.count == 0 ) { //filtering the stopmove and stopSingSongs cmd.
         if ([string isEqualToString:@"g"] || [string isEqualToString:@"P"]) {

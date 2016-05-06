@@ -12,6 +12,7 @@
 @synthesize deskName;
 @synthesize img;
 @synthesize selected;
+@synthesize turn;
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -44,6 +45,7 @@
             make.centerX.equalTo(img);
             make.width.mas_equalTo(CGSizeMake(100, 30));
         }];
+        turn = 3;//default is not turn
         self.userInteractionEnabled = YES;
     }
     return self;

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface HitControl : NSObject
+@interface HitNewControl : NSObject
 
 @property (nonatomic, strong) ServerSocket *server;
 
@@ -46,8 +46,6 @@
 - (void)singSong:(NSInteger)numeber ;
 
 - (void)deskNumber:(NSInteger)numeber ;
-
-- (void)deskNumber:(NSInteger)numeber turn:(int)turn;
 
 - (void)cancelSendMeal ;
 

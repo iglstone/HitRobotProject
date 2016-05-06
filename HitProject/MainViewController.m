@@ -125,6 +125,7 @@
     model.status = status;
     model.socket = sokect;
     model.isCheck = NO;
+//    model.status = @"已连接";
     model.robotName = [ServerSocket getRobotNameByIp:host];
     for (int i = 0; i < m_modelsArray.count; i++) {
         ConnectModel *tmpModel = [m_modelsArray objectAtIndex:i];
@@ -174,7 +175,7 @@
     for (int i = 0; i < [m_modelsArray count]; i++) {
         ConnectModel *model = [m_modelsArray objectAtIndex:i];
         model.isCheck = NO;
-        model.status = @"断开连接";
+//        model.status = @"断开连接";
         if ([model.socket isEqual:socket]) {
             //[m_modelsArray removeObject:model];
             [[self mutableArrayValueForKey:@"m_modelsArray"] removeObject:model];// for kvo
@@ -246,6 +247,16 @@
         
         ConnectModel *model = [m_modelsArray objectAtIndex:indexPath.row];
         [cell configModel:model];
+        if ([model.robotName isEqualToString:ROBOTNAME_RED]) {
+            cell.backgroundColor = [UIColor redColor];
+        }
+        if ([model.robotName isEqualToString:ROBOTNAME_BLUE]) {
+            cell.backgroundColor = [UIColor blueColor];
+        }
+        if ([model.robotName isEqualToString:ROBOTNAME_GOLD]) {
+            cell.backgroundColor = [UIColor orangeColor];
+        }
+        
         [m_cellsArray addObject:cell];
         
         return cell;

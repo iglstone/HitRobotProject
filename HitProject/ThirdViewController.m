@@ -178,6 +178,7 @@
     @autoreleasepool {
 //      NSArray *deskNumArray = @[@"121", @"122", @"123", @"125", @"126", @"127", @"128", @"117", @"116", @"115", @"113", @"112", @"106"];
         NSArray <NSString *> *deskNumArray = [helper getDeskNamesFromUserdefaultByTag:(int)self.TotaldeskNum isSong:NO];
+        NSArray <NSNumber *> *deskTurn = [helper getDeskTurnFromUserdefaultByTag:(int)self.TotaldeskNum isSong:NO];
         for (int i = 0; i <= 12; i++) {//lie
             for (int j = 0; j < deknum; j++) {//hang
                 if (deskNum > self.TotaldeskNum) {
@@ -186,7 +187,11 @@
                 }
                 DeskView *deskview = [DeskView new];
                 NSString *deskNumString = nil;
-                
+                NSNumber *turnNum = deskTurn[deskNum -1];
+                deskview.turn = [turnNum integerValue];
+                if (deskview.turn == 0) {
+                    deskview.turn = 3;
+                }
                 if (deskNum <= 13) {
                     deskNumString = deskNumArray[deskNum -1];
                     deskview.deskName.text = [NSString stringWithFormat:@"%@",deskNumString];//(NSInteger)((j+1)+(i)*(j+1))];
@@ -242,7 +247,9 @@
     NSDictionary *dic  = [noti userInfo];
     NSInteger tag      = [[dic objectForKey:@"deskTag"] integerValue];
     NSString *deskNames = [dic objectForKey:@"deskName"];
-    [helper changeDeskModelByTag:(int)tag name:deskNames isSong:NO];
+    NSInteger turn = [[dic objectForKey:@"turn"] integerValue];
+    [helper changeDeskModelByTag:(int)tag name:deskNames turn:turn isSong:NO];
+    tmpView.turn = turn;
     tmpView.deskName.text = [deskNames hasSuffix:@"桌"] ? deskNames : [NSString stringWithFormat:@"%@桌", deskNames];
 }
 
@@ -278,6 +285,7 @@
 }
 
 - (void)deskLongTaped :(UIGestureRecognizer *)gesture {
+//    NSArray <NSNumber *> *deskTurn = [helper getDeskTurnFromUserdefaultByTag:(int)self.TotaldeskNum isSong:NO];
     if ([gesture isKindOfClass:[UILongPressGestureRecognizer class]]) {
         if (gesture.state == UIGestureRecognizerStateBegan) {
             tmpView = (DeskView *)[gesture view];
@@ -288,6 +296,7 @@
             view.signal = @"xxx";
             view.parentVC = self;
             view.deskTag = tmpView.tag;
+            view.turn = tmpView.turn;
             [view addInnerView];
             [self lew_presentPopupView:view animation:[LewPopupViewAnimationFade new] dismissed:^{
                 NSLog(@"动画结束");
@@ -322,7 +331,8 @@
             tmpDeskView.selected = YES;
             [tmpDeskView.img setImage:[UIImage imageNamed:@"desk_red.png"]];
             if (self.deskNum <= 30) {
-                [control deskNumber:self.deskNum];
+//                [control deskNumber:self.deskNum];
+                [control deskNumber:self.deskNum turn:(int)tmpView.turn];
             }else {
                 NSLog(@"目前最多支持30桌");
             }
