@@ -100,6 +100,27 @@
     
     [self addSubViews];
     [self viewsMakeConstranins];
+    
+    UITextField *f1 = [UITextField new];
+    [self.view addSubview:f1];
+    f1.backgroundColor = [UIColor orangeColor];
+    [f1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view).offset(50);
+        make.left.equalTo(self.view).offset(200);
+        make.width.mas_equalTo(@100);
+    }];
+    f1.tag = 110;
+
+    UITextField *f2 = [UITextField new];
+    [self.view addSubview:f2];
+    f2.backgroundColor = [UIColor orangeColor];
+    [f2 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(f1.mas_right).offset(50);
+        make.top.equalTo(self.view).offset(50);
+        make.width.mas_equalTo(@100);
+    }];
+    f2.tag = 111;
+    
 }
 
 - (void)addSubViews {
@@ -332,7 +353,12 @@
     NSLog(@"changed to %lu in %@",(unsigned long)index,groupId);
     if (index == 0) {
         NSLog(@"meal mode");
-        [control mealMode];
+//        [control mealMode];
+        UITextField *t1 = [self.view viewWithTag:110];
+        UITextField *t2 = [self.view viewWithTag:111];
+        NSString *st = [CommonsFunc stringToHexString:(int)[t1.text integerValue]];
+        NSString *st2 = [CommonsFunc stringToHexString:(int)[t2.text integerValue]];
+        [server sendMessage:[NSString stringWithFormat:@"0x01%@%@",st,st2] debugstring:@"送餐模式"];
     }
     else
     {

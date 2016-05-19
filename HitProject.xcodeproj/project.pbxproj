@@ -53,6 +53,12 @@
 		E35D11AB1C0ECAD2009AF0BB /* ResetSecurityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11AA1C0ECAD2009AF0BB /* ResetSecurityViewController.m */; };
 		E35D11AE1C0EE0B8009AF0BB /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11AD1C0EE0B8009AF0BB /* WebViewController.m */; };
 		E35D11B21C0F1CC0009AF0BB /* PickDeskNumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11B11C0F1CC0009AF0BB /* PickDeskNumViewController.m */; };
+		E36A67A01CEDACD600941DD1 /* RobotRouteViewController2.m in Sources */ = {isa = PBXBuildFile; fileRef = E36A679A1CEDACD600941DD1 /* RobotRouteViewController2.m */; };
+		E36A67A11CEDACD600941DD1 /* FloydAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = E36A679D1CEDACD600941DD1 /* FloydAlgorithm.m */; };
+		E36A67A21CEDACD600941DD1 /* RouteView.m in Sources */ = {isa = PBXBuildFile; fileRef = E36A679F1CEDACD600941DD1 /* RouteView.m */; };
+		E36A67A91CEDADB600941DD1 /* ZDStickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = E36A67A51CEDADB600941DD1 /* ZDStickerView.m */; };
+		E36A67AA1CEDADB600941DD1 /* SPGripViewBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = E36A67A71CEDADB600941DD1 /* SPGripViewBorderView.m */; };
+		E36A67AB1CEDADB600941DD1 /* ZDStickerView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E36A67A81CEDADB600941DD1 /* ZDStickerView.bundle */; };
 		E3768DC21C4E08290084916D /* InternationControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E3768DC11C4E08290084916D /* InternationControl.m */; };
 		E3768DCB1C4E0F310084916D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3768DCD1C4E0F310084916D /* InfoPlist.strings */; };
 		E3768DD11C4E11710084916D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E3768DD31C4E11710084916D /* Localizable.strings */; };
@@ -64,6 +70,7 @@
 		E39DA2161C3A1E5E002065BE /* DeskInfoHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DA2151C3A1E5E002065BE /* DeskInfoHelper.m */; };
 		E39DA2171C3A1E5E002065BE /* DeskInfoHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E39DA2151C3A1E5E002065BE /* DeskInfoHelper.m */; };
 		E39EEF741CC5C24D00A812BF /* RobotStateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E39EEF731CC5C24D00A812BF /* RobotStateCell.m */; };
+		E3A15BCB1CE2CA4800CD51BB /* STModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E3A15BCA1CE2CA4800CD51BB /* STModel.m */; };
 		E3C0B5241BE1EAA5004437EC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E3C0B5231BE1EAA5004437EC /* main.m */; };
 		E3C0B5271BE1EAA5004437EC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E3C0B5261BE1EAA5004437EC /* AppDelegate.m */; };
 		E3C0B52A1BE1EAA5004437EC /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3C0B5291BE1EAA5004437EC /* FirstViewController.m */; };
@@ -181,6 +188,18 @@
 		E35D11AD1C0EE0B8009AF0BB /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		E35D11B01C0F1CC0009AF0BB /* PickDeskNumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickDeskNumViewController.h; sourceTree = "<group>"; };
 		E35D11B11C0F1CC0009AF0BB /* PickDeskNumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickDeskNumViewController.m; sourceTree = "<group>"; };
+		E36A67991CEDACD600941DD1 /* RobotRouteViewController2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotRouteViewController2.h; sourceTree = "<group>"; };
+		E36A679A1CEDACD600941DD1 /* RobotRouteViewController2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotRouteViewController2.m; sourceTree = "<group>"; };
+		E36A679B1CEDACD600941DD1 /* RouteHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteHeader.h; sourceTree = "<group>"; };
+		E36A679C1CEDACD600941DD1 /* FloydAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FloydAlgorithm.h; sourceTree = "<group>"; };
+		E36A679D1CEDACD600941DD1 /* FloydAlgorithm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FloydAlgorithm.m; sourceTree = "<group>"; };
+		E36A679E1CEDACD600941DD1 /* RouteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteView.h; sourceTree = "<group>"; };
+		E36A679F1CEDACD600941DD1 /* RouteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteView.m; sourceTree = "<group>"; };
+		E36A67A41CEDADB600941DD1 /* ZDStickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZDStickerView.h; sourceTree = "<group>"; };
+		E36A67A51CEDADB600941DD1 /* ZDStickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZDStickerView.m; sourceTree = "<group>"; };
+		E36A67A61CEDADB600941DD1 /* SPGripViewBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPGripViewBorderView.h; sourceTree = "<group>"; };
+		E36A67A71CEDADB600941DD1 /* SPGripViewBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPGripViewBorderView.m; sourceTree = "<group>"; };
+		E36A67A81CEDADB600941DD1 /* ZDStickerView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZDStickerView.bundle; sourceTree = "<group>"; };
 		E3768DC01C4E08290084916D /* InternationControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InternationControl.h; sourceTree = "<group>"; };
 		E3768DC11C4E08290084916D /* InternationControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InternationControl.m; sourceTree = "<group>"; };
 		E3768DCC1C4E0F310084916D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -200,6 +219,8 @@
 		E39DA2151C3A1E5E002065BE /* DeskInfoHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeskInfoHelper.m; sourceTree = "<group>"; };
 		E39EEF721CC5C24D00A812BF /* RobotStateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotStateCell.h; sourceTree = "<group>"; };
 		E39EEF731CC5C24D00A812BF /* RobotStateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotStateCell.m; sourceTree = "<group>"; };
+		E3A15BC91CE2CA4800CD51BB /* STModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STModel.h; sourceTree = "<group>"; };
+		E3A15BCA1CE2CA4800CD51BB /* STModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STModel.m; sourceTree = "<group>"; };
 		E3B146BD1BED9CB100963FA8 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		E3C0B51E1BE1EAA5004437EC /* HitProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HitProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3C0B5221BE1EAA5004437EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -294,9 +315,13 @@
 		E3106ED71CCDAF290031659A /* StarGazer */ = {
 			isa = PBXGroup;
 			children = (
+				E36A67A31CEDAD9F00941DD1 /* ZDStickerView */,
+				E36A67981CEDACB600941DD1 /* Floyed */,
 				E39560D91CCE13D10059372B /* StarGazerViewController2.h */,
 				E39560DA1CCE13D10059372B /* StarGazerViewController2.m */,
 				E39560DB1CCE13D10059372B /* StarGazerViewController2.xib */,
+				E3A15BC91CE2CA4800CD51BB /* STModel.h */,
+				E3A15BCA1CE2CA4800CD51BB /* STModel.m */,
 			);
 			name = StarGazer;
 			path = ..;
@@ -388,6 +413,32 @@
 				E35D11B11C0F1CC0009AF0BB /* PickDeskNumViewController.m */,
 			);
 			name = Settings;
+			sourceTree = "<group>";
+		};
+		E36A67981CEDACB600941DD1 /* Floyed */ = {
+			isa = PBXGroup;
+			children = (
+				E36A67991CEDACD600941DD1 /* RobotRouteViewController2.h */,
+				E36A679A1CEDACD600941DD1 /* RobotRouteViewController2.m */,
+				E36A679B1CEDACD600941DD1 /* RouteHeader.h */,
+				E36A679C1CEDACD600941DD1 /* FloydAlgorithm.h */,
+				E36A679D1CEDACD600941DD1 /* FloydAlgorithm.m */,
+				E36A679E1CEDACD600941DD1 /* RouteView.h */,
+				E36A679F1CEDACD600941DD1 /* RouteView.m */,
+			);
+			name = Floyed;
+			sourceTree = "<group>";
+		};
+		E36A67A31CEDAD9F00941DD1 /* ZDStickerView */ = {
+			isa = PBXGroup;
+			children = (
+				E36A67A41CEDADB600941DD1 /* ZDStickerView.h */,
+				E36A67A51CEDADB600941DD1 /* ZDStickerView.m */,
+				E36A67A61CEDADB600941DD1 /* SPGripViewBorderView.h */,
+				E36A67A71CEDADB600941DD1 /* SPGripViewBorderView.m */,
+				E36A67A81CEDADB600941DD1 /* ZDStickerView.bundle */,
+			);
+			name = ZDStickerView;
 			sourceTree = "<group>";
 		};
 		E3C0B5151BE1EAA5004437EC = {
@@ -627,6 +678,7 @@
 				E3E0F8C01C0E7B60001CC06F /* login_avatar_default@2x.png in Resources */,
 				E34B9A491C5A41A3009E4B78 /* dPad-Right.png in Resources */,
 				E34B9A411C5A41A3009E4B78 /* dPad-DownLeft.png in Resources */,
+				E36A67AB1CEDADB600941DD1 /* ZDStickerView.bundle in Resources */,
 				E34B9A4C1C5A41A3009E4B78 /* dPad-Up@2x.png in Resources */,
 				E34B9A4D1C5A41A3009E4B78 /* dPad-UpLeft.png in Resources */,
 				E3E0F8A81C0E7982001CC06F /* login_textfield_mid.png in Resources */,
@@ -709,12 +761,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E36A67A01CEDACD600941DD1 /* RobotRouteViewController2.m in Sources */,
 				E357F6131BE20F8100AE9454 /* FourthViewController.m in Sources */,
 				E353A2C41C0FD4180058BC6A /* DataCenter.m in Sources */,
 				E3E91FCC1BEC8117003AE247 /* HitControl.m in Sources */,
 				E3768DC21C4E08290084916D /* InternationControl.m in Sources */,
 				E3C0B52D1BE1EAA5004437EC /* SecondViewController.m in Sources */,
 				E30EEC3E1C2532BD00352235 /* SocketMessageModel.m in Sources */,
+				E3A15BCB1CE2CA4800CD51BB /* STModel.m in Sources */,
 				E35D11B21C0F1CC0009AF0BB /* PickDeskNumViewController.m in Sources */,
 				E31636781BF05607002EB100 /* MainViewController.m in Sources */,
 				E34C265D1C2CDCD3007936D8 /* UIViewController+LewPopupViewController.m in Sources */,
@@ -722,6 +776,7 @@
 				E34C26581C2CDCD3007936D8 /* LewPopupBackgroundView.m in Sources */,
 				E34B9A2B1C5A4163009E4B78 /* JSDPad.m in Sources */,
 				E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */,
+				E36A67A91CEDADB600941DD1 /* ZDStickerView.m in Sources */,
 				E34C26591C2CDCD3007936D8 /* LewPopupViewAnimationDrop.m in Sources */,
 				E37BA5031BE462C700DB7A96 /* JSAnalogueStick.m in Sources */,
 				E31636751BF0428F002EB100 /* AsyncSocket.m in Sources */,
@@ -732,7 +787,9 @@
 				E3C0B52A1BE1EAA5004437EC /* FirstViewController.m in Sources */,
 				E34C26651C2CEC43007936D8 /* DeskInfoModel.m in Sources */,
 				E3E91FC21BEC318F003AE247 /* ServerSocket.m in Sources */,
+				E36A67AA1CEDADB600941DD1 /* SPGripViewBorderView.m in Sources */,
 				E3FCC5EC1BF0924100FAB88C /* UIColor+Hex.m in Sources */,
+				E36A67A11CEDACD600941DD1 /* FloydAlgorithm.m in Sources */,
 				E34C265C1C2CDCD3007936D8 /* LewPopupViewAnimationSpring.m in Sources */,
 				E3C0B5241BE1EAA5004437EC /* main.m in Sources */,
 				E316367C1BF07AE4002EB100 /* CHYSlider.m in Sources */,
@@ -746,6 +803,7 @@
 				E34C265B1C2CDCD3007936D8 /* LewPopupViewAnimationSlide.m in Sources */,
 				E34C265A1C2CDCD3007936D8 /* LewPopupViewAnimationFade.m in Sources */,
 				E39EEF741CC5C24D00A812BF /* RobotStateCell.m in Sources */,
+				E36A67A21CEDACD600941DD1 /* RouteView.m in Sources */,
 				E37BA50A1BE7162500DB7A96 /* DeskView.m in Sources */,
 				E39DA2161C3A1E5E002065BE /* DeskInfoHelper.m in Sources */,
 				E3D671E21C3DEC3F00AF3391 /* HitControlHex.m in Sources */,

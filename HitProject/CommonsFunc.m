@@ -17,6 +17,15 @@
 
 @implementation CommonsFunc
 
++ (UIImage *)imagePinch:(UIImage *)img width:(int)width height:(int)height {
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(width, height), NO ,0.0);
+    CGRect imageRect = CGRectMake(0, 0,width, height);
+    [img drawInRect:imageRect];
+    UIImage *new = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return new;
+}
+
 +(NSString *)stringFromHexString:(NSString *)hexString { //
     hexString = [hexString stringByReplacingOccurrencesOfString:@"0x" withString:@""];
     char *myBuffer = (char *)malloc((int)[hexString length] / 2 + 1);

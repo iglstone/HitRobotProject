@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "STModel.h"
+
 
 @interface StarGazerViewController2 : UIViewController
 

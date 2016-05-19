@@ -28,6 +28,8 @@
 @property (nonatomic,retain) NSString        *receiveMessage;
 @property (nonatomic,retain) NSMutableArray *messagesArray;
 
+@property (nonatomic,retain) NSString *starGazerAckString;
+
 + (instancetype) sharedSocket;
 
 /**

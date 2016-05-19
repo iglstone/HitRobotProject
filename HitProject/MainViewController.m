@@ -11,6 +11,7 @@
 #import "SecondViewController.h"
 #import "ThirdViewController.h"
 #import "FourthViewController.h"
+#import "RobotRouteViewController2.h"
 #import "ConnectStatesCell.h"
 #import <Toast/UIView+Toast.h>
 #import "GLViewProcessingTest.h"
@@ -71,7 +72,8 @@
     first.tabBarItem = itm;
     SecondViewController *second = [SecondViewController new];
     second.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"操作界面" image:image selectedImage:nil];
-    ThirdViewController *third = [ThirdViewController new];
+//    ThirdViewController *third = [ThirdViewController new];
+    RobotRouteViewController2 *third = [RobotRouteViewController2 new];
     third.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"送餐界面" image:image selectedImage:nil];
     FourthViewController *fourth = [FourthViewController new];
     fourth.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"语音界面" image:image selectedImage:nil];
@@ -278,6 +280,9 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView.tag == DEBUGTAG) {
+        return;
+    }
     tmpCell = (ConnectStatesCell *)[tableView cellForRowAtIndexPath:indexPath];
     ConnectModel *model = [m_modelsArray objectAtIndex:indexPath.row];
     

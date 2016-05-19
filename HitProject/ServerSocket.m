@@ -216,6 +216,9 @@ static ServerSocket* _instance = nil;
     }else if ([msg hasPrefix:@"o"]&&[msg hasSuffix:@"e"]){
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONFIG_MODE_SPEEDN object:nil userInfo:@{@"ipAddr":sock.connectedHost, @"message":msg}];
         
+    }else if ([msg hasPrefix:@"~"] && [msg hasSuffix:@"`"]) {
+        self.starGazerAckString = msg;
+        
     }else{
         //用来检测信息是否发送过去了，即检测发送的信号是否是msg == o;
         receiveMessage = msg;

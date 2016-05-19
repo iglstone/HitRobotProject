@@ -9,15 +9,29 @@
 #import "StarGazerViewController2.h"
 
 
+#define CALCSTOPTAG  101
+#define CALCSTARTTAG 102
+#define POINTRADIUS  7
+#define DRAWVIEWWIDTH 200
+#define DRAWVIEWHEIGHT 100
+
+
 @interface StarGazerViewController2 () <UIPickerViewDelegate, UIPickerViewDataSource>
 {
     ServerSocket *server;
+    NSString *longString;
+    UIView *drawView;
+    CAShapeLayer *pointShapeLayer;
+    UIBezierPath *pointPath;
 }
 @property (strong, nonatomic) IBOutlet UITextField *inputMarkHeight;
 @property (strong, nonatomic) IBOutlet UITextField *inputNumOfLandmark;
 @property (strong, nonatomic) IBOutlet UITextField *inputReferenceID;
 @property (strong, nonatomic) IBOutlet UITextField *labelSendData;
 @property (strong, nonatomic) IBOutlet UIPickerView *markTypePickview;
+@property (strong, nonatomic) IBOutlet UITextField *outputAck;
+@property (strong, nonatomic) IBOutlet UIView *settingContainerView;
+@property (strong, nonatomic) IBOutlet UILabel *mapInfoLabel;
 
 @end
 
@@ -28,12 +42,63 @@
     server = [ServerSocket sharedSocket];
     self.markTypePickview.delegate = self;
     self.markTypePickview.dataSource = self;
-    // Do any additional setup after loading the view from its nib.
+    longString  = nil;
+    
+    
+//    [self setSettingContainerViewEnableNo];
+    
+    drawView = [UIView new];
+    [self.view addSubview:drawView];
+    drawView.backgroundColor = [UIColor orangeColor];
+    [drawView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.view);
+        make.bottom.equalTo(self.view);
+        make.height.mas_equalTo(DRAWVIEWHEIGHT);
+        make.width.mas_equalTo(DRAWVIEWWIDTH);
+    }];
+    
+    pointShapeLayer = [CAShapeLayer new];
+    pointShapeLayer.strokeColor = [UIColor redColor].CGColor;
+    pointPath = [UIBezierPath new];
+    [drawView.layer addSublayer:pointShapeLayer];
+    
+    [server addObserver:self forKeyPath:@"starGazerAckString" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"starGazerAckString"]) {
+        NSString *newString  = [change objectForKey:@"new"];
+        longString = [longString stringByAppendingString:[NSString stringWithFormat:@"%@\n",newString]];
+        self.outputAck.text = newString;
+        self.mapInfoLabel.text = longString;
+        
+        STModel *model = [STModel stmodelWithString:newString];
+        [self drawModelInLayer:model];
+    }
+}
+
+- (void)drawModelInLayer :(STModel *)model {
+    CGPoint pointPosition = CGPointMake(model.modelX, model.modelY);
+    UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:[self changePointToDrawView:pointPosition] radius:POINTRADIUS startAngle:0.0 endAngle:2 * M_PI clockwise:0];
+    [pointPath appendPath:path];
+    pointShapeLayer.path = pointPath.CGPath;
+}
+
+- (CGPoint)changePointToDrawView :(CGPoint )pt{
+    NSInteger screenW = self.view.frame.size.width;
+    NSInteger screenH = self.view.frame.size.height;
+    float newX = (DRAWVIEWWIDTH / screenW) * pt.x + (screenW - DRAWVIEWWIDTH);
+    float newY = (DRAWVIEWHEIGHT / screenH) * pt.y + (screenH - DRAWVIEWHEIGHT);
+    return CGPointMake(newX, newY);
+}
+
+- (void)dealloc {
+    [server removeObserver:self forKeyPath:@"starGazerAckString"];
 }
 
 /*
@@ -51,18 +116,45 @@
     return 6;
 }
 
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
     return 1;
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    NSArray *MarkTypeArrays = @[@"xxx",@"ooo",@"ooo",@"ccc",@"ggg",@"eee"];
+    NSArray *MarkTypeArrays = @[@"3-s",@"3-m",@"3-l",@"4-s",@"4-m",@"4-l"];
     return [MarkTypeArrays objectAtIndex:row];
+}
+
+#pragma mark - private methods
+- (void)setSettingContainerViewEnableNo {
+    for (UIView *view in self.settingContainerView.subviews) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            UIButton *btn =(UIButton *)view;
+            btn.enabled = NO;
+        }
+        view.alpha = 0.4;
+    }
+    UIButton *stopBtn = (UIButton *) [self.settingContainerView viewWithTag:CALCSTOPTAG];
+    stopBtn.enabled = YES;
+    stopBtn.alpha = 0;
 }
 
 #pragma mark - cmds
 - (IBAction)calcStop:(id)sender {
+    for (UIView *view in self.settingContainerView.subviews) {
+        view.alpha = 0;
+        if ([view isKindOfClass:[UIButton class]]) {
+            UIButton *btn =(UIButton *)view;
+            btn.enabled = YES;
+        }
+    }
     [server sendMessage:[self stringOfPara:@"CalcStop" num:nil] debugstring:@"停止计算"];
+    self.mapInfoLabel.text = nil;//清空
+}
+
+- (IBAction)calcStart:(id)sender {
+    [self setSettingContainerViewEnableNo];
+    [server sendMessage:[self stringOfPara:@"CalcStart" num:nil] debugstring:@"开始计算"];
 }
 
 - (IBAction)sendNumOfMark:(id)sender {
@@ -126,10 +218,6 @@
 
 - (IBAction)mapBuildingProcessStart:(id)sender {
     [server sendMessage:[self stringOfPara:@"MapMode" num:@"Start"] debugstring:@"地图构建"];
-}
-
-- (IBAction)calcStart:(id)sender {
-    [server sendMessage:[self stringOfPara:@"CalcStart" num:nil] debugstring:@"开始计算"];
 }
 
 #pragma mark - privateMotheds

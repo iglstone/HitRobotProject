@@ -10,6 +10,9 @@
 #import <UIKit/UIKit.h>
 
 @interface CommonsFunc : NSObject
+
++ (UIImage *)imagePinch:(UIImage *)img width:(int)width height:(int)height ;
+
 //十六进制转nsstring
 +(NSString *)stringFromHexString:(NSString *)hexString;
 +(NSString *)stringToHexString:(int)number;

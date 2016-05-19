@@ -279,6 +279,11 @@
     tmpDeskView = (DeskView *)[gesture view];
     sss = [[tmpDeskView deskName] text];
     self.deskNum = tmpDeskView.tag - 1;
+
+//    tmpView = (DeskView *)[gesture view];
+//    sss = [[tmpView deskName] text];
+//    self.deskNum = tmpView.tag - 1;
+    
     NSString *string = [NSString stringWithFormat:@"选择%@？",sss];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:string message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
     [alert show];
@@ -330,9 +335,12 @@
             [self setUnselectedDeskImage];
             tmpDeskView.selected = YES;
             [tmpDeskView.img setImage:[UIImage imageNamed:@"desk_red.png"]];
-            if (self.deskNum <= 30) {
+//            tmpView.selected = YES;
+//            [tmpView.img setImage:[UIImage imageNamed:@"desk_red.png"]];
+    
+        if (self.deskNum <= 30) {
 //                [control deskNumber:self.deskNum];
-                [control deskNumber:self.deskNum turn:(int)tmpView.turn];
+                [control deskNumber:self.deskNum turn:(int)tmpDeskView.turn];
             }else {
                 NSLog(@"目前最多支持30桌");
             }
