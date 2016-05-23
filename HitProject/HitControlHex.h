@@ -64,6 +64,5 @@
 - (void)queryMessageSpeed ;
 
 
-
 @end
 

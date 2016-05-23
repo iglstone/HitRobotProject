@@ -151,7 +151,6 @@
 }
 
 
-
 + (instancetype)defaultPopupView{
     if ([CommonsFunc isDeviceIpad]) {
         PopupView *pop = [[PopupView alloc]initWithFrame:CGRectMake(0, 0, 300, 330)];

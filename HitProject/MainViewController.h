@@ -25,4 +25,7 @@ typedef NS_ENUM(NSInteger, MESSAGEMODE) {
 //mode :0 send
 //mode :1 recv
 - (void)setDebugLabelText:(NSString *)string mode:(MESSAGEMODE)mode;
+
+-(void) hideTabelAndDebugLabel ;
+-(void) showTabelAndDebugLabel ;
 @end

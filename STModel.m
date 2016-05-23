@@ -88,9 +88,19 @@
 }
 
 + (NSInteger)getCount:(NSString *)string ofsubString:(NSString *)subString {
-    NSMutableString *newString = [NSMutableString stringWithString:string];
-    NSInteger occurTimes = [newString replaceOccurrencesOfString:newString withString:@"\\|" options:NSCaseInsensitiveSearch range:NSRangeFromString(newString)];
-    return occurTimes;
+    if (subString.length != 1) {
+        NSLog(@"sub string length is to long");
+        return 0;
+    }
+    int k = 0;
+    for (int i = 0; i < string.length; i++) {
+        NSString *t = [string substringWithRange:NSMakeRange(i, 1)];
+        if ([t isEqualToString:subString]) {
+            k++;
+        }
+    }
+    return k;
+
 }
 
 @end

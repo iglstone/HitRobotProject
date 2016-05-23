@@ -13,6 +13,7 @@
 #import "FourthViewController.h"
 #import "LoginViewController.h"
 #import "DeskInfoHelper.h"
+#import "RobotRouteViewController3.h"
 
 #import "SocketClientViewController.h"
 @interface AppDelegate ()
@@ -29,8 +30,8 @@
     [help default];
     
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
-//    _main = [MainViewController new];
-    _main = [LoginViewController new];
+    _main = [RobotRouteViewController3 new];
+//    _main = [LoginViewController new];
     self.window.rootViewController = _main;//切换viewcontroller 只要把main换掉就好。
     
     [self.window makeKeyAndVisible];
@@ -58,6 +59,14 @@
     // 将log输入到文件
     freopen([logFilePath cStringUsingEncoding:NSASCIIStringEncoding], "a+", stdout);
     freopen([logFilePath cStringUsingEncoding:NSASCIIStringEncoding], "a+", stderr);
+}
+
+-(UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+        return UIInterfaceOrientationMaskAll;
+    else
+        return UIInterfaceOrientationMaskAllButUpsideDown;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

@@ -2,22 +2,20 @@
 //  RobotRouteViewController.m
 //  TourRobot
 //
-//  Created by 郭龙 on 16/5/5.
+//  Created by 显示 on 16/5/5.
 //  Copyright © 2016年 郭龙. All rights reserved.
 //  copy form:http://blog.chinaunix.net/uid-26548237-id-3834873.html
 
-#import "RobotRouteViewController2.h"
+#import "RobotRouteViewController3.h"
 #import "RouteHeader.h"
 #import "FloydAlgorithm.h"
 #import "RouteView.h"
-#import "ZDStickerView.h"
+#import "EditGraphViewController.h"
 
-#define TABLEVIEWWIDTH 100
 #define TOUCHPINCHTHRESHHOLD 10
-#define TABLEVIEWTOPOFFSET 0
 #define RIGHTBACKGROUNDVIEWOFSEET 30
 
-@interface RobotRouteViewController2 () <UITableViewDataSource, UITableViewDelegate, ZDStickerViewDelegate>
+@interface RobotRouteViewController3 () <UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
     mGraph m_graph;
     NSMutableArray *m_realPosotionsArray;
@@ -25,21 +23,18 @@
     vexsPre2DTabel vexsPre2D;
     distancesSum2DTabel distanceSum2D;
     
-    UIView *backgroundRightView;
-    UITableView *leftTabelView;
+    UIView *backgroundView;
     NSInteger screenHeight;
     NSInteger screenWidth;
     UIView *tmpPickedView;
-    NSMutableArray *zdsticks;
-    BOOL canEdit;
     NSArray *deskNameArr;
     UIView *rightContainer;
     CAShapeLayer *touchPointLayer;
+    NSData *mapImageData ;
 }
 @end
 
-@implementation RobotRouteViewController2
-
+@implementation RobotRouteViewController3
 #pragma mark - life cicle
 
 - (void)viewDidLoad {
@@ -48,6 +43,18 @@
     m_realPosotionsArray = [NSMutableArray new];
     screenHeight = [[UIScreen mainScreen] bounds].size.height;
     screenWidth = [[UIScreen mainScreen] bounds].size.width;
+    
+//    self.imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight - 49)];
+    UIEdgeInsets edge = UIEdgeInsetsMake(RIGHTBACKGROUNDVIEWOFSEET, RIGHTBACKGROUNDVIEWOFSEET, RIGHTBACKGROUNDVIEWOFSEET + 49, RIGHTBACKGROUNDVIEWOFSEET);
+    self.imgView = [[UIImageView alloc] initWithFrame:UIEdgeInsetsInsetRect(self.view.frame, edge)];
+    self.imgView.backgroundColor = [UIColor clearColor];
+    self.imgView.contentMode = UIViewContentModeScaleToFill;// UIViewContentModeScaleAspectFit ;
+    [self.view addSubview:self.imgView];
+    mapImageData = [[NSUserDefaults standardUserDefaults] objectForKey:@"mapImageData"];
+    UIImage *image = [UIImage imageWithData:mapImageData];
+    if (image) {
+        self.imgView.image = image;
+    }
     
     /*****合并画画View***/
     [self addDrawViews];
@@ -65,13 +72,16 @@
     [self logSomeThing];
     
     //数据驱动绘图
-    RouteView *routeView = [[RouteView alloc] initWithFrame:CGRectMake(0, 0, screenWidth , screenHeight)];
-    [backgroundRightView insertSubview:routeView belowSubview: backgroundRightView];
+    RouteView *routeView = [[RouteView alloc] initWithFrame:CGRectMake(0, 0, screenWidth - 2* RIGHTBACKGROUNDVIEWOFSEET, screenHeight -RIGHTBACKGROUNDVIEWOFSEET *2 - 49)];
+    [backgroundView insertSubview:routeView belowSubview: backgroundView];
+//    routeView.m_pointPositionsArray = m_realPosotionsArray;
     [routeView drawLineAndPoints:&m_graph withPointsArray:m_realPosotionsArray withTailAngel:&vexsAngel];
     
+    //点击出红点
     touchPointLayer = [CAShapeLayer new];
     touchPointLayer.fillColor = [UIColor redColor].CGColor;
-    [backgroundRightView.layer addSublayer:touchPointLayer];
+    touchPointLayer.strokeColor = [UIColor orangeColor].CGColor;
+    [backgroundView.layer addSublayer:touchPointLayer];
     CGPoint pt = CGPointMake(100, 100);
     UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:pt radius:10 startAngle:0 endAngle:2*M_PI clockwise:YES];
     touchPointLayer.path = path.CGPath;
@@ -149,14 +159,6 @@
     [self initGrghNodeStart:0 end:@[@1,@3] angel:@[@-90, @180]];
     [self initGrghNodeStart:1 end:@[@2]    angel:@[@180]];
     [self initGrghNodeStart:2 end:@[@3]    angel:@[@90]];
-    
-//    [self initGrghNodeStart:1 end:@[@2]];
-//    [self initGrghNodeStart:2 end:@[@3,@6]];
-//    [self initGrghNodeStart:3 end:@[@4,@5]];
-//    [self initGrghNodeStart:4 end:@[@5]];
-//    [self initGrghNodeStart:5 end:@[@6]];
-//    [self initGrghNodeStart:6 end:@[@7]];
-//    [self initGrghNodeStart:7 end:@[@8]];
     
     //初始化另外一半
     for (i = 0; i < graph->numVertexes; i++) {
@@ -253,23 +255,13 @@
 }
 #pragma mark - addDrawViews
 - (void)addDrawViews {
-    zdsticks  = [NSMutableArray new];
-    
-    backgroundRightView = [[UIView alloc] initWithFrame:CGRectMake(RIGHTBACKGROUNDVIEWOFSEET, RIGHTBACKGROUNDVIEWOFSEET, screenWidth-RIGHTBACKGROUNDVIEWOFSEET * 2, screenHeight- RIGHTBACKGROUNDVIEWOFSEET *2 - 49)];
-    backgroundRightView.backgroundColor = [CommonsFunc colorOfSystemBackground];// [UIColor lightGrayColor];
-    [self.view addSubview:backgroundRightView];
+    backgroundView = [[UIView alloc] initWithFrame:CGRectMake(RIGHTBACKGROUNDVIEWOFSEET, RIGHTBACKGROUNDVIEWOFSEET, screenWidth-RIGHTBACKGROUNDVIEWOFSEET * 2, screenHeight- RIGHTBACKGROUNDVIEWOFSEET *2 - 49)];
+//    backgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight)];
+    backgroundView.backgroundColor = [UIColor clearColor];// [UIColor lightGrayColor];
+//    backgroundRightView.backgroundColor = [CommonsFunc colorOfSystemBackground];// [UIColor lightGrayColor];
+    [self.view addSubview:backgroundView];
     
     [self addBtns];
-    
-    leftTabelView = [[UITableView alloc] initWithFrame:CGRectMake(0, TABLEVIEWTOPOFFSET, TABLEVIEWWIDTH, screenHeight - 49) style:UITableViewStylePlain];
-    leftTabelView.frame = CGRectMake(0, TABLEVIEWTOPOFFSET, 0, screenHeight -  49);
-    [self.view addSubview:leftTabelView];
-    leftTabelView.dataSource = self;
-    leftTabelView.delegate = self;
-    leftTabelView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    leftTabelView.showsVerticalScrollIndicator = NO;
-    leftTabelView.backgroundColor = [UIColor clearColor];
-
 }
 
 - (void)addBtns {
@@ -277,44 +269,43 @@
     rightContainer.backgroundColor = [UIColor lightGrayColor];
     [self.view addSubview:rightContainer];
     
-    UIButton *editBtn = [UIButton new];
-    editBtn.backgroundColor = [UIColor orangeColor];
-    [rightContainer addSubview:editBtn];
-    [editBtn setTitle:@"编辑" forState:UIControlStateNormal];
-    [editBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).offset(20);
-        make.right.equalTo(self.view).offset(-20);
-        make.width.mas_equalTo(@100);
-    }];
-    [editBtn addTarget:self action:@selector(btnTaped:) forControlEvents:UIControlEventTouchUpInside];
-
-    deskNameArr = @[@"201桌", @"202桌", @"203桌",@"204桌"];
+    deskNameArr = @[@"隐藏", @"参数设置", @"选择地图", @"EditGraph", @"201桌", @"202桌", @"203桌",@"204桌"];
     for (int i = 0; i < deskNameArr.count; i++) {
         UIButton *positionBtn = [UIButton new];
         positionBtn.backgroundColor = [UIColor orangeColor];
         [rightContainer addSubview:positionBtn];
         [positionBtn setTitle:deskNameArr[i] forState:UIControlStateNormal];
         [positionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(editBtn.mas_bottom).offset(20 + 55 * i);
-            make.right.equalTo(editBtn);
-            make.width.mas_equalTo(editBtn);
+            make.top.equalTo(self.view.mas_top).offset(20 + 55 * i);
+            make.right.equalTo(self.view).offset(-20);
+            make.width.mas_equalTo(@100);
         }];
         [positionBtn addTarget:self action:@selector(btnTaped:) forControlEvents:UIControlEventTouchUpInside];
     }
-    
-    
 }
 
 #pragma mark - btn taped
 
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+//    UIImage *imge = [info objectForKey:@"UIImagePickerControllerEditedImage"];
+    UIImage *imge = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+
+    [self dismissViewControllerAnimated:YES completion:^{
+        self.imgView.image = imge;
+        mapImageData = UIImageJPEGRepresentation(imge, 0.6);
+        [[NSUserDefaults standardUserDefaults] setObject:mapImageData forKey:@"mapImageData"];
+    }];
+}
+
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
+    NSLog(@"ooo");
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     UITouch *tou = [touches anyObject];
     
-    CGPoint pt = [tou locationInView:backgroundRightView];
+    CGPoint pt = [tou locationInView:backgroundView];
     UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:pt radius:10 startAngle:0 endAngle:2*M_PI clockwise:YES];
     touchPointLayer.path = path.CGPath;
     CGPoint realPosition = [FloydAlgorithm changeCoodToRealPosition:pt];
@@ -325,52 +316,61 @@
 
 - (void) btnTaped:(UIButton *)btn {
     NSString *title = btn.titleLabel.text;
-    if ([title isEqualToString:@"编辑"]) {
-        canEdit = YES;
-        [btn setTitle:@"完成" forState:UIControlStateNormal];
+    if ([btn.titleLabel.text isEqualToString:@"隐藏"]) {
+        [btn setTitle:@"显示" forState:UIControlStateNormal];
         btn.backgroundColor = [UIColor redColor];
         
-        [UIView beginAnimations:@"table" context:nil];
+        [UIView beginAnimations:@"ani" context:nil];
         [UIView setAnimationDuration:0.4];
         [UIView setAnimationCurve:UIViewAnimationCurveLinear];
-        leftTabelView.frame = CGRectMake(0, TABLEVIEWTOPOFFSET, TABLEVIEWWIDTH, screenHeight -  49);
-        backgroundRightView.frame = CGRectMake( TABLEVIEWWIDTH + RIGHTBACKGROUNDVIEWOFSEET, RIGHTBACKGROUNDVIEWOFSEET, screenWidth - TABLEVIEWWIDTH - RIGHTBACKGROUNDVIEWOFSEET * 2 , screenHeight - RIGHTBACKGROUNDVIEWOFSEET * 2 - 49 );
+        rightContainer.frame = CGRectMake(screenWidth - 120, 20, 100, 35);
+        [UIView commitAnimations];
+        
         for (UIButton *btn in rightContainer.subviews) {
-            if ([btn.titleLabel.text isEqualToString:@"完成"]) {
+            if ([btn.titleLabel.text isEqualToString:@"显示"]) {
                 continue;
             }
             btn.hidden = YES;
         }
-        rightContainer.frame = CGRectMake(screenWidth - 120, 20, 100, 35);
-        [UIView commitAnimations];
-        
-        for (ZDStickerView *st in zdsticks) {
-            [st showEditingHandles];
-        }
         return;
     }
-    if ([btn.titleLabel.text isEqualToString:@"完成"]) {
-        canEdit = NO;
-        [btn setTitle:@"编辑" forState:UIControlStateNormal];
+    if ([btn.titleLabel.text isEqualToString:@"显示"]) {
+        [btn setTitle:@"隐藏" forState:UIControlStateNormal];
         btn.backgroundColor = [UIColor orangeColor];
         
-        [UIView beginAnimations:@"table" context:nil];
+        [UIView beginAnimations:@"ani" context:nil];
         [UIView setAnimationDuration:0.4];
         [UIView setAnimationCurve:UIViewAnimationCurveLinear];
-        leftTabelView.frame = CGRectMake(0, 0, 0, screenHeight - 49);
-        backgroundRightView.frame = CGRectMake(RIGHTBACKGROUNDVIEWOFSEET, RIGHTBACKGROUNDVIEWOFSEET, screenWidth - RIGHTBACKGROUNDVIEWOFSEET * 2, screenHeight - RIGHTBACKGROUNDVIEWOFSEET *2 - 49 );
         rightContainer.frame = CGRectMake(screenWidth - 120, 20, 100, screenHeight - 49 - 20*2);
+        [UIView commitAnimations];
+        
         for (UIButton *btn in rightContainer.subviews) {
-            if ([btn.titleLabel.text isEqualToString:@"编辑"]) {
+            if ([btn.titleLabel.text isEqualToString:@"隐藏"]) {
                 continue;
             }
             btn.hidden = NO;
         }
-        [UIView commitAnimations];
-        
-        for (ZDStickerView *st in zdsticks) {
-            [st hideEditingHandles];
-        }
+        return;
+    }
+    
+    if ([title isEqualToString:@"参数设置"]) {
+        [self presentViewController:[SettingViewController new] animated:YES completion:nil];
+        return;
+    }
+    
+    if ([title isEqualToString:@"选择地图"]) {
+        UIImagePickerController *imgPick = [UIImagePickerController new];
+        imgPick.delegate = self;
+        imgPick.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        imgPick.view.backgroundColor = [UIColor whiteColor];
+//        imgPick.allowsEditing = YES;
+        [self presentViewController:imgPick animated:YES completion:nil];
+        return;
+    }
+    
+    if ([title isEqualToString:@"EditGraph"]) {
+        EditGraphViewController *edit = [EditGraphViewController new];
+        [self presentViewController:edit animated:YES completion:nil];
         return;
     }
     
@@ -382,64 +382,11 @@
         }
         return NO;
     }];
-    [[HitControl sharedControl] sendPathToRobot:index ofRealPosition:m_realPosotionsArray ofDeskNum:deskNameArr];
-}
-
-#pragma  mark - table dele
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *st = @"leftabtlview";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:st];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"leftTableView"];
+    if (index != NSNotFound) {
+        [[HitControl sharedControl] sendPathToRobot:index ofRealPosition:m_realPosotionsArray ofDeskNum:deskNameArr];
     }
-    //    cell.textLabel.text = @"桌子";
-    cell.imageView.image = [UIImage imageNamed:@"desk_red"];
-    cell.backgroundColor = [UIColor orangeColor];
-    cell.imageView.image = [CommonsFunc imagePinch:[UIImage imageNamed:@"desk_white"] width:60 height:60];
-    switch (indexPath.row) {
-        case 0:
-            cell.imageView.image = [CommonsFunc imagePinch:[UIImage imageNamed:@"desk_red"] width:60 height:60];
-            break;
-        case 1:
-            cell.imageView.image = [CommonsFunc imagePinch:[UIImage imageNamed:@"robot_2"] width:60 height:60];
-            break;
-        case 2:
-            cell.imageView.image = [CommonsFunc imagePinch:[UIImage imageNamed:@"robot_3"] width:60 height:60];
-        default:
-            break;
-    }
-    
-    return cell;
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    UIImageView *pickedView = [cell imageView];
-    UIImage *new = [CommonsFunc imagePinch:[pickedView image] width:pickedView.frame.size.width height:pickedView.frame.size.height];
-    tmpPickedView = [[UIImageView alloc] initWithImage:new];
-    CGRect rectInTableView = [tableView rectForRowAtIndexPath:indexPath];
-//    CGRect rect1 = [tableView convertRect:pickedView.frame toView:self.view];
-    CGRect rect1 = [tableView convertRect:rectInTableView toView:self.view];
-    ZDStickerView *zt = [[ZDStickerView alloc] initWithFrame:CGRectMake(rect1.origin.x, rect1.origin.y -RIGHTBACKGROUNDVIEWOFSEET, rect1.size.width, rect1.size.height - 15)];//130 - 30
-    zt.contentView = tmpPickedView;
-    zt.stickerViewDelegate = self;
-    [zt showEditingHandles];
-    zt.translucencySticker = NO;
-    zt.preventsPositionOutsideSuperview = NO;
-    [backgroundRightView addSubview:zt];
-    [zdsticks addObject:zt];
-    
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 8;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 130;
-}
-
-#pragma mark - privateMethod 
 - (void)logSomeThing {
     //    NSLog(@"各顶点间最短路径如下：");
     //    [self printShortestPath:&graph pointsTabel:&vexsPre2D shortestTabel:&distanceSum2D];

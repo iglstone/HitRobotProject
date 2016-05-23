@@ -215,5 +215,25 @@ static HitControl* _instance = nil;
     [server sendMessage:@"0x410101" debugstring:@"停止播放"];
 }
 
+- (void) sendTouchPointToRobot: (CGPoint) touchPoint {
+    NSString *cmd = [NSString stringWithFormat:@"~#%03d,%03d`",(int)touchPoint.x,(int)touchPoint.y];
+    [server sendMessage:cmd debugstring:cmd];
+}
+
+- (void) sendPathToRobot:(NSInteger)index ofRealPosition:(NSArray *)positionArr ofDeskNum:(NSArray *)deskArr {
+    CGPoint pt = [[positionArr objectAtIndex:index] CGPointValue];
+    [server sendMessage:[NSString stringWithFormat:@"~#%03d,%03d`",(int)pt.x,(int)pt.y] debugstring:deskArr[index]];
+    
+//    NSArray *deskNumArray = @[@"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"10", @"11", @"12", @"13", @"14",@"15", @"16", @"17", @"18", @"19", @"20", @"21", @"22", @"23", @"24", @"25", @"26", @"27", @"28", @"29", @"30"];
+//    if (deskNumArray.count >= index) {
+//        NSString *cmd = [NSString stringWithFormat:@"0x21%@%@",[CommonsFunc stringToHexString:(int)(index+1)],[CommonsFunc stringToHexString:(int)3]];
+////        [server sendMessage:cmd debugstring:[NSString stringWithFormat:@"%@桌",deskNumArray[index]]];
+//        NSString *st = [@"0D0A2B4950442C333A" stringByAppendingString:[cmd substringFromIndex:2]];
+//        [server sendMessage:st debugstring:[NSString stringWithFormat:@"%@桌",deskNumArray[index]]];
+//    }else {
+//        NSLog(@"desk num is less than input num");
+//        return;
+//    }
+}
 
 @end

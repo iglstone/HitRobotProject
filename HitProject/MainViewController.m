@@ -11,7 +11,7 @@
 #import "SecondViewController.h"
 #import "ThirdViewController.h"
 #import "FourthViewController.h"
-#import "RobotRouteViewController2.h"
+#import "RobotRouteViewController3.h"
 #import "ConnectStatesCell.h"
 #import <Toast/UIView+Toast.h>
 #import "GLViewProcessingTest.h"
@@ -73,7 +73,7 @@
     SecondViewController *second = [SecondViewController new];
     second.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"操作界面" image:image selectedImage:nil];
 //    ThirdViewController *third = [ThirdViewController new];
-    RobotRouteViewController2 *third = [RobotRouteViewController2 new];
+    RobotRouteViewController3 *third = [RobotRouteViewController3 new];
     third.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"送餐界面" image:image selectedImage:nil];
     FourthViewController *fourth = [FourthViewController new];
     fourth.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"语音界面" image:image selectedImage:nil];
@@ -353,6 +353,17 @@
 }
 
 #pragma mark - Add views
+-(void) hideTabelAndDebugLabel {
+    rightsideContainer.hidden = YES;
+    self.p_debugLabel.hidden = YES;
+}
+
+-(void) showTabelAndDebugLabel {
+    rightsideContainer.hidden = NO;
+    self.p_debugLabel.hidden = NO;
+}
+
+
 - (UILabel *)p_debugLabel {
     if (!_p_debugLabel) {
         _p_debugLabel = [UILabel new];

@@ -79,6 +79,7 @@
 		E3C0B5351BE1EAA5004437EC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3C0B5331BE1EAA5004437EC /* LaunchScreen.xib */; };
 		E3C0B5411BE1EAA6004437EC /* HitProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E3C0B5401BE1EAA6004437EC /* HitProjectTests.m */; };
 		E3D671E21C3DEC3F00AF3391 /* HitControlHex.m in Sources */ = {isa = PBXBuildFile; fileRef = E3D671E11C3DEC3F00AF3391 /* HitControlHex.m */; };
+		E3DFC53E1CF3336800206A07 /* DataCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = E3DFC53D1CF3336800206A07 /* DataCenter.m */; };
 		E3E0F8A51C0E77C1001CC06F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E0F8A31C0E77C1001CC06F /* LoginViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E3E0F8A61C0E77C1001CC06F /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8A41C0E77C1001CC06F /* LoginViewController.xib */; };
 		E3E0F8A81C0E7982001CC06F /* login_textfield_mid.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8A71C0E7982001CC06F /* login_textfield_mid.png */; };
@@ -94,6 +95,8 @@
 		E3E0F8BC1C0E7ABA001CC06F /* login_btn_blue_press@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8B81C0E7ABA001CC06F /* login_btn_blue_press@2x.png */; };
 		E3E0F8BF1C0E7B60001CC06F /* login_avatar_default.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8BD1C0E7B60001CC06F /* login_avatar_default.png */; };
 		E3E0F8C01C0E7B60001CC06F /* login_avatar_default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E3E0F8BE1C0E7B60001CC06F /* login_avatar_default@2x.png */; };
+		E3E1ECA21CF291C4006E7DC5 /* RobotRouteViewController3.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E1ECA11CF291C4006E7DC5 /* RobotRouteViewController3.m */; };
+		E3E1ECA51CF2EED4006E7DC5 /* EditGraphViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E1ECA41CF2EED4006E7DC5 /* EditGraphViewController.m */; };
 		E3E91FC21BEC318F003AE247 /* ServerSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FC11BEC318F003AE247 /* ServerSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FC61BEC32C6003AE247 /* AsyncUdpSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E3E91FCC1BEC8117003AE247 /* HitControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FCB1BEC8117003AE247 /* HitControl.m */; };
@@ -238,6 +241,8 @@
 		E3C0B5401BE1EAA6004437EC /* HitProjectTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HitProjectTests.m; sourceTree = "<group>"; };
 		E3D671E01C3DEC3F00AF3391 /* HitControlHex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitControlHex.h; sourceTree = "<group>"; };
 		E3D671E11C3DEC3F00AF3391 /* HitControlHex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HitControlHex.m; sourceTree = "<group>"; };
+		E3DFC53C1CF3336800206A07 /* DataCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataCenter.h; sourceTree = "<group>"; };
+		E3DFC53D1CF3336800206A07 /* DataCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataCenter.m; sourceTree = "<group>"; };
 		E3E0F8A21C0E77C1001CC06F /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		E3E0F8A31C0E77C1001CC06F /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		E3E0F8A41C0E77C1001CC06F /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
@@ -254,6 +259,10 @@
 		E3E0F8B81C0E7ABA001CC06F /* login_btn_blue_press@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_btn_blue_press@2x.png"; sourceTree = "<group>"; };
 		E3E0F8BD1C0E7B60001CC06F /* login_avatar_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = login_avatar_default.png; sourceTree = "<group>"; };
 		E3E0F8BE1C0E7B60001CC06F /* login_avatar_default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login_avatar_default@2x.png"; sourceTree = "<group>"; };
+		E3E1ECA01CF291C4006E7DC5 /* RobotRouteViewController3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RobotRouteViewController3.h; sourceTree = "<group>"; };
+		E3E1ECA11CF291C4006E7DC5 /* RobotRouteViewController3.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RobotRouteViewController3.m; sourceTree = "<group>"; };
+		E3E1ECA31CF2EED4006E7DC5 /* EditGraphViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditGraphViewController.h; sourceTree = "<group>"; };
+		E3E1ECA41CF2EED4006E7DC5 /* EditGraphViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditGraphViewController.m; sourceTree = "<group>"; };
 		E3E91FC01BEC318F003AE247 /* ServerSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerSocket.h; sourceTree = "<group>"; };
 		E3E91FC11BEC318F003AE247 /* ServerSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerSocket.m; sourceTree = "<group>"; };
 		E3E91FC51BEC32C6003AE247 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncUdpSocket.h; sourceTree = "<group>"; };
@@ -420,11 +429,17 @@
 			children = (
 				E36A67991CEDACD600941DD1 /* RobotRouteViewController2.h */,
 				E36A679A1CEDACD600941DD1 /* RobotRouteViewController2.m */,
+				E3E1ECA01CF291C4006E7DC5 /* RobotRouteViewController3.h */,
+				E3E1ECA11CF291C4006E7DC5 /* RobotRouteViewController3.m */,
 				E36A679B1CEDACD600941DD1 /* RouteHeader.h */,
 				E36A679C1CEDACD600941DD1 /* FloydAlgorithm.h */,
 				E36A679D1CEDACD600941DD1 /* FloydAlgorithm.m */,
 				E36A679E1CEDACD600941DD1 /* RouteView.h */,
 				E36A679F1CEDACD600941DD1 /* RouteView.m */,
+				E3E1ECA31CF2EED4006E7DC5 /* EditGraphViewController.h */,
+				E3E1ECA41CF2EED4006E7DC5 /* EditGraphViewController.m */,
+				E3DFC53C1CF3336800206A07 /* DataCenter.h */,
+				E3DFC53D1CF3336800206A07 /* DataCenter.m */,
 			);
 			name = Floyed;
 			sourceTree = "<group>";
@@ -776,6 +791,7 @@
 				E34C26581C2CDCD3007936D8 /* LewPopupBackgroundView.m in Sources */,
 				E34B9A2B1C5A4163009E4B78 /* JSDPad.m in Sources */,
 				E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */,
+				E3E1ECA51CF2EED4006E7DC5 /* EditGraphViewController.m in Sources */,
 				E36A67A91CEDADB600941DD1 /* ZDStickerView.m in Sources */,
 				E34C26591C2CDCD3007936D8 /* LewPopupViewAnimationDrop.m in Sources */,
 				E37BA5031BE462C700DB7A96 /* JSAnalogueStick.m in Sources */,
@@ -788,8 +804,10 @@
 				E34C26651C2CEC43007936D8 /* DeskInfoModel.m in Sources */,
 				E3E91FC21BEC318F003AE247 /* ServerSocket.m in Sources */,
 				E36A67AA1CEDADB600941DD1 /* SPGripViewBorderView.m in Sources */,
+				E3DFC53E1CF3336800206A07 /* DataCenter.m in Sources */,
 				E3FCC5EC1BF0924100FAB88C /* UIColor+Hex.m in Sources */,
 				E36A67A11CEDACD600941DD1 /* FloydAlgorithm.m in Sources */,
+				E3E1ECA21CF291C4006E7DC5 /* RobotRouteViewController3.m in Sources */,
 				E34C265C1C2CDCD3007936D8 /* LewPopupViewAnimationSpring.m in Sources */,
 				E3C0B5241BE1EAA5004437EC /* main.m in Sources */,
 				E316367C1BF07AE4002EB100 /* CHYSlider.m in Sources */,

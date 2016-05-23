@@ -176,5 +176,53 @@
     //    gragh.weightAndAngels[end][start].weight = INTMAX;//反方向给堵住
 }
 
+//实际的cm坐标转换成坐标系坐标
++ (CGPoint)changeCood:(CGPoint) pt {
+    int scH = [[UIScreen mainScreen] bounds].size.height - 49;
+    int scW = [[UIScreen mainScreen] bounds].size.width;
+    
+    int showPixW = scW - 2 * MAPOFFSETOFSCREEN;
+    int showPixH = scH - 2 * MAPOFFSETOFSCREEN;
+    int realW = MAPMAXWIDTH;  //cm
+    int realH = MAPMAXHEIGHT; //cm
+    float scaleX = (float) showPixW / realW ;//every cm  To pix;
+    float scaleY = (float) showPixH / realH  ;//
+    
+    float positionXLenth = scaleX * pt.x;
+    float positionYLenth = scaleY * pt.y;
+    
+    float newX = 0 + positionXLenth;//这里 POSITIONOFFSET 表示在父类中的
+    float newY = 0 + showPixH - positionYLenth ;
+    //    int newXOff = newX + ROUTEOFFSET;
+    //    int newYOff = newY - ROUTEOFFSET;
+    int newXOff = newX ;
+    int newYOff = newY ;
+    CGPoint new = CGPointMake(newXOff, newYOff);
+    return new;
+}
+
+//屏幕坐标系转换成实际坐标系
++ (CGPoint)changeCoodToRealPosition:(CGPoint) touchPosition {
+    int scH = [[UIScreen mainScreen] bounds].size.height - 49;
+    int scW = [[UIScreen mainScreen] bounds].size.width;
+    
+    int showPixW = scW - 2 * MAPOFFSETOFSCREEN;
+    int showPixH = scH - 2 * MAPOFFSETOFSCREEN;
+    int realW = MAPMAXWIDTH;  //cm
+    int realH = MAPMAXHEIGHT; //cm
+    float scaleX = (float) realW / showPixW  ;//every pix  To cm;
+    float scaleY = (float)  realH / showPixH ;//
+    
+    float positionXLenth = scaleX * touchPosition.x;
+    float positionYLenth = scaleY * touchPosition.y;
+    
+    float newX = positionXLenth;//这里 POSITIONOFFSET 表示在父类中的
+    float newY = positionYLenth ;
+    int newXOff = newX ;
+    int newYOff = MAPMAXHEIGHT - newY ;
+    CGPoint new = CGPointMake(newXOff, newYOff);
+    return new;
+}
+
 
 @end

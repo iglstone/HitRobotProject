@@ -192,5 +192,4 @@ static HitControlHex* _instance = nil;
 
 
 
-
 @end

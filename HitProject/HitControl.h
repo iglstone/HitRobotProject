@@ -59,4 +59,10 @@
 
 - (void)stopSingSong ;
 
+//参数是转换过来的实际坐标
+- (void) sendTouchPointToRobot: (CGPoint) touchPoint ;
+
+//path route
+- (void) sendPathToRobot:(NSInteger)index ofRealPosition:(NSArray *)positionArr ofDeskNum:(NSArray *)deskArr ;
+
 @end

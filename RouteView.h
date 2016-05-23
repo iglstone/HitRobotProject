@@ -9,9 +9,9 @@
 #import "RouteHeader.h"
 @interface RouteView : UIView
 
-//dataSource
-@property (nonatomic) NSMutableArray *m_pointPositionsArray;
+@property (nonatomic) BOOL canEdit;
 
-- (void)drawLineAndPoints :(mGraph *)graph withTailAngel:(vexAngels *)angels ;
+- (void) drawLineAndPoints :(mGraph *)graph withPointsArray:(NSArray *)positions withTailAngel:(vexAngels *)angels ;
+- (void) setCanEdit:(BOOL) bol ;//default NO
 
 @end

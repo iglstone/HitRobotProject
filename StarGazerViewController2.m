@@ -62,7 +62,7 @@
     pointPath = [UIBezierPath new];
     [drawView.layer addSublayer:pointShapeLayer];
     
-    [server addObserver:self forKeyPath:@"starGazerAckString" options:NSKeyValueObservingOptionNew context:nil];
+//    [server addObserver:self forKeyPath:@"starGazerAckString" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)didReceiveMemoryWarning {

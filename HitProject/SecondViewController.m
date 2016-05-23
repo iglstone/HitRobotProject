@@ -353,12 +353,12 @@
     NSLog(@"changed to %lu in %@",(unsigned long)index,groupId);
     if (index == 0) {
         NSLog(@"meal mode");
-//        [control mealMode];
-        UITextField *t1 = [self.view viewWithTag:110];
-        UITextField *t2 = [self.view viewWithTag:111];
-        NSString *st = [CommonsFunc stringToHexString:(int)[t1.text integerValue]];
-        NSString *st2 = [CommonsFunc stringToHexString:(int)[t2.text integerValue]];
-        [server sendMessage:[NSString stringWithFormat:@"0x01%@%@",st,st2] debugstring:@"送餐模式"];
+        [control mealMode];
+//        UITextField *t1 = [self.view viewWithTag:110];
+//        UITextField *t2 = [self.view viewWithTag:111];
+//        NSString *st = [CommonsFunc stringToHexString:(int)[t1.text integerValue]];
+//        NSString *st2 = [CommonsFunc stringToHexString:(int)[t2.text integerValue]];
+//        [server sendMessage:[NSString stringWithFormat:@"0x01%@%@",st,st2] debugstring:@"送餐模式"];
     }
     else
     {

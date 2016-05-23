@@ -29,4 +29,9 @@
  *  @param end   
  */
 + (void )preventTheWay:(mGraph *)gragh OfStart:(int)start toEnd:(int)end ;
+
+//实际的cm坐标转换成坐标系坐标
++ (CGPoint)changeCood:(CGPoint) pt ;
+//屏幕坐标系转换成实际坐标系
++ (CGPoint)changeCoodToRealPosition:(CGPoint) touchPosition ;
 @end
