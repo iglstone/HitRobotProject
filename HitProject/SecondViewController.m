@@ -106,7 +106,7 @@
     f1.backgroundColor = [UIColor orangeColor];
     [f1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(50);
-        make.left.equalTo(self.view).offset(200);
+        make.left.equalTo(self.view).offset(250);
         make.width.mas_equalTo(@100);
     }];
     f1.tag = 110;
@@ -249,10 +249,10 @@
     for (ConnectModel *model in m_robotStateModelsArray) {
         if ([model.robotName isEqualToString:roboName]) {
             float average = [self calcuPower:ele connectModel:model];//times:model.times arr:model.multPowerArray];
-            model.robotTemPower = power;
+            model.robotTemPower = [NSString stringWithFormat:@"%.1f", Powerfloat];
             NSLog(@"average == %f",average);
             if (average != 0) {
-                model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)",average,model.robotTemPower];
+                model.robotPower = [NSString stringWithFormat:@"%.0f%%(%@)", average, model.robotTemPower];
                 update = true;
             }else {
                 update = false;
@@ -583,7 +583,7 @@
     [m_robotsDetailTableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(radioContainer.mas_bottom).offset(20);
         make.left.equalTo(radioContainer);
-        make.width.equalTo(radioContainer);
+        make.right.equalTo(radioContainer).offset(30);
         make.bottom.equalTo(self.view).offset(-50);
     }];
     m_robotsDetailTableView.backgroundColor = [UIColor clearColor];

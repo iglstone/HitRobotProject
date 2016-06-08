@@ -14,16 +14,24 @@
 #define ROUTEOFFSET    30 //路径相对于整体地图的偏移，，0，0 点不是在地图的最坐下角
 
 @interface RouteView (){
-    UIBezierPath *m_bezierPath ; // globel line and point path
-    CAShapeLayer *m_lineShapLayer ; //show globel and point path
+    UIBezierPath *m_bezierPath ;         // globel line and point path
+    CAShapeLayer *m_lineShapLayer ;      // show globel and point path
     CAShapeLayer *m_realTimePointLayer ; // robot dispalay on screen realtime
+    CAShapeLayer *m_pathLayer;
+    
     CGPoint robotPositionOfScreen ;
     float robotAngelOfScreen ;
     
     mGraph *tmpGraph;
     vexAngels *vexsAngels;
+    vexsPre2DTabel *vesxPreTabel;
+    
     NSMutableArray *labelsArray;
-    NSMutableArray *m_pointPositionsArray;
+    NSMutableArray *m_screenPositionsArray;
+    
+    CAShapeLayer *touchPointLayer;
+    
+    NSInteger selectedIndex;
 }
 @end
 
@@ -36,35 +44,43 @@
         m_bezierPath = [UIBezierPath new];
         m_lineShapLayer = [[CAShapeLayer alloc] init];
         m_lineShapLayer.strokeColor = [UIColor redColor].CGColor;
+        m_lineShapLayer.hidden = YES;
+        [self.layer addSublayer:m_lineShapLayer];
+        
         m_realTimePointLayer = [CAShapeLayer new];
         m_realTimePointLayer.fillColor = [[UIColor blueColor] CGColor];
         m_realTimePointLayer.strokeColor = [[UIColor blueColor] CGColor];
-        [self.layer addSublayer:m_lineShapLayer];
         [self.layer addSublayer:m_realTimePointLayer];
-        self.backgroundColor = [CommonsFunc colorOfLight];// [UIColor lightGrayColor];
-        self.alpha = 0.4;
+        
+        m_pathLayer = [[CAShapeLayer alloc] init];
+        m_pathLayer.strokeColor = [UIColor blueColor].CGColor;
+        [self.layer addSublayer:m_pathLayer];
+        
+        self.backgroundColor = [UIColor clearColor];// [UIColor lightGrayColor];
         [[ServerSocket sharedSocket] addObserver:self forKeyPath:@"starGazerAckString" options:NSKeyValueObservingOptionNew context:nil];
+        
         robotPositionOfScreen = CGPointZero;
         robotAngelOfScreen = 0;
         NSTimer *time = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateRobotPosition:) userInfo:nil repeats:YES];
         [time fire];
-        self.canEdit = NO;
+        
         labelsArray = [NSMutableArray new];
+        
+        //点击出红点
+        touchPointLayer = [CAShapeLayer new];
+        touchPointLayer.fillColor = [UIColor redColor].CGColor;
+        touchPointLayer.strokeColor = [UIColor orangeColor].CGColor;
+        [self.layer addSublayer:touchPointLayer];
+        CGPoint pt = CGPointMake(100, 100);
+        UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:pt radius:10 startAngle:0 endAngle:2*M_PI clockwise:YES];
+        touchPointLayer.path = path.CGPath;
+        
         return self;
     }
     return self;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
-    if ([keyPath isEqualToString:@"starGazerAckString"]) {
-        NSString *newString  = [change objectForKey:@"new"];
-        STModel *model = [STModel stmodelWithString:newString]; //解析string
-        if (model) {
-            robotAngelOfScreen = model.modelAngel + 90;
-            robotPositionOfScreen = [FloydAlgorithm changeCood: CGPointMake(model.modelX, model.modelY)];
-        }
-    }
-}
+#pragma mark - actions
 
 - (void)updateRobotPosition :(NSTimer *)time {
     UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:robotPositionOfScreen radius:10 startAngle:0.0 endAngle:2 * M_PI clockwise:0];
@@ -81,62 +97,94 @@
  *  @param arr
  *  @param angels 角度信息
  */
-- (void)drawLineAndPoints :(mGraph *)graph withPointsArray:(NSArray *)positions withTailAngel:(vexAngels *)angels {
+- (void)drawLineAndPoints :(mGraph *)graph withPointsArray:(NSArray *)positions withTailAngel:(vexAngels *)angels vexsTabel:(vexsPre2DTabel *)table {
     /*****test***/
-    m_pointPositionsArray = [NSMutableArray arrayWithArray:positions];
     [self updateRobotPosition:nil];
+    
+    //存下来，后面有需要
     tmpGraph = graph;
     vexsAngels = angels;
+    vesxPreTabel = table;
     
-    canEdit =  YES;//test
-    
-    // change to screen points
-    for (int i = 0 ; i<m_pointPositionsArray.count; i++) {
-        CGPoint old = [[m_pointPositionsArray objectAtIndex:i] CGPointValue];
-        CGPoint new = [FloydAlgorithm changeCood:old];
-        [m_pointPositionsArray replaceObjectAtIndex:i withObject:[NSValue valueWithCGPoint:new]];
-    }
+    m_screenPositionsArray =[NSMutableArray arrayWithArray:[self changeToScreenCood:positions]];
     
     [self updataPath];
 }
 
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (!canEdit) [super touchesBegan:touches withEvent:event];
-    UITouch *touch = [touches anyObject];
-    CGPoint touchPoint = [touch locationInView:self];
-    NSUInteger index = [m_pointPositionsArray indexOfObjectPassingTest:^BOOL(NSValue *obj2, NSUInteger idx, BOOL * _Nonnull stop) {
-        CGPoint obj = [obj2 CGPointValue];
-        if ((fabs(obj.x - touchPoint.x) + fabs(obj.y - touchPoint.y)) < 40) {
-            return YES;
+#pragma mark - delegata
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"starGazerAckString"]) {
+        NSString *newString  = [change objectForKey:@"new"];
+        STModel *model = [STModel stmodelWithString:newString]; //解析string
+        if (model) {
+            robotAngelOfScreen = model.modelAngel + 90;
+            robotPositionOfScreen = [FloydAlgorithm changeCood: CGPointMake(model.modelX, model.modelY)];
         }
-        return NO;
-    }];
-    if (index != NSNotFound) {
-        [m_pointPositionsArray replaceObjectAtIndex:index withObject:[NSValue valueWithCGPoint:touchPoint]];
-        [self updataPath];
+    }
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    if (canEdit){
+        UITouch *touch = [touches anyObject];
+        CGPoint touchPoint = [touch locationInView:self];
+        NSUInteger index = [m_screenPositionsArray indexOfObjectPassingTest:^BOOL(NSString *obj2, NSUInteger idx, BOOL * _Nonnull stop) {
+            CGPoint obj = CGPointFromString(obj2);
+            if ((fabs(obj.x - touchPoint.x) + fabs(obj.y - touchPoint.y)) < 40) {
+                return YES;
+            }
+            return NO;
+        }];
+        selectedIndex = index;
+        if (index != NSNotFound) {
+            [m_screenPositionsArray replaceObjectAtIndex:index withObject:NSStringFromCGPoint(touchPoint)];
+            [self updataPath];
+        }
+    } else {
+        [super touchesBegan:touches withEvent:event];
     }
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (!canEdit) [super touchesBegan:touches withEvent:event];
-    UITouch *touch = [touches anyObject];
-    CGPoint touchPoint = [touch locationInView:self];
-    NSUInteger index = [m_pointPositionsArray indexOfObjectPassingTest:^BOOL(NSValue *obj2, NSUInteger idx, BOOL * _Nonnull stop) {
-        CGPoint obj = [obj2 CGPointValue];
-        if ((fabs(obj.x - touchPoint.x) + fabs(obj.y - touchPoint.y)) < 40) {
-            return YES;
+    if (canEdit){
+        UITouch *touch = [touches anyObject];
+        CGPoint touchPoint = [touch locationInView:self];
+        NSUInteger index = [m_screenPositionsArray indexOfObjectPassingTest:^BOOL(NSString *obj2, NSUInteger idx, BOOL * _Nonnull stop) {
+            CGPoint obj = CGPointFromString(obj2);
+            if ((fabs(obj.x - touchPoint.x) + fabs(obj.y - touchPoint.y)) < 40) {
+                return YES;
+            }
+            return NO;
+        }];
+        selectedIndex = index;
+        if (index != NSNotFound) {
+            [m_screenPositionsArray replaceObjectAtIndex:index withObject:NSStringFromCGPoint(touchPoint)];
+            [self updataPath];
         }
-        return NO;
-    }];
-    if (index != NSNotFound) {
-        [m_pointPositionsArray replaceObjectAtIndex:index withObject:[NSValue valueWithCGPoint:touchPoint]];
-        [self updataPath];
-    }
+    } else
+        [super touchesMoved:touches withEvent:event];
 }
 
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    if (!canEdit) [super touchesBegan:touches withEvent:event];
+    UITouch *tou = [touches anyObject];
+    if (canEdit) {
+        CGPoint touchPoint = [[touches anyObject] locationInView:self];
+        if (selectedIndex != NSNotFound) {
+            [m_screenPositionsArray replaceObjectAtIndex:selectedIndex withObject:NSStringFromCGPoint(touchPoint)];
+            CGPoint real = [FloydAlgorithm changeCoodToRealPosition:touchPoint];
+            NSLog(@"touch:%ld toRealPositon:%@",selectedIndex, NSStringFromCGPoint(real));
+        }
+        [self updataPath];
+    }else {
+        CGPoint pt = [tou locationInView:self];
+        UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:pt radius:10 startAngle:0 endAngle:2*M_PI clockwise:YES];
+        touchPointLayer.path = path.CGPath;
+        CGPoint realPosition = [FloydAlgorithm changeCoodToRealPosition:pt];
+        [[HitControl sharedControl] sendTouchPointToRobot:realPosition];
+        
+        [self drawRobotPositonByScreenPositionStart:robotPositionOfScreen end:pt];
+    }
 }
 
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
@@ -157,8 +205,8 @@
             int weight = tmpGraph->weightAndAngels[i][j].weight;
             float angel = tmpGraph->weightAndAngels[i][j].angel;
             if (weight != INTMAX && weight != 0) {
-                CGPoint ptI = [[m_pointPositionsArray objectAtIndex:i] CGPointValue];
-                CGPoint ptJ = [[m_pointPositionsArray objectAtIndex:j] CGPointValue];
+                CGPoint ptI = CGPointFromString([m_screenPositionsArray objectAtIndex:i]);
+                CGPoint ptJ = CGPointFromString([m_screenPositionsArray objectAtIndex:j]);
                 UIBezierPath *path = [UIBezierPath new];
                 [path moveToPoint:ptI];
                 [path addLineToPoint:ptJ];
@@ -166,16 +214,22 @@
                 
                 UILabel *numL = [[UILabel alloc] initWithFrame:CGRectMake(ptI.x/2+ptJ.x/2, ptI.y/2 + ptJ.y/2, 50, 10)];
                 numL.font = [UIFont systemFontOfSize:10];
-                numL.text = [NSString stringWithFormat:@"%d,%.0f",weight,angel];
+                CGPoint II = [FloydAlgorithm changeCoodToRealPosition:ptI];
+                CGPoint JJ = [FloydAlgorithm changeCoodToRealPosition:ptJ];
+                float xx = JJ.x - II.x;
+                float yy = JJ.y - II.y;
+                float dist = sqrtf(xx * xx + yy * yy);
+                numL.text = [NSString stringWithFormat:@"%d,%.0f",(int)dist,angel];
                 [self addSubview:numL];
                 numL.backgroundColor = [UIColor lightGrayColor];
+                
                 [labelsArray addObject:numL];
             }
         }
     }
     
-    for (int i = 0; i  < m_pointPositionsArray.count; i++ ) {
-        CGPoint position = [[m_pointPositionsArray objectAtIndex:i] CGPointValue];
+    for (int i = 0; i  < m_screenPositionsArray.count; i++ ) {
+        CGPoint position = CGPointFromString([m_screenPositionsArray objectAtIndex:i] );
         UIBezierPath *pointPath = [UIBezierPath bezierPathWithArcCenter:position radius:POINTRADUS startAngle:0 endAngle:2*M_PI clockwise:0];
         [m_bezierPath appendPath:pointPath];
         
@@ -198,12 +252,119 @@
     m_lineShapLayer.path = m_bezierPath.CGPath;
 }
 
-- (void)setCanEdit:(BOOL)bol {
-    canEdit = bol;
+#pragma mark - private mathod
+
+- (void) drawRobotPositonByScreenPositionStart:(CGPoint)start end:(CGPoint )end {
+    CGPoint startR = [FloydAlgorithm changeCoodToRealPosition:start];
+    CGPoint endR = [FloydAlgorithm changeCoodToRealPosition:end];
+    int firstIndex = (int)[self findNearestIndexByRealPosition:startR];
+    int lastIndex = (int)[self findNearestIndexByRealPosition:endR];
+    
+    NSString *pathSting = [FloydAlgorithm findShortestPath:tmpGraph from:firstIndex to:lastIndex pointsTabel:vesxPreTabel robotAngels:vexsAngels];
+    NSArray *arr = [pathSting componentsSeparatedByString:@"->"];
+    
+    UIBezierPath *bezier = [UIBezierPath new];
+    for (int i = 0; i < arr.count; i++) {
+        NSString *indexAndAngel = [arr objectAtIndex:i];
+        NSArray *ptArr = [indexAndAngel componentsSeparatedByString:@","];
+        int index = (int)[[ptArr objectAtIndex:0] integerValue];
+        CGPoint pt = CGPointFromString( [m_screenPositionsArray objectAtIndex:index] );
+        
+        if (i == 0) {
+            [bezier moveToPoint:pt];
+        }else{
+            [bezier addLineToPoint:pt];
+            [bezier moveToPoint:pt];
+        }
+    }
+    m_pathLayer.path = bezier.CGPath;
+    NSLog(@"Path__:%@", pathSting);
+    [self sendToRobot:pathSting];
 }
 
-/*
-//根据角度信息来的**************更新信息
+//pathString:3,0->0,-90->1,70
+- (void)sendToRobot : (NSString *)pathString {
+    if (pathString.length == 0) {
+        NSLog(@"pathString length is zero, wrong");
+    }
+    NSArray *arr = [pathString componentsSeparatedByString:@"->"];
+    for (NSString *vexAngs in arr) {
+        NSArray *aa = [vexAngs componentsSeparatedByString:@","];
+        NSInteger pointIndex = [[aa objectAtIndex:0] integerValue];
+        NSInteger angel = [[aa objectAtIndex:1] integerValue];
+        NSLog(@"xx%ld, oo%ld", pointIndex, angel);
+    }
+}
+
+- (NSInteger) findNearestIndexByScreenPosition : (CGPoint) screen_original {
+    CGPoint scPt = [FloydAlgorithm changeCoodToRealPosition:screen_original];
+    return [self findNearestIndexByScreenPosition:scPt];
+}
+
+- (NSInteger) findNearestIndexByRealPosition : (CGPoint) real_original {
+    NSArray *realsArr = [[DataCenter sharedDataCenter] getRealPositionsArr];
+    float maxDis = INTMAX;
+    NSInteger nearestIndex = 0;
+    for (int i = 0; i < realsArr.count; i++) {
+        CGPoint pt = CGPointFromString( [realsArr objectAtIndex: i] );
+        float disX = real_original.x - pt.x;
+        float disY = real_original.y - pt.y;
+        float dis  = sqrtf(disX * disX + disY * disY);
+        if (maxDis > dis) {
+            maxDis = dis;
+            nearestIndex = i;
+        }
+    }
+    return nearestIndex;
+}
+
+- (void)setCanEdit:(BOOL)bol {
+    canEdit = bol;
+    
+    if (canEdit) {
+        m_lineShapLayer.hidden = NO;
+        for (UIView *view in self.subviews) {
+            if ([view isKindOfClass:[UILabel class]]) {
+                view.hidden = NO;
+            }
+        }
+    }else {
+        m_lineShapLayer.hidden = YES;
+        for (UIView *view in self.subviews) {
+            if ([view isKindOfClass:[UILabel class]]) {
+                view.hidden = YES;
+            }
+        }
+    }
+    
+}
+
+- (NSArray *)changeToScreenCood:(NSArray *)arr {
+    NSMutableArray *mut = [NSMutableArray new];
+    for (int i = 0 ; i< arr.count; i++) {
+        CGPoint old = CGPointFromString([arr objectAtIndex:i]); // [[m_pointPositionsArray objectAtIndex:i] CGPointValue];
+        CGPoint new = [FloydAlgorithm changeCood:old];
+        [mut insertObject:NSStringFromCGPoint(new) atIndex:i];
+    }
+    return mut;
+}
+
+- (NSArray *)changeToRealCood:(NSArray *)arr {
+    NSMutableArray *mut = [NSMutableArray new];
+    for (int i = 0 ; i< arr.count; i++) {
+        CGPoint old = CGPointFromString(arr[i]); // [[m_pointPositionsArray objectAtIndex:i] CGPointValue];
+        CGPoint new = [FloydAlgorithm changeCoodToRealPosition:old];
+        [mut insertObject:NSStringFromCGPoint(new) atIndex:i];
+    }
+    return mut;
+}
+
+- (void)saveRoute {
+    [[DataCenter sharedDataCenter] setRealPoisitonsOfArr:[self changeToRealCood:m_screenPositionsArray]];
+}
+
+#pragma mark - unuse
+//根据角度信息来的**************更新信息 nouser
 - (void)initDrawDataSource :(mGraph *)graph withRealPoints:(NSMutableArray *) m_pointPositionsArray {
     int i,j;
     CGPoint positionZero = CGPointMake(50, 50);
@@ -239,6 +400,5 @@
         }
     }
 }
-*/
 
 @end

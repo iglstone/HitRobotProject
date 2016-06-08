@@ -23,7 +23,7 @@
     if (!realPosotionsArray) {
         NSMutableArray *arr = [NSMutableArray new];
         for (int i = 0 ; i < MAXVEX; i++) {
-            [arr insertObject:[NSValue valueWithCGPoint:CGPointZero] atIndex:i];
+            [arr insertObject:NSStringFromCGPoint(CGPointZero) atIndex:i];
         }
         realPosotionsArray = [NSArray arrayWithArray:arr];
     }
@@ -34,8 +34,8 @@
             continue;
         }
         
-        CGPoint st = [[realPosotionsArray objectAtIndex:start] CGPointValue];
-        CGPoint ed = [[realPosotionsArray objectAtIndex:end] CGPointValue];
+        CGPoint st = CGPointFromString([realPosotionsArray objectAtIndex:start]);
+        CGPoint ed = CGPointFromString([realPosotionsArray objectAtIndex:end]);
         float disX = ed.x - st.x;
         float disY = ed.y - st.y;
         float weight = sqrtf(disX*disX + disY*disY);
@@ -61,8 +61,8 @@
             continue;
         }
         
-        CGPoint st = [[realPosotionsArray objectAtIndex:start] CGPointValue];
-        CGPoint ed = [[realPosotionsArray objectAtIndex:end] CGPointValue];
+        CGPoint st = CGPointFromString([realPosotionsArray objectAtIndex:start]);//[[realPosotionsArray objectAtIndex:start] CGPointValue];
+        CGPoint ed = CGPointFromString([realPosotionsArray objectAtIndex:end]);//[[realPosotionsArray objectAtIndex:end] CGPointValue];
         float disX = ed.x - st.x;float disY = ed.y - st.y;
         float weight = sqrtf(disX*disX + disY*disY);
         float angelf = atan2f(disY, disX);//  atan2f(disY/disX);
@@ -82,11 +82,11 @@
  */
 + (void )initSingelPointIdAndAngel:(vexAngels *)vexAngels withIdAndAngels:(NSArray *)angels {
     int v;
-    if (angels.count != MAXVEX) {
-        NSLog(@"points num is not equal to angels num");
-        return;
-    }
-    for (v = 0; v < MAXVEX; v++) {
+//    if (angels.count != MAXVEX) {
+//        NSLog(@"points num is not equal to angels num");
+//        return;
+//    }
+    for (v = 0; v < angels.count; v++) {
         float angel = [[angels objectAtIndex:v] floatValue];
         (*vexAngels)[v] = angel;
     }
@@ -125,15 +125,15 @@
 +(NSString *)findShortestPath:(mGraph *)graph from:(int)start to:(int)end pointsTabel:(vexsPre2DTabel *)vexPres robotAngels:(vexAngels *)angels{
     int pontIndexFirst =  (*vexPres)[start][end];//robot.pointNum;
     int angelmOfStart = graph->weightAndAngels[start][pontIndexFirst].angel;
-    NSString *tem = [NSString stringWithFormat:@"path: %d,%d -> %d,", start, angelmOfStart, pontIndexFirst];
+    NSString *tem = [NSString stringWithFormat:@"%d,%d->%d,", start, angelmOfStart, pontIndexFirst];
     
     while (pontIndexFirst != end) {
         int pointIndexSaveFirst = pontIndexFirst;
         pontIndexFirst = (*vexPres)[pontIndexFirst][end];// get next vertex point
         int angelOfFirst = graph->weightAndAngels[pointIndexSaveFirst][pontIndexFirst].angel;
-        tem = [tem stringByAppendingString:[NSString stringWithFormat:@"%d -> %d,",angelOfFirst, pontIndexFirst]];
+        tem = [tem stringByAppendingString:[NSString stringWithFormat:@"%d->%d,",angelOfFirst, pontIndexFirst]];
     }
-    tem = [tem stringByAppendingString:[NSString stringWithFormat:@"%f",(*angels)[end]]];
+    tem = [tem stringByAppendingString:[NSString stringWithFormat:@"%.0f",(*angels)[end]]];
     return tem;
 }
 
@@ -222,6 +222,93 @@
     int newYOff = MAPMAXHEIGHT - newY ;
     CGPoint new = CGPointMake(newXOff, newYOff);
     return new;
+}
+
+
+#pragma mark - initNodeFonc---备份
+
+/**
+ *  辅助初始化mGragh函数, 只初始化一半, 自己计算距离和角度
+ *  @param g      gragh
+ *  @param start,要求 start < end
+ *  @param end
+ *  @param weight
+ *  @param angles
+ */
+- (void)initGrghNodeStart:(int)start end:(NSArray*)ends {
+    mGraph *g ;
+    for (int i = 0; i<ends.count; i++) {
+        NSInteger end = [[ends objectAtIndex:i] integerValue];
+        if (start >= end) {
+            NSLog(@"start num >= ending num");
+            continue;
+        }
+        
+        CGPoint st ;//= [[m_realPosotionsArray objectAtIndex:start] CGPointValue];
+        CGPoint ed ;//= [[m_realPosotionsArray objectAtIndex:end] CGPointValue];
+        float disX = ed.x - st.x;
+        float disY = ed.y - st.y;
+        float weight = sqrtf(disX*disX + disY*disY);
+        float angelf = atan2f(disY, disX);//  atan2f(disY/disX);
+        int angel = (int) (angelf / M_PI *180);
+        //        if (angel < 0) {
+        //            angel = angel +180;
+        //        }
+        g->weightAndAngels[start][end].weight = weight;
+        g->weightAndAngels[start][end].angel = angel;
+    }
+}
+
+/**
+ *  辅助初始化mGragh函数, 只初始化一半, 带绝对角度，不是相对角度的，自计算距离
+ *  @param g      gragh
+ *  @param start,要求 start < end
+ *  @param end
+ *  @param angles
+ */
+- (void)initGrghNodeStart:(int)start end:(NSArray*)ends angel:(NSArray *)angels {
+    mGraph *g ;
+    for (int i = 0; i<ends.count; i++) {
+        NSInteger end = [[ends objectAtIndex:i] integerValue];
+        if (start >= end) {
+            NSLog(@"start num >= ending num");
+            continue;
+        }
+        
+        CGPoint st ;//= [[m_realPosotionsArray objectAtIndex:start] CGPointValue];
+        CGPoint ed ;//= [[m_realPosotionsArray objectAtIndex:end] CGPointValue];
+        float disX = ed.x - st.x;float disY = ed.y - st.y;
+        float weight = sqrtf(disX*disX + disY*disY);
+        float angel = [[angels objectAtIndex:i] floatValue];
+        g->weightAndAngels[start][end].weight = weight;
+        g->weightAndAngels[start][end].angel = angel;
+    }
+}
+
+/**
+ *  辅助初始化mGragh函数, 只初始化一半, 带绝对距离和角度，非计算距离与计算角度
+ *  @param g      gragh
+ *  @param start,要求 start < end
+ *  @param end
+ *  @param weight
+ *  @param angles
+ */
+- (void)initGrghStart:(int)start end:(NSArray*)ends weight:(NSArray *)weight angle:(NSArray *)angles {
+    mGraph *graph ;
+    if ([ends count] != [weight count]) {
+        return;
+    }
+    for (int i = 0; i<ends.count; i++) {
+        NSInteger end = [[ends objectAtIndex:i] integerValue];
+        if (start >= end) {
+            NSLog(@"start num >= ending num");
+            continue;
+        }
+        float angel = [[angles objectAtIndex:i] floatValue];
+        float weights = [[weight objectAtIndex:i] floatValue];
+        graph->weightAndAngels[start][end].weight = weights;
+        graph->weightAndAngels[start][end].angel = angel;
+    }
 }
 
 

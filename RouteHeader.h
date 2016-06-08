@@ -11,8 +11,8 @@
 
 #import <math.h>
 
-#define MAXVEX     4
-#define MAXEDGE    4
+#define MAXVEX      30
+//#define MAXEDGE    4
 //#define POINTSNUM  9
 #define INTMAX     65535
 #define POINTRADUS 7

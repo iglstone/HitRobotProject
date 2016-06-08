@@ -67,7 +67,7 @@
     //数据驱动绘图
     RouteView *routeView = [[RouteView alloc] initWithFrame:CGRectMake(0, 0, screenWidth , screenHeight)];
     [backgroundRightView insertSubview:routeView belowSubview: backgroundRightView];
-    [routeView drawLineAndPoints:&m_graph withPointsArray:m_realPosotionsArray withTailAngel:&vexsAngel];
+    [routeView drawLineAndPoints:&m_graph withPointsArray:m_realPosotionsArray withTailAngel:&vexsAngel vexsTabel:&vexsPre2D];
     
     touchPointLayer = [CAShapeLayer new];
     touchPointLayer.fillColor = [UIColor redColor].CGColor;
@@ -129,7 +129,6 @@
 - (void)creatMGragh {
     mGraph *graph = &m_graph;
     int i,j;
-    graph->numEdges = MAXEDGE;
     graph->numVertexes = MAXVEX;//POINTSNUM; // point num
     for (i = 0; i < graph->numVertexes; i++) {// init vexs
         graph->vexs[i] = i;
@@ -185,8 +184,8 @@
             continue;
         }
         
-        CGPoint st = [[m_realPosotionsArray objectAtIndex:start] CGPointValue];
-        CGPoint ed = [[m_realPosotionsArray objectAtIndex:end] CGPointValue];
+        CGPoint st = CGPointFromString([m_realPosotionsArray objectAtIndex:start] );
+        CGPoint ed = CGPointFromString([m_realPosotionsArray objectAtIndex:end] );
         float disX = ed.x - st.x;
         float disY = ed.y - st.y;
         float weight = sqrtf(disX*disX + disY*disY);
@@ -216,8 +215,8 @@
             continue;
         }
         
-        CGPoint st = [[m_realPosotionsArray objectAtIndex:start] CGPointValue];
-        CGPoint ed = [[m_realPosotionsArray objectAtIndex:end] CGPointValue];
+        CGPoint st = CGPointFromString([m_realPosotionsArray objectAtIndex:start] );
+        CGPoint ed = CGPointFromString([m_realPosotionsArray objectAtIndex:end] );
         float disX = ed.x - st.x;float disY = ed.y - st.y;
         float weight = sqrtf(disX*disX + disY*disY);
         float angel = [[angels objectAtIndex:i] floatValue];

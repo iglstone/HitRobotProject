@@ -53,6 +53,7 @@
         [_labelPower mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(_labelName).offset(20);
             make.top.equalTo(_labelName.mas_bottom).offset(20);//后期电量不显示
+            make.right.equalTo(self);
         }];
         
         //speed

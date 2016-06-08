@@ -30,8 +30,8 @@
     [help default];
     
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
-    _main = [RobotRouteViewController3 new];
-//    _main = [LoginViewController new];
+//    _main = [RobotRouteViewController3 new];
+    _main = [LoginViewController new];
     self.window.rootViewController = _main;//切换viewcontroller 只要把main换掉就好。
     
     [self.window makeKeyAndVisible];

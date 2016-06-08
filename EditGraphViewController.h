@@ -12,6 +12,3 @@
 
 @end
 
-@interface SettingViewController : UIViewController
-
-@end

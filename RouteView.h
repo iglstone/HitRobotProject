@@ -7,11 +7,13 @@
 
 #import <UIKit/UIKit.h>
 #import "RouteHeader.h"
+#import "DataCenter.h"
 @interface RouteView : UIView
 
 @property (nonatomic) BOOL canEdit;
 
-- (void) drawLineAndPoints :(mGraph *)graph withPointsArray:(NSArray *)positions withTailAngel:(vexAngels *)angels ;
+- (void)drawLineAndPoints :(mGraph *)graph withPointsArray:(NSArray *)positions withTailAngel:(vexAngels *)angels vexsTabel:(vexsPre2DTabel *)table ;
+//- (void) drawLineAndPoints :(mGraph *)graph withPointsArray:(NSArray *)positions withTailAngel:(vexAngels *)angels ;
 - (void) setCanEdit:(BOOL) bol ;//default NO
-
+- (void) saveRoute;
 @end

@@ -206,6 +206,9 @@ static ServerSocket* _instance = nil;
         
     }else if ([msg hasPrefix:@"v"] && [msg hasSuffix:@"e"]) {
         NSString *power = [msg substringWithRange:NSMakeRange(1, msg.length-2)];
+        if (power.length > 5) {
+            return NO;
+        }
         NSString *roboName = [ServerSocket getRobotName:sock];
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_POWERNOTIFICATION object:nil userInfo:@{@"power":power, @"roboName":roboName}];
         willShowOnLabel = NO;

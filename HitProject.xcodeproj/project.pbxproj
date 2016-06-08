@@ -46,9 +46,9 @@
 		E34C26611C2CDCE1007936D8 /* PopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C265F1C2CDCE1007936D8 /* PopupView.m */; };
 		E34C26621C2CDCE1007936D8 /* PopupView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E34C26601C2CDCE1007936D8 /* PopupView.xib */; };
 		E34C26651C2CEC43007936D8 /* DeskInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C26641C2CEC43007936D8 /* DeskInfoModel.m */; };
-		E353A2C41C0FD4180058BC6A /* DataCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = E353A2C31C0FD4180058BC6A /* DataCenter.m */; };
 		E357F6101BE20F6500AE9454 /* ThirdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E357F60F1BE20F6500AE9454 /* ThirdViewController.m */; };
 		E357F6131BE20F8100AE9454 /* FourthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E357F6121BE20F8100AE9454 /* FourthViewController.m */; };
+		E35933421CF3F19D00636800 /* EditGraphModelAndCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E35933411CF3F19D00636800 /* EditGraphModelAndCell.m */; };
 		E35D11A81C0ECAA3009AF0BB /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11A71C0ECAA3009AF0BB /* SettingViewController.m */; };
 		E35D11AB1C0ECAD2009AF0BB /* ResetSecurityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11AA1C0ECAD2009AF0BB /* ResetSecurityViewController.m */; };
 		E35D11AE1C0EE0B8009AF0BB /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E35D11AD1C0EE0B8009AF0BB /* WebViewController.m */; };
@@ -100,6 +100,7 @@
 		E3E91FC21BEC318F003AE247 /* ServerSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FC11BEC318F003AE247 /* ServerSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FC61BEC32C6003AE247 /* AsyncUdpSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		E3E91FCC1BEC8117003AE247 /* HitControl.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E91FCB1BEC8117003AE247 /* HitControl.m */; };
+		E3F430361CF42748003674EC /* MapInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3F430351CF42748003674EC /* MapInfoViewController.m */; };
 		E3FC88881BEAF3750016376D /* RadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FC88871BEAF3750016376D /* RadioButton.m */; };
 		E3FC889F1BEB54050016376D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3FC889E1BEB54050016376D /* CFNetwork.framework */; };
 		E3FC88A11BEB54150016376D /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3FC88A01BEB54150016376D /* CoreFoundation.framework */; };
@@ -177,12 +178,12 @@
 		E34C26601C2CDCE1007936D8 /* PopupView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopupView.xib; sourceTree = "<group>"; };
 		E34C26631C2CEC43007936D8 /* DeskInfoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeskInfoModel.h; sourceTree = "<group>"; };
 		E34C26641C2CEC43007936D8 /* DeskInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeskInfoModel.m; sourceTree = "<group>"; };
-		E353A2C21C0FD4180058BC6A /* DataCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataCenter.h; sourceTree = "<group>"; };
-		E353A2C31C0FD4180058BC6A /* DataCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataCenter.m; sourceTree = "<group>"; };
 		E357F60E1BE20F6500AE9454 /* ThirdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThirdViewController.h; sourceTree = "<group>"; };
 		E357F60F1BE20F6500AE9454 /* ThirdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThirdViewController.m; sourceTree = "<group>"; };
 		E357F6111BE20F8100AE9454 /* FourthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FourthViewController.h; sourceTree = "<group>"; };
 		E357F6121BE20F8100AE9454 /* FourthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FourthViewController.m; sourceTree = "<group>"; };
+		E35933401CF3F19D00636800 /* EditGraphModelAndCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditGraphModelAndCell.h; sourceTree = "<group>"; };
+		E35933411CF3F19D00636800 /* EditGraphModelAndCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditGraphModelAndCell.m; sourceTree = "<group>"; };
 		E35D11A61C0ECAA3009AF0BB /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
 		E35D11A71C0ECAA3009AF0BB /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		E35D11A91C0ECAD2009AF0BB /* ResetSecurityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetSecurityViewController.h; sourceTree = "<group>"; };
@@ -270,6 +271,8 @@
 		E3E91FC91BEC7795003AE247 /* AppMacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppMacro.h; sourceTree = "<group>"; };
 		E3E91FCA1BEC8117003AE247 /* HitControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitControl.h; sourceTree = "<group>"; };
 		E3E91FCB1BEC8117003AE247 /* HitControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HitControl.m; sourceTree = "<group>"; };
+		E3F430341CF42748003674EC /* MapInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapInfoViewController.h; sourceTree = "<group>"; };
+		E3F430351CF42748003674EC /* MapInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapInfoViewController.m; sourceTree = "<group>"; };
 		E3FC88861BEAF3750016376D /* RadioButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadioButton.h; sourceTree = "<group>"; };
 		E3FC88871BEAF3750016376D /* RadioButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadioButton.m; sourceTree = "<group>"; };
 		E3FC889E1BEB54050016376D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -436,10 +439,14 @@
 				E36A679D1CEDACD600941DD1 /* FloydAlgorithm.m */,
 				E36A679E1CEDACD600941DD1 /* RouteView.h */,
 				E36A679F1CEDACD600941DD1 /* RouteView.m */,
-				E3E1ECA31CF2EED4006E7DC5 /* EditGraphViewController.h */,
-				E3E1ECA41CF2EED4006E7DC5 /* EditGraphViewController.m */,
 				E3DFC53C1CF3336800206A07 /* DataCenter.h */,
 				E3DFC53D1CF3336800206A07 /* DataCenter.m */,
+				E3E1ECA31CF2EED4006E7DC5 /* EditGraphViewController.h */,
+				E3E1ECA41CF2EED4006E7DC5 /* EditGraphViewController.m */,
+				E3F430341CF42748003674EC /* MapInfoViewController.h */,
+				E3F430351CF42748003674EC /* MapInfoViewController.m */,
+				E35933401CF3F19D00636800 /* EditGraphModelAndCell.h */,
+				E35933411CF3F19D00636800 /* EditGraphModelAndCell.m */,
 			);
 			name = Floyed;
 			sourceTree = "<group>";
@@ -486,8 +493,6 @@
 				E3B146BD1BED9CB100963FA8 /* PrefixHeader.pch */,
 				E3C0B5251BE1EAA5004437EC /* AppDelegate.h */,
 				E3C0B5261BE1EAA5004437EC /* AppDelegate.m */,
-				E353A2C21C0FD4180058BC6A /* DataCenter.h */,
-				E353A2C31C0FD4180058BC6A /* DataCenter.m */,
 				E3E0F8A11C0E779C001CC06F /* Login */,
 				E31636761BF05607002EB100 /* MainViewController.h */,
 				E31636771BF05607002EB100 /* MainViewController.m */,
@@ -778,7 +783,6 @@
 			files = (
 				E36A67A01CEDACD600941DD1 /* RobotRouteViewController2.m in Sources */,
 				E357F6131BE20F8100AE9454 /* FourthViewController.m in Sources */,
-				E353A2C41C0FD4180058BC6A /* DataCenter.m in Sources */,
 				E3E91FCC1BEC8117003AE247 /* HitControl.m in Sources */,
 				E3768DC21C4E08290084916D /* InternationControl.m in Sources */,
 				E3C0B52D1BE1EAA5004437EC /* SecondViewController.m in Sources */,
@@ -792,6 +796,7 @@
 				E34B9A2B1C5A4163009E4B78 /* JSDPad.m in Sources */,
 				E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */,
 				E3E1ECA51CF2EED4006E7DC5 /* EditGraphViewController.m in Sources */,
+				E3F430361CF42748003674EC /* MapInfoViewController.m in Sources */,
 				E36A67A91CEDADB600941DD1 /* ZDStickerView.m in Sources */,
 				E34C26591C2CDCD3007936D8 /* LewPopupViewAnimationDrop.m in Sources */,
 				E37BA5031BE462C700DB7A96 /* JSAnalogueStick.m in Sources */,
@@ -826,6 +831,7 @@
 				E39DA2161C3A1E5E002065BE /* DeskInfoHelper.m in Sources */,
 				E3D671E21C3DEC3F00AF3391 /* HitControlHex.m in Sources */,
 				E35D11AB1C0ECAD2009AF0BB /* ResetSecurityViewController.m in Sources */,
+				E35933421CF3F19D00636800 /* EditGraphModelAndCell.m in Sources */,
 				E33DD38D1BF20DE40028FCBD /* SocketClientViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

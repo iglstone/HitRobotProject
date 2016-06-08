@@ -72,8 +72,8 @@
     first.tabBarItem = itm;
     SecondViewController *second = [SecondViewController new];
     second.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"操作界面" image:image selectedImage:nil];
-//    ThirdViewController *third = [ThirdViewController new];
-    RobotRouteViewController3 *third = [RobotRouteViewController3 new];
+    ThirdViewController *third = [ThirdViewController new];
+//    RobotRouteViewController3 *third = [RobotRouteViewController3 new];
     third.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"送餐界面" image:image selectedImage:nil];
     FourthViewController *fourth = [FourthViewController new];
     fourth.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"语音界面" image:image selectedImage:nil];
@@ -176,8 +176,6 @@
     }];
     for (int i = 0; i < [m_modelsArray count]; i++) {
         ConnectModel *model = [m_modelsArray objectAtIndex:i];
-        model.isCheck = NO;
-//        model.status = @"断开连接";
         if ([model.socket isEqual:socket]) {
             //[m_modelsArray removeObject:model];
             [[self mutableArrayValueForKey:@"m_modelsArray"] removeObject:model];// for kvo
