@@ -20,7 +20,7 @@
 {
     AsyncSocket *listenSocket;
     NSMutableArray *connectedSockets;
-    BOOL isRunning;
+//    BOOL isRunning;
 }
 
 //@property (nonatomic,retain) NSMutableString *result;
@@ -29,6 +29,8 @@
 @property (nonatomic,retain) NSMutableArray *messagesArray;
 
 @property (nonatomic,retain) NSString *starGazerAckString;
+
+@property (nonatomic) BOOL isRunning;
 
 + (instancetype) sharedSocket;
 

@@ -12,6 +12,7 @@
 #import "ConnectStatesCell.h"
 #import "SettingViewController.h"
 #import "LoginViewController.h"
+#import "ServerSocket.h"
 
 @interface FirstViewController ()
 
@@ -179,7 +180,9 @@
  */
 - (void)backToForground :(NSNotification *)noti {
     NSLog(@"backToForground noti");
-    [control startListen];
+    if ([ServerSocket sharedSocket].isRunning) {
+        [control startListen];
+    }
 }
 
 #pragma mark - action.

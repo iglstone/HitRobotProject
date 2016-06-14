@@ -168,12 +168,21 @@
     NSDictionary *dic = [noti userInfo];
     AsyncSocket *socket = (AsyncSocket *)[dic objectForKey:@"socket"];
     //去除选中的socket
-    [server.selectedSocketArray enumerateObjectsUsingBlock:^(AsyncSocket *S, NSUInteger idx, BOOL *stop) {
-        if ([socket isEqual:S]) {
+//    [server.selectedSocketArray enumerateObjectsUsingBlock:^(AsyncSocket *S, NSUInteger idx, BOOL *stop) {
+//        if ([socket isEqual:S]) {
+//            NSLog(@"remove socket from modelArrays");
+//            [server.selectedSocketArray removeObject:S];
+//        }
+//    }];
+    
+    for (int i = 0; i < server.selectedSocketArray.count; i++) {
+        AsyncSocket *sock = (AsyncSocket *)[server.selectedSocketArray objectAtIndex:i];
+        if ([sock isEqual:socket]) {
             NSLog(@"remove socket from modelArrays");
-            [server.selectedSocketArray removeObject:S];
+            [server.selectedSocketArray removeObject:sock];
         }
-    }];
+    }
+    
     for (int i = 0; i < [m_modelsArray count]; i++) {
         ConnectModel *model = [m_modelsArray objectAtIndex:i];
         if ([model.socket isEqual:socket]) {

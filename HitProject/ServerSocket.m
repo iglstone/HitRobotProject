@@ -20,6 +20,7 @@
 
 @implementation ServerSocket
 @synthesize receiveMessage;
+@synthesize isRunning;
 
 static ServerSocket* _instance = nil;
 #pragma mark - Lifecycle
