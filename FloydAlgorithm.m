@@ -155,7 +155,7 @@
                 NSLog(@"-> %d",k);// log vertex
                 k = (*points2)[k][w];   //get next vertex point
             }
-            NSLog(@"-> %d",w);    // log final point
+            NSLog(@"-> %d",w);    // log final pointDSDDEXEDSEDXZ
         }
     }
 }

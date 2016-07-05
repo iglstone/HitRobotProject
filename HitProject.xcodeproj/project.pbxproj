@@ -976,7 +976,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = /Users/li529700/Documents/1IOSDev/1HitRobot/HitProject/HitProject/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/guolong/Documents/2iOSDev/HitRobotProject/HitProject/PrefixHeader.pch;
 				INFOPLIST_FILE = HitProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hitrobot.wuhuhate;
@@ -994,7 +994,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = /Users/li529700/Documents/1IOSDev/1HitRobot/HitProject/HitProject/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/guolong/Documents/2iOSDev/HitRobotProject/HitProject/PrefixHeader.pch;
 				INFOPLIST_FILE = HitProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hitrobot.wuhuhate;

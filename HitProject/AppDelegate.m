@@ -39,7 +39,7 @@
     //真机调试保存log日志
     UIDevice *device = [UIDevice currentDevice];
     if (![[device model] hasSuffix:@"Simulator"]) {
-//        [self redirectNSlogToDocumentFolder];
+        [self redirectNSlogToDocumentFolder];
     }
     
     return YES;

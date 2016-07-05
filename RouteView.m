@@ -8,10 +8,12 @@
 
 #import "RouteView.h"
 #import "STModel.h"
+#import "EditGraphModelAndCell.h"
 #import "FloydAlgorithm.h"
 
 #define POSITIONOFFSET 30 //整体地图相对于背景的偏移
 #define ROUTEOFFSET    30 //路径相对于整体地图的偏移，，0，0 点不是在地图的最坐下角
+#define THRSHHOLDCIRCLE 20
 
 @interface RouteView (){
     UIBezierPath *m_bezierPath ;         // globel line and point path
@@ -32,6 +34,11 @@
     CAShapeLayer *touchPointLayer;
     
     NSInteger selectedIndex;
+    
+    STModel *tmpGazerModel;
+    NSMutableArray *pathArr ;
+    NSArray *graphModelsArray;
+    
 }
 @end
 
@@ -64,6 +71,9 @@
         NSTimer *time = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateRobotPosition:) userInfo:nil repeats:YES];
         [time fire];
         
+        NSTimer *time2 = [NSTimer scheduledTimerWithTimeInterval:0.8 target:self selector:@selector(sendPositonToRobot:) userInfo:nil repeats:YES];
+        [time2 fire];
+        
         labelsArray = [NSMutableArray new];
         
         //点击出红点
@@ -74,6 +84,10 @@
         CGPoint pt = CGPointMake(100, 100);
         UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:pt radius:10 startAngle:0 endAngle:2*M_PI clockwise:YES];
         touchPointLayer.path = path.CGPath;
+        
+        tmpGazerModel = nil;
+        pathArr = [NSMutableArray new];
+        graphModelsArray = [[DataCenter sharedDataCenter] getGraphModlesArr];
         
         return self;
     }
@@ -89,6 +103,35 @@
     int l2 = 25*sinf(robotAngelOfScreen/180*M_PI);
     [path addLineToPoint:CGPointMake(robotPositionOfScreen.x + l1, robotPositionOfScreen.y + l2)];
     m_realTimePointLayer.path = path.CGPath;
+}
+
+//judge the robot has come to the position
+// only used when touch end and search the path, because pathArr will be the nil until then.
+- (void)sendPositonToRobot:(NSTimer *)time{
+    if (pathArr.count == 0) {
+        NSLog(@"hasnot search the path or reach the final position");
+        return;
+    }
+    
+    NSString *vexAngs = [pathArr objectAtIndex:0];//get first object
+    NSArray *arr = [vexAngs componentsSeparatedByString:@","];
+    NSInteger pointIndex = [[arr objectAtIndex:0] integerValue];
+    NSInteger angel = [[arr objectAtIndex:1] integerValue];
+    EditGraphModel *tmpGraphModel = [graphModelsArray objectAtIndex:pointIndex];
+    NSString *xys = tmpGraphModel.ptXYS;
+    CGPoint realPt = CGPointFromString(xys);
+    
+    //send to robot every time.
+    [[HitControl sharedControl] sendTouchPointToRobot:realPt];
+    
+    if ((fabs( tmpGazerModel.modelX - realPt.x) < THRSHHOLDCIRCLE ) && (fabs(tmpGazerModel.modelY - realPt.y) < THRSHHOLDCIRCLE)) {
+        NSLog(@"now in cicle next angel");
+        if (fabs( angel - tmpGazerModel.modelAngel) < 5) {
+            NSLog(@"oooo :position right");
+            [pathArr removeObjectAtIndex:0];//remove the fisrt position in arr
+        }
+    }
+    
 }
 
 #pragma mark - draw views
@@ -117,10 +160,10 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
     if ([keyPath isEqualToString:@"starGazerAckString"]) {
         NSString *newString  = [change objectForKey:@"new"];
-        STModel *model = [STModel stmodelWithString:newString]; //解析string
-        if (model) {
-            robotAngelOfScreen = model.modelAngel + 90;
-            robotPositionOfScreen = [FloydAlgorithm changeCood: CGPointMake(model.modelX, model.modelY)];
+        tmpGazerModel = [STModel stmodelWithString:newString]; //解析string
+        if (tmpGazerModel) {
+            robotAngelOfScreen = tmpGazerModel.modelAngel + 90;
+            robotPositionOfScreen = [FloydAlgorithm changeCood: CGPointMake(tmpGazerModel.modelX, tmpGazerModel.modelY)];
         }
     }
 }
@@ -279,22 +322,20 @@
     }
     m_pathLayer.path = bezier.CGPath;
     NSLog(@"Path__:%@", pathSting);
-    [self sendToRobot:pathSting];
+    [self processingPath:pathSting];
+
 }
 
-//pathString:3,0->0,-90->1,70
-- (void)sendToRobot : (NSString *)pathString {
+//pathString:3,0->0,-90->1,70, 将pathstring切换成数组
+- (void)processingPath : (NSString *)pathString {
     if (pathString.length == 0) {
         NSLog(@"pathString length is zero, wrong");
     }
     NSArray *arr = [pathString componentsSeparatedByString:@"->"];
-    for (NSString *vexAngs in arr) {
-        NSArray *aa = [vexAngs componentsSeparatedByString:@","];
-        NSInteger pointIndex = [[aa objectAtIndex:0] integerValue];
-        NSInteger angel = [[aa objectAtIndex:1] integerValue];
-        NSLog(@"xx%ld, oo%ld", pointIndex, angel);
-    }
+    pathArr = [NSMutableArray arrayWithArray:arr];
+    
 }
+
 
 - (NSInteger) findNearestIndexByScreenPosition : (CGPoint) screen_original {
     CGPoint scPt = [FloydAlgorithm changeCoodToRealPosition:screen_original];

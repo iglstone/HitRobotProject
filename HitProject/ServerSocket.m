@@ -246,7 +246,7 @@ static ServerSocket* _instance = nil;
     }
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
     if (self.selectedSocketArray.count == 0 ) { //filtering the stopmove and stopSingSongs cmd.
-        if ([string isEqualToString:@"g"] || [string isEqualToString:@"P"]) {
+        if ([debugs isEqualToString:@"停止"] || [debugs isEqualToString:@"停止播放"]) {
             //g:stopmove  P:stopSingSong
         } else {
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_NOROBOT object:nil];//通知到主界面去提示没有连接
