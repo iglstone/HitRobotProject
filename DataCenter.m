@@ -171,6 +171,33 @@
     return arr;
 }
 
+- (CGPoint )getRealPositionsOfIndex:(NSInteger)index {
+    NSArray *arr = [self getRealPositionsArr];
+    if (arr == nil || arr.count <=3) {
+        NSMutableArray *rr = [NSMutableArray new];
+        NSArray *pointsArr = @[@[@0,@0], @[@770,@0], @[@770,@400], @[@0,@400]]; //初始化四个
+        for (int i = 0; i < pointsArr.count; i++) {
+            int x = (int)[pointsArr[i][0] integerValue];
+            int y = (int)[pointsArr[i][1] integerValue];
+            CGPoint pt = CGPointMake(x, y);
+            [rr insertObject:NSStringFromCGPoint(pt) atIndex:i];
+        }
+        [self setRealPoisitonsOfArr:rr];
+        arr = rr;
+    }
+    
+    if (index >= arr.count) {
+        NSLog(@"connnot get index points of index :%ld", (long)index);
+        return CGPointMake(0, 0);
+    }
+    
+    NSString *ptst = [arr objectAtIndex:index];
+    CGPoint pt = CGPointFromString(ptst);
+    
+    return pt;
+}
+
+
 - (void)setGraphModelsArr :(NSArray *)arr {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:arr];
     [[NSUserDefaults standardUserDefaults] setObject:data forKey:NOTI_EDITGRAPHINFO];

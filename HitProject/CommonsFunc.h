@@ -24,6 +24,15 @@
  */
 + (BOOL)isFirstLaunch ;
 
+/**
+ *  按位顺序校验和
+ *
+ *  @param stringToChar
+ *
+ *  @return 校验和
+ */
++ (char )xorSum:(NSString *)string;
+
 //获得系统背景色
 +(UIColor *)colorOfSystemBackground;
 +(UIColor *)colorOfLight;

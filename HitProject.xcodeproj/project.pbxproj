@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		424F71331D45EBD400FB78FA /* StarGazerProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 424F71321D45EBD400FB78FA /* StarGazerProtocol.m */; };
 		4C667AEEA938854297F27795 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC05B4E2E18680CC4941107 /* libPods.a */; };
 		E30B62AD1C40AAE5006712F1 /* GLViewProcessingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E30B62AC1C40AAE5006712F1 /* GLViewProcessingTest.m */; };
 		E30EEC3E1C2532BD00352235 /* SocketMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E30EEC3D1C2532BD00352235 /* SocketMessageModel.m */; };
@@ -120,6 +121,8 @@
 
 /* Begin PBXFileReference section */
 		397759819632A14F21F4B158 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		424F71311D45EBD400FB78FA /* StarGazerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StarGazerProtocol.h; sourceTree = "<group>"; };
+		424F71321D45EBD400FB78FA /* StarGazerProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StarGazerProtocol.m; sourceTree = "<group>"; };
 		5977BFAC93DE4DCB521D4947 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		AAC05B4E2E18680CC4941107 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E30B62AB1C40AAE5006712F1 /* GLViewProcessingTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLViewProcessingTest.h; sourceTree = "<group>"; };
@@ -590,6 +593,8 @@
 				E3E91FC61BEC32C6003AE247 /* AsyncUdpSocket.m */,
 				E3E91FC01BEC318F003AE247 /* ServerSocket.h */,
 				E3E91FC11BEC318F003AE247 /* ServerSocket.m */,
+				424F71311D45EBD400FB78FA /* StarGazerProtocol.h */,
+				424F71321D45EBD400FB78FA /* StarGazerProtocol.m */,
 				E30EEC3C1C2532BD00352235 /* SocketMessageModel.h */,
 				E30EEC3D1C2532BD00352235 /* SocketMessageModel.m */,
 				E3E91FCA1BEC8117003AE247 /* HitControl.h */,
@@ -796,6 +801,7 @@
 				E34B9A2B1C5A4163009E4B78 /* JSDPad.m in Sources */,
 				E3E91FC81BEC32C6003AE247 /* AsyncUdpSocket.m in Sources */,
 				E3E1ECA51CF2EED4006E7DC5 /* EditGraphViewController.m in Sources */,
+				424F71331D45EBD400FB78FA /* StarGazerProtocol.m in Sources */,
 				E3F430361CF42748003674EC /* MapInfoViewController.m in Sources */,
 				E36A67A91CEDADB600941DD1 /* ZDStickerView.m in Sources */,
 				E34C26591C2CDCD3007936D8 /* LewPopupViewAnimationDrop.m in Sources */,

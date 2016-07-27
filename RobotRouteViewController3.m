@@ -13,6 +13,7 @@
 #import "EditGraphViewController.h"
 #import "DataCenter.h"
 #import "MapInfoViewController.h"
+#import "StarGazerProtocol.h"
 
 #define TOUCHPINCHTHRESHHOLD 10
 #define RIGHTBACKGROUNDVIEWOFSEET 30
@@ -75,9 +76,20 @@
     
     //refresh the draw
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(drawRouteView) name:NOTI_REFRESHDRAW object:nil];
+    
+    StarGazerProtocol *stP = [StarGazerProtocol sharedStarGazerProtocol];
+    if (stP) {
+        NSString *st = [stP composeDownLoadStringOfMode:StarGazerModeControl data:@"abcde"];
+        if (st) {
+            NSLog(@"_st: %@", st);
+        }else {
+            NSLog(@"composeDownLoadStringOfMode nil");
+        }
+    }
 }
 
-- (void) drawRouteView {
+- (void) drawRouteView
+{
     m_realPosotionsArray = [NSMutableArray arrayWithArray:[sharedData getRealPositionsArr]];
     NSArray *arr = [sharedData getGraphModlesArr];
     [sharedData creatMGragh:&m_graph OfModelsArr:arr];
@@ -85,8 +97,8 @@
     [FloydAlgorithm initSingelPointIdAndAngel:&vexsAngel withIdAndAngels:[sharedData getAngelsArr]];
     [FloydAlgorithm floydShortestPath:&m_graph pointsTabel:&vexsPre2D shortTable:&distanceSum2D];
     
-    NSString *pathTo = [FloydAlgorithm findShortestPath:&m_graph from:0 to:2 pointsTabel:&vexsPre2D robotAngels:&vexsAngel];
-    NSString *pathBack = [FloydAlgorithm findShortestPath:&m_graph from:2 to:0 pointsTabel:&vexsPre2D robotAngels:&vexsAngel];
+    NSString *pathTo = [[FloydAlgorithm sharedFloydAlgorithm] findShortestPath:&m_graph from:0 to:2 pointsTabel:&vexsPre2D robotAngels:&vexsAngel];
+    NSString *pathBack = [[FloydAlgorithm sharedFloydAlgorithm] findShortestPath:&m_graph from:2 to:0 pointsTabel:&vexsPre2D robotAngels:&vexsAngel];
     NSLog(@"pathTo: %@ \n PathBack: %@" , pathTo, pathBack);
     
     [self logSomeThing];

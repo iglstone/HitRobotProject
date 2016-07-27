@@ -28,7 +28,8 @@
 @property (nonatomic,retain) NSString        *receiveMessage;
 @property (nonatomic,retain) NSMutableArray *messagesArray;
 
-@property (nonatomic,retain) NSString *starGazerAckString;
+@property (nonatomic,retain) NSString *starGazerAckString; //原生指令
+@property (nonatomic,retain) NSString *starGazerUpLoadString;// 上行指令
 
 @property (nonatomic) BOOL isRunning;
 

@@ -7,8 +7,19 @@
 //
 
 #import "FloydAlgorithm.h"
+#import "DataCenter.h"
 
 @implementation FloydAlgorithm
+
++ (instancetype )sharedFloydAlgorithm {
+    static FloydAlgorithm *sharedFloydAlgorithm = nil;
+    static dispatch_once_t pridicate;
+    dispatch_once(&pridicate, ^{
+        sharedFloydAlgorithm = [[FloydAlgorithm alloc] init];
+    });
+    return sharedFloydAlgorithm;
+}
+
 
 #pragma mark - init graph and algrithem
 
@@ -122,12 +133,23 @@
  *  @param distances   distanceTable,距离信息
  *  @param vexsAngel   终点角度信息
  */
-+(NSString *)findShortestPath:(mGraph *)graph from:(int)start to:(int)end pointsTabel:(vexsPre2DTabel *)vexPres robotAngels:(vexAngels *)angels{
-    int pontIndexFirst =  (*vexPres)[start][end];//robot.pointNum;
-    int angelmOfStart = graph->weightAndAngels[start][pontIndexFirst].angel;
-    NSString *tem = [NSString stringWithFormat:@"%d,%d->%d,", start, angelmOfStart, pontIndexFirst];
+- (NSString *)findShortestPath:(mGraph *)graph from:(int)start to:(int)end pointsTabel:(vexsPre2DTabel *)vexPres robotAngels:(vexAngels *)angels
+{
+    /*
+    DataCenter *dataCenter  = [DataCenter sharedDataCenter];
+    CGPoint startPt = [dataCenter getRealPositionsOfIndex:start];
     
-    while (pontIndexFirst != end) {
+    int pontIndexFirst =  (*vexPres)[start][end];//robot.pointNum;
+    CGPoint firstPt = [dataCenter getRealPositionsOfIndex:pontIndexFirst];
+    */
+    int pontIndexFirst =  (*vexPres)[start][end];//robot.pointNum;
+    
+    int angelOfStart = graph->weightAndAngels[start][pontIndexFirst].angel;
+    NSString *tem = [NSString stringWithFormat:@"%d,%d->%d,", start, angelOfStart, pontIndexFirst];
+    //NSString *tem = [NSString stringWithFormat:@"%d,%d->%d,", start, angelOfStart, pontIndexFirst];
+    
+    while (pontIndexFirst != end)
+    {
         int pointIndexSaveFirst = pontIndexFirst;
         pontIndexFirst = (*vexPres)[pontIndexFirst][end];// get next vertex point
         int angelOfFirst = graph->weightAndAngels[pointIndexSaveFirst][pontIndexFirst].angel;
@@ -136,6 +158,23 @@
     tem = [tem stringByAppendingString:[NSString stringWithFormat:@"%.0f",(*angels)[end]]];
     return tem;
 }
+/*
++(NSString *)findShortestPath:(mGraph *)graph from:(int)start to:(int)end pointsTabel:(vexsPre2DTabel *)vexPres robotAngels:(vexAngels *)angels{
+    int pontIndexFirst =  (*vexPres)[start][end];//robot.pointNum;
+    int angelOfStart = graph->weightAndAngels[start][pontIndexFirst].angel;
+    NSString *tem = [NSString stringWithFormat:@"%d,%d->%d,", start, angelOfStart, pontIndexFirst];
+    
+    while (pontIndexFirst != end)
+    {
+        int pointIndexSaveFirst = pontIndexFirst;
+        pontIndexFirst = (*vexPres)[pontIndexFirst][end];// get next vertex point
+        int angelOfFirst = graph->weightAndAngels[pointIndexSaveFirst][pontIndexFirst].angel;
+        tem = [tem stringByAppendingString:[NSString stringWithFormat:@"%d->%d,",angelOfFirst, pontIndexFirst]];
+    }
+    tem = [tem stringByAppendingString:[NSString stringWithFormat:@"%.0f",(*angels)[end]]];
+    return tem;
+}
+*/
 
 /**
  *  输出图中任意两点的前驱点信息和距离和信息

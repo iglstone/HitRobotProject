@@ -11,6 +11,8 @@
 
 @interface FloydAlgorithm : NSObject
 
++ (instancetype )sharedFloydAlgorithm ;
+
 //初始化angel和id成为pointIdAndAngel格式
 + (void ) initSingelPointIdAndAngel:(vexAngels *)idsAndAngels withIdAndAngels:(NSArray *)angels ;
 
@@ -18,7 +20,7 @@
 + (void ) floydShortestPath:(mGraph *)graph pointsTabel:(vexsPre2DTabel *)points2 shortTable:(distancesSum2DTabel *)distances2 ;
 
 //从一点到另一点的最短路径
-+ (NSString *) findShortestPath:(mGraph *)graph from:(int)m to:(int)n pointsTabel:(vexsPre2DTabel *)points2 robotAngels:(vexAngels *)idsAndAngels ;
+- (NSString *) findShortestPath:(mGraph *)graph from:(int)m to:(int)n pointsTabel:(vexsPre2DTabel *)points2 robotAngels:(vexAngels *)idsAndAngels ;
 
 + (void) printShortestPath:(mGraph *)graph pointsTabel:(vexsPre2DTabel *)points2 shortestTabel:(distancesSum2DTabel *)distances2 ;
 

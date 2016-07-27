@@ -71,7 +71,7 @@
         [self.view addSubview:text];
         text.tag = [arrTag[i] integerValue];
         text.placeholder = arr2[i] ;
-        text.text = [NSString stringWithFormat:@"%ld",[ttt[i] integerValue]];
+        text.text = [NSString stringWithFormat:@"%ld",(long)[ttt[i] integerValue]];
         [text mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.view.mas_centerX).offset(20);
             make.top.equalTo(label);

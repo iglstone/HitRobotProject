@@ -24,6 +24,7 @@
 - (NSInteger)getMapHeight;
 
 - (NSArray *)getRealPositionsArr ;
+- (CGPoint )getRealPositionsOfIndex:(NSInteger)index ;
 - (NSArray *)getAngelsArr ;
 - (NSArray *)getGraphModlesArr;
 - (void)setRealPositonsOfIndex:(int)index ofPoint:(CGPoint)pt ;

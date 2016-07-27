@@ -58,8 +58,8 @@
     
     [FloydAlgorithm initSingelPointIdAndAngel:&vexsAngel withIdAndAngels:@[@100,@70,@160,@30]];
     [FloydAlgorithm floydShortestPath:&m_graph pointsTabel:&vexsPre2D shortTable:&distanceSum2D];
-    NSString *pathTo = [FloydAlgorithm findShortestPath:&m_graph from:0 to:2 pointsTabel:&vexsPre2D robotAngels:&vexsAngel];
-    NSString *pathBack = [FloydAlgorithm findShortestPath:&m_graph from:2 to:0 pointsTabel:&vexsPre2D robotAngels:&vexsAngel];
+    NSString *pathTo = [[FloydAlgorithm sharedFloydAlgorithm] findShortestPath:&m_graph from:0 to:2 pointsTabel:&vexsPre2D robotAngels:&vexsAngel];
+    NSString *pathBack = [[FloydAlgorithm sharedFloydAlgorithm] findShortestPath:&m_graph from:2 to:0 pointsTabel:&vexsPre2D robotAngels:&vexsAngel];
     NSLog(@"pathTo: %@ \n PathBack: %@" , pathTo, pathBack);
     
     [self logSomeThing];

@@ -98,7 +98,7 @@
 
 
 - (void) initCellWithModel :(EditGraphModel *)model {
-    self.pointIndexL.text = [NSString stringWithFormat:@"%ld", model.ptIndexI];
+    self.pointIndexL.text = [NSString stringWithFormat:@"%ld", (long)model.ptIndexI];
     self.pointAngelT.text = model.ptAngelS;
     CGPoint pt = CGPointFromString(model.ptXYS);
     self.pointXYT.text = [NSString stringWithFormat:@"%.0f,%.0f",pt.x, pt.y];

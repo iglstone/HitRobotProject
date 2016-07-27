@@ -24,6 +24,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launc
+    int tt = sizeof(int);
+    int tt2 = sizeof(NSInteger);
+    int tt3 = sizeof(short);
+    NSLog(@"int_size: %d ; NSInteger_size: %d , shore_size: %d", tt, tt2, tt3);
+    
     
     //程序运行第一次存60个桌号 40首歌曲到内存中
     DeskInfoHelper *help = [DeskInfoHelper new];

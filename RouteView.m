@@ -216,7 +216,7 @@
         if (selectedIndex != NSNotFound) {
             [m_screenPositionsArray replaceObjectAtIndex:selectedIndex withObject:NSStringFromCGPoint(touchPoint)];
             CGPoint real = [FloydAlgorithm changeCoodToRealPosition:touchPoint];
-            NSLog(@"touch:%ld toRealPositon:%@",selectedIndex, NSStringFromCGPoint(real));
+            NSLog(@"touch:%ld toRealPositon:%@",(long)selectedIndex, NSStringFromCGPoint(real));
         }
         [self updataPath];
     }else {
@@ -297,13 +297,15 @@
 
 #pragma mark - private mathod
 
-- (void) drawRobotPositonByScreenPositionStart:(CGPoint)start end:(CGPoint )end {
+//从任意点坐标计算最短路径到终点并描述出来
+- (void) drawRobotPositonByScreenPositionStart:(CGPoint)start end:(CGPoint )end
+{
     CGPoint startR = [FloydAlgorithm changeCoodToRealPosition:start];
     CGPoint endR = [FloydAlgorithm changeCoodToRealPosition:end];
     int firstIndex = (int)[self findNearestIndexByRealPosition:startR];
     int lastIndex = (int)[self findNearestIndexByRealPosition:endR];
     
-    NSString *pathSting = [FloydAlgorithm findShortestPath:tmpGraph from:firstIndex to:lastIndex pointsTabel:vesxPreTabel robotAngels:vexsAngels];
+    NSString *pathSting = [[FloydAlgorithm sharedFloydAlgorithm] findShortestPath:tmpGraph from:firstIndex to:lastIndex pointsTabel:vesxPreTabel robotAngels:vexsAngels];
     NSArray *arr = [pathSting componentsSeparatedByString:@"->"];
     
     UIBezierPath *bezier = [UIBezierPath new];

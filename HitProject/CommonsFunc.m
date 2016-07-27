@@ -120,6 +120,20 @@
     return strIPAddress;
 }
 
++ (char )xorSum:(NSString *)string
+{
+    const char *ch = [string UTF8String];
+    int i;
+    char result;
+    for (result = ch[0], i = 1; i < string.length; i++)
+    {
+        result^=ch[i];//Xor
+    }
+    NSLog(@"XOR of String: %@ result = %c", string ,result);
+    
+    return result;
+}
+
 
 /*
 // 设置超时时间

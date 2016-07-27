@@ -66,7 +66,7 @@
         cell = [[EditGraphCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:st];
     }
     
-    cell.pointIndexL.text = [NSString stringWithFormat:@"%ld", indexPath.row];
+    cell.pointIndexL.text = [NSString stringWithFormat:@"%ld", (long)indexPath.row];
     if (dataSourceArr.count >= 4) {
         if (indexPath.row < dataSourceArr.count) {
             EditGraphModel *model = [dataSourceArr objectAtIndex:indexPath.row];

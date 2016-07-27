@@ -223,7 +223,10 @@ static ServerSocket* _instance = nil;
     }else if ([msg hasPrefix:@"~"] && [msg hasSuffix:@"`"]) {
         self.starGazerAckString = msg;
         
-    }else{
+    }else if ([msg hasPrefix:@"$$"] && [msg hasSuffix:@"#"]) {
+        self.starGazerUpLoadString = msg;
+    }
+    else{
         //用来检测信息是否发送过去了，即检测发送的信号是否是msg == o;
         receiveMessage = msg;
         tmpSocket = sock;

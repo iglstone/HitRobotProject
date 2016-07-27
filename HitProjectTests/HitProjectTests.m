@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "StarGazerProtocol.h"
 
-@interface HitProjectTests : XCTestCase
+@interface HitProjectTests : XCTestCase{
+    StarGazerProtocol *stPro;
+}
 
 @end
 
@@ -17,6 +20,7 @@
 
 - (void)setUp {
     [super setUp];
+    stPro = [StarGazerProtocol sharedStarGazerProtocol];
     // Put setup code here. This method is called before the invocation of each test method in the class.
 }
 
@@ -25,9 +29,19 @@
     [super tearDown];
 }
 
+- (void)test1StarGazer{
+    
+}
+
 - (void)testExample {
     // This is an example of a functional test case.
+    
+    NSString *st = [stPro composeDownLoadStringOfMode:StarGazerModeControl data:@"abcdef"];
+    
+    XCTAssert(@"1234", @"st.... : %@", st);// if expression is false, will out put to console
+    XCTAssertNotNil(st, @"st is nil");
     XCTAssert(YES, @"Pass");
+    
 }
 
 - (void)testPerformanceExample {

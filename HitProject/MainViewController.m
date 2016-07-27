@@ -73,11 +73,13 @@
     SecondViewController *second = [SecondViewController new];
     second.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"操作界面" image:image selectedImage:nil];
     ThirdViewController *third = [ThirdViewController new];
-//    RobotRouteViewController3 *third = [RobotRouteViewController3 new];
     third.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"送餐界面" image:image selectedImage:nil];
     FourthViewController *fourth = [FourthViewController new];
     fourth.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"语音界面" image:image selectedImage:nil];
-    self.viewControllers = @[first, second, third, fourth];
+    
+    RobotRouteViewController3 *fifth = [RobotRouteViewController3 new];
+    fifth.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"无轨导航" image:image selectedImage:nil];
+    self.viewControllers = @[first, second, third, fourth, fifth];
     
     [self addRightSideViewContainer];
     [self.view addSubview:self.p_debugLabel];
