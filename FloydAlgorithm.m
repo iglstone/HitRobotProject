@@ -152,10 +152,10 @@
     {
         int pointIndexSaveFirst = pontIndexFirst;
         pontIndexFirst = (*vexPres)[pontIndexFirst][end];// get next vertex point
-        int angelOfFirst = graph->weightAndAngels[pointIndexSaveFirst][pontIndexFirst].angel;
+        int angelOfFirst = graph->weightAndAngels[pointIndexSaveFirst][pontIndexFirst].angel;//turn angel , not final angel
         tem = [tem stringByAppendingString:[NSString stringWithFormat:@"%d->%d,",angelOfFirst, pontIndexFirst]];
     }
-    tem = [tem stringByAppendingString:[NSString stringWithFormat:@"%.0f",(*angels)[end]]];
+    tem = [tem stringByAppendingString:[NSString stringWithFormat:@"%.0f",(*angels)[end]]];//final angel
     return tem;
 }
 /*

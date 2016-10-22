@@ -15,6 +15,8 @@
 #define ROUTEOFFSET    30 //路径相对于整体地图的偏移，，0，0 点不是在地图的最坐下角
 #define THRSHHOLDCIRCLE 80//40
 
+#define TURNANGELTRHESHOLD 20//定义最大转向角，小于这个角度过度点就不发送到下位机
+
 @interface RouteView (){
     UIBezierPath *m_bezierPath ;         // globel line and point path
     CAShapeLayer *m_lineShapLayer ;      // show globel and point path
@@ -78,9 +80,9 @@
         [time2 fire];
         
         noRobotConnected = false;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiNoRobot:) name:NOTICE_NOROBOT object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiNoRobot:) name:NOTICE_NOROBOT object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiConfirmRobot:) name:NOTICE_CONFIRMROBOT object:nil];
+        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiConfirmRobot:) name:NOTICE_CONFIRMROBOT object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiCicleModeToRobot:) name:NOTICE_CIRCLEMODE object:nil];
         
@@ -118,16 +120,18 @@
     
 }
 
+/*
 - (void)notiNoRobot:(NSNotification *)niti {
     //no robot
     noRobotConnected = true;
-    [pathArr removeAllObjects];
+    //[pathArr removeAllObjects];
 }
 - (void)notiConfirmRobot :(NSNotification *)noti {
     //选择机器人后开始计算
     noRobotConnected = false;
-    [pathArr removeAllObjects];//清空所有
+    //[pathArr removeAllObjects];//清空所有
 }
+*/
 
 - (void)updateRobotPosition :(NSTimer *)time {
     UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:robotPositionOfScreen radius:10 startAngle:0.0 endAngle:2 * M_PI clockwise:0] ;
@@ -158,13 +162,20 @@
     return realPt;
 }
 
+
 - (void) circleModeToRobot :(NSTimer *)timer {
-    if (noRobotConnected) {
-        //no robot connect
+//    if (noRobotConnected) {
+//        //no robot connect
+//        return;
+//    }
+    if ([ServerSocket sharedSocket].selectedSocketArray.count == 0) {
+        NSLog(@"no robot connected, return");
+        [pathArr removeAllObjects];
         return;
     }
     if (pathArr.count == 0) {
         [timer invalidate];
+        return;
     }
     
     CGPoint realPt = [self getRealPointByIndex:0];
@@ -178,11 +189,18 @@
 //judge the robot has come to the position
 //only used when touch end and search the path, because pathArr will be the nil until then.
 - (void)sendPositonToRobot:(NSTimer *)time {
+    if ([ServerSocket sharedSocket].selectedSocketArray.count == 0) {
+        NSLog(@"no robot connected, return");
+        [pathArr removeAllObjects];
+        return;
+    }
+    /*
     if (noRobotConnected)
     {
         //no robot connect
         return;
     }
+    */
     
     if (pathArr.count == 0)
     {
@@ -442,8 +460,47 @@
     //init path arr
     pathArr = [NSMutableArray arrayWithArray:arr];
     
+    //过滤掉中间的非转折点的点，判断是否是非转折点的依据是两个角度差在25度以内
+    [self filterPathArray:pathArr];
+    
 }
 
+/**
+ *  过滤掉中间的非转折点的点，判断是否是非转折点的依据是两个角度差在25度以内
+ *  待测 
+ *  @param arrOfPath 路径生成后的数组
+ */
+- (void)filterPathArray:(NSMutableArray *)arrOfPath
+{
+    NSInteger vexNUm = [[DataCenter sharedDataCenter] getVexsNum];
+    if (vexNUm == 2) {
+        return;
+    }
+    
+    //pathString:3,0->0,-90->1,70
+    
+    NSString *vexAngs1 = [pathArr objectAtIndex:0];//get first object
+    NSArray *arr1 = [vexAngs1 componentsSeparatedByString:@","];
+    //NSInteger pointIndex = [[arr objectAtIndex:0] integerValue];
+    NSInteger firstAngel = [[arr1 objectAtIndex:1] integerValue];
+    NSInteger beforAngel = firstAngel;
+    
+    //从第二组数据开始，判断是否与前一个数据角度差 < 25度
+    for (int i = 1 ; i < arrOfPath.count - 1 ; i ++)
+    {
+        NSString *vexAngs = [arrOfPath objectAtIndex:i];//get first object
+        NSArray *arr = [vexAngs componentsSeparatedByString:@","];
+        //NSInteger pointIndex = [[arr objectAtIndex:0] integerValue];
+        NSInteger angel = [[arr objectAtIndex:1] integerValue];
+        
+        if (labs(beforAngel - angel) <= TURNANGELTRHESHOLD) { //25du
+            //guo lv xia
+            [arrOfPath removeObjectAtIndex: i];
+        }
+        beforAngel = angel;
+    }
+    
+}
 
 - (NSInteger) findNearestIndexByScreenPosition : (CGPoint) screen_original {
     CGPoint scPt = [FloydAlgorithm changeCoodToRealPosition:screen_original];
