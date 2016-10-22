@@ -376,7 +376,7 @@
 }
 
 - (void )circleMode{
-    
+    NSLog(@"circleMode and send positions to robot");
 }
 
 -(void)dPad:(JSDPad *)dPad didPressDirection:(JSDPadDirection)direction2 {
