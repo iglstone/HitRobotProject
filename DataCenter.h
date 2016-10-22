@@ -24,6 +24,8 @@
 - (NSInteger)getMapHeight;
 - (NSInteger)getOffsetWidth ;
 - (NSInteger)getOffsetHeight ;
+- (NSInteger)getCircleStart ;
+- (NSInteger)getCircleEnd ;
 
 - (NSArray *)getRealPositionsArr ;
 - (CGPoint )getRealPositionsOfIndex:(NSInteger)index ;

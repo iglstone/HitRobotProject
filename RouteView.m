@@ -40,7 +40,7 @@
     NSArray *graphModelsArray;
     
     NSTimer *time2 ;
-    BOOL sendDataToRobot;
+    BOOL noRobotConnected;
     
 }
 @end
@@ -77,10 +77,12 @@
         time2 = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(sendPositonToRobot:) userInfo:nil repeats:YES];
         [time2 fire];
         
-        sendDataToRobot = false;
+        noRobotConnected = false;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiNoRobot:) name:NOTICE_NOROBOT object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiConfirmRobot:) name:NOTICE_CONFIRMROBOT object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiCicleModeToRobot:) name:NOTICE_CIRCLEMODE object:nil];
         
         labelsArray = [NSMutableArray new];
         
@@ -103,15 +105,27 @@
 }
 
 #pragma mark - actions
+- (void)notiCicleModeToRobot :(NSNotification *)noti
+{
+    NSInteger start = [[DataCenter sharedDataCenter] getCircleStart];
+    NSInteger end = [[DataCenter sharedDataCenter] getCircleEnd];
+    
+    //填充pathArr数据
+    [self producePathfrom:(int)start to:(int)end];
+    
+    NSTimer *time = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(circleModeToRobot:) userInfo:nil repeats:YES];
+    [time fire];
+    
+}
 
 - (void)notiNoRobot:(NSNotification *)niti {
     //no robot
-    sendDataToRobot = true;
+    noRobotConnected = true;
     [pathArr removeAllObjects];
 }
 - (void)notiConfirmRobot :(NSNotification *)noti {
     //选择机器人后开始计算
-    sendDataToRobot = false;
+    noRobotConnected = false;
     [pathArr removeAllObjects];//清空所有
 }
 
@@ -125,27 +139,61 @@
     
 }
 
-//judge the robot has come to the position
-//only used when touch end and search the path, because pathArr will be the nil until then.
-- (void)sendPositonToRobot:(NSTimer *)time {
-    if (sendDataToRobot) {
-        //no robot connect
-        return;
-    }
-    if (pathArr.count == 0) {
-        NSLog(@"hasnot search the path or reach the final position");
-        return;
-    }
-    else
-        NSLog(@"checkout");
+- (CGPoint )getRealPointByIndex:(int)index
+{
     
-    NSString *vexAngs = [pathArr objectAtIndex:0];//get first object
+    if ( index >= pathArr.count ) {
+        NSLog(@"error of index..");
+        return CGPointMake(0, 0);
+    }
+    
+    NSString *vexAngs = [pathArr objectAtIndex:index];//get first object
     NSArray *arr = [vexAngs componentsSeparatedByString:@","];
     NSInteger pointIndex = [[arr objectAtIndex:0] integerValue];
     //NSInteger angel = [[arr objectAtIndex:1] integerValue];
     EditGraphModel *tmpGraphModel = [graphModelsArray objectAtIndex:pointIndex];
     NSString *xys = tmpGraphModel.ptXYS;
     CGPoint realPt = CGPointFromString(xys);
+
+    return realPt;
+}
+
+- (void) circleModeToRobot :(NSTimer *)timer {
+    if (noRobotConnected) {
+        //no robot connect
+        return;
+    }
+    if (pathArr.count == 0) {
+        [timer invalidate];
+    }
+    
+    CGPoint realPt = [self getRealPointByIndex:0];
+    
+    //send to robot every time.
+    [[HitControl sharedControl] sendTouchPointToRobot:realPt];
+    
+    [pathArr removeObjectAtIndex:0];//remove the fisrt position in arr
+}
+
+//judge the robot has come to the position
+//only used when touch end and search the path, because pathArr will be the nil until then.
+- (void)sendPositonToRobot:(NSTimer *)time {
+    if (noRobotConnected)
+    {
+        //no robot connect
+        return;
+    }
+    
+    if (pathArr.count == 0)
+    {
+        NSLog(@"no path route");
+        return;
+    }
+    else
+        NSLog(@"time fire to robot");
+    
+    //每次取第一个。。
+    CGPoint realPt = [self getRealPointByIndex:0];
     
     //send to robot every time.
     [[HitControl sharedControl] sendTouchPointToRobot:realPt];
@@ -259,7 +307,7 @@
         /***********TEST***************/
         [[HitControl sharedControl] sendTouchPointToRobot:realPosition];
         
-        /**********测试不需要***********/
+        /**********测试不需要，装载数据用的***********/
         //[self drawRobotPositonByScreenPositionStart:robotPositionOfScreen end:pt];
         /*****************************/
     }
@@ -390,6 +438,7 @@
     NSArray *arr = [pathString componentsSeparatedByString:@"->"];
     
     [pathArr removeAllObjects];
+    pathArr = nil;
     //init path arr
     pathArr = [NSMutableArray arrayWithArray:arr];
     

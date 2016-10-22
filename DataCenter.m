@@ -29,7 +29,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        keySettingArr = @[@"vexs", @"mapW", @"mapH", @"offsetW", @"offsetH"];
+        keySettingArr = @[@"vexs", @"mapW", @"mapH", @"offsetW", @"offsetH", @"circleS", @"circleE"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiInfo:) name:NOTI_SETTINGINFOMATION object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiInfo:) name:NOTI_EDITGRAPHINFO object:nil];
         return self;
@@ -287,5 +287,22 @@
     return [number integerValue];
 }
 
+- (NSInteger)getCircleStart {
+    NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:NOTI_SETTINGINFOMATION];
+    NSNumber *number = [dic objectForKey:keySettingArr[5]];
+    if (!number || [number integerValue] == 0) {
+        return 0;
+    }
+    return [number integerValue];
+}
+
+- (NSInteger)getCircleEnd {
+    NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:NOTI_SETTINGINFOMATION];
+    NSNumber *number = [dic objectForKey:keySettingArr[6]];
+    if (!number || [number integerValue] == 0) {
+        return 1;
+    }
+    return [number integerValue];
+}
 
 @end

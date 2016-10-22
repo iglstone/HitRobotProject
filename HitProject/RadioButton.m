@@ -160,7 +160,7 @@ static NSMutableDictionary *rb_observers=nil;
     [_button mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self);
         make.left.equalTo(self);
-        make.width.mas_equalTo(100);
+        make.width.mas_equalTo(140);
         make.height.mas_equalTo(22);
     }];
     

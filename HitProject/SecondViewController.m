@@ -369,9 +369,7 @@
     {
         NSLog(@"circle mode");
         [control circleMode];//发命令
-        
-        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CIRCLEMODE object:nil];
-        
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CIRCLEMODE object:nil];
     }
 }
 
@@ -699,8 +697,8 @@
         if ([CommonsFunc isDeviceIpad]) {
             make.top.equalTo(self.view).offset(50);
             make.left.equalTo(self.view).offset(50);
-            make.width.mas_equalTo(@200);
-            make.height.mas_equalTo(@150);
+            make.width.mas_equalTo(@180);
+            make.height.mas_equalTo(@190);
         }else {
             make.top.equalTo(self.view).offset(10);
             make.left.equalTo(self.view).offset(10);
@@ -732,7 +730,7 @@
             }else
                 make.top.equalTo(radioContainer).offset(40 + 35*i);
             make.left.equalTo(radioContainer).offset(10);
-            make.size.mas_equalTo(CGSizeMake(100, 22));
+            make.size.mas_equalTo(CGSizeMake(120, 22));
         }];
         [rb.button setTitle:arr[i] forState:UIControlStateNormal];
     }

@@ -43,6 +43,16 @@
 @implementation RobotRouteViewController3
 #pragma mark - life cicle
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        routeView = [[RouteView alloc] initWithFrame:CGRectMake(0, 0, self.imgView.frame.size.width, self.imgView.frame.size.height)];
+        [routeView setCanEdit:YES];
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -68,8 +78,10 @@
     backgroundView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:backgroundView];
     
+    /***** move to init part 
     routeView = [[RouteView alloc] initWithFrame:CGRectMake(0, 0, self.imgView.frame.size.width, self.imgView.frame.size.height)];
     [routeView setCanEdit:YES];
+     */
     [backgroundView insertSubview:routeView belowSubview: backgroundView];
     
     [self addBtns];
