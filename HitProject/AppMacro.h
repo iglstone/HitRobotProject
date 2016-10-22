@@ -67,6 +67,9 @@
 //没有robot的通知
 #define NOTICE_NOROBOT                      @"NOTICE_NOROBOT"
 
+//没有robot的通知
+#define NOTICE_CONFIRMROBOT                 @"NOTICE_CONFIRMROBOT"
+
 #define NOTICE_OPEN_LOCAL_VIEW              @"NOTICE_OPEN_LOCAL_VIEW"
 
 #define NOTICE_CLOSE_WEBVIEW                @"NOTICE_CLOSE_WEBVIEW"
@@ -78,10 +81,10 @@
 #define NOTICE_SONGPOPVIEW_CONFIRM          @"NOTICE_SONGPOPVIEW_CONFIRM"
 
 //change the socke mode and speed
-#define NOTICE_CONFIG_MODE_SPEEDN          @"NOTICE_CONFIG_MODE_SPEEDN"
+#define NOTICE_CONFIG_MODE_SPEEDN           @"NOTICE_CONFIG_MODE_SPEEDN"
 
 //post power notification
-#define NOTICE_POWERNOTIFICATION           @"NOTICE_POWERNOTIFICATION"
+#define NOTICE_POWERNOTIFICATION            @"NOTICE_POWERNOTIFICATION"
 
 //nsdefaut KEY
 #define NSDEFAULT_REMEMBERCODE              @"NSDEFAULT_REMEMBERCODE"
@@ -91,6 +94,9 @@
 //#define NSDEFAULT_GOLDROBOTIP               @"NSDEFAULT_GOLDROBOTIP"
 #define NSDEFAULT_PickupDeskNum             @"NSDEFAULT_PickupDeskNum"
 #define NSDEFAULT_PickupSongsNum            @"NSDEFAULT_PickupSongsNum"
+
+//post power notification
+#define NOTICE_CIRCLEMODE                   @"NOTICE_CIRCLEMODE"
 
 #endif
 

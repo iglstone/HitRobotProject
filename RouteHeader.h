@@ -17,9 +17,18 @@
 #define INTMAX     65535
 #define POINTRADUS 7
 
-#define MAPMAXWIDTH  900//实际地图尺寸,CM
-#define MAPMAXHEIGHT  400//实际地图尺寸,CM
+/*******207办公室******/
+//#define MAPMAXWIDTH  900//实际地图尺寸,CM
+//#define MAPMAXHEIGHT  400//实际地图尺寸,CM
+/*****一楼展厅尺寸******/
+#define MAPMAXWIDTH  2365//实际地图尺寸,CM
+#define MAPMAXHEIGHT  1395//实际地图尺寸,CM
+
 #define MAPOFFSETOFSCREEN 30
+
+#define OFFSETPICW  600//地图上0点水平偏移地图实际位置，cm
+#define OFFSETPICH  935// = 1395 - 460//地图上0点竖直偏移地图实际位置，cm
+
 
 typedef struct {
     float weight;//连线长度

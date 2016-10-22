@@ -11,7 +11,7 @@
 @implementation EditGraphModel
 //NSData *data = [NSKeyedArchiver archivedDataWithRootObject:deskModelsArray];
 //[[NSUserDefaults standardUserDefaults] setObject:data forKey:DESKMODELSDIC];
-- (void)encodeWithCoder:(NSCoder *)aCoder{
+- (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:@(self.ptIndexI)       forKey:@"ptIndexI"];
     [aCoder encodeObject:self.ptXYS             forKey:@"ptXYS"];
     [aCoder encodeObject:self.ptAngelS          forKey:@"ptAngelS"];
@@ -26,7 +26,7 @@
  */
 //NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:DESKMODELSDIC];
 //NSArray <DeskInfoModel *> *arr = [NSKeyedUnarchiver unarchiveObjectWithData:data];
--(instancetype)initWithCoder:(NSCoder *)aDecoder{
+-(instancetype)initWithCoder:(NSCoder *)aDecoder {
     self.ptIndexI       = [[aDecoder decodeObjectForKey:@"ptIndexI"] integerValue];
     self.ptXYS          = [aDecoder decodeObjectForKey:@"ptXYS"];
     self.ptAngelS       = [aDecoder decodeObjectForKey:@"ptAngelS"];

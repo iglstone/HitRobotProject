@@ -360,11 +360,23 @@
 //        NSString *st2 = [CommonsFunc stringToHexString:(int)[t2.text integerValue]];
 //        [server sendMessage:[NSString stringWithFormat:@"0x01%@%@",st,st2] debugstring:@"送餐模式"];
     }
-    else
+    else if(index == 1)
     {
         NSLog(@"control mode");
         [control controlMode];
     }
+    else if(index == 2)
+    {
+        NSLog(@"circle mode");
+        [control circleMode];//发命令
+        
+        //[[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CIRCLEMODE object:nil];
+        
+    }
+}
+
+- (void )circleMode{
+    
 }
 
 -(void)dPad:(JSDPad *)dPad didPressDirection:(JSDPadDirection)direction2 {
@@ -709,8 +721,8 @@
         make.left.equalTo(radioContainer);
     }];
     
-    NSArray *arr = @[@"送餐模式",@"控制模式"];
-    for (int i = 0; i < 2; i++) {
+    NSArray *arr = @[@"送餐模式",@"控制模式",@"循环模式"];
+    for (int i = 0; i < arr.count; i++) {
         RadioButton *rb = [[RadioButton alloc] initWithGroupId:@"first group" index:i];
         rb.tag = i + 100;
         [radioContainer addSubview:rb];

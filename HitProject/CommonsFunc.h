@@ -16,6 +16,10 @@
 //十六进制转nsstring
 +(NSString *)stringFromHexString:(NSString *)hexString;
 +(NSString *)stringToHexString:(int)number;
+//@"7e1212"->接收端十六进制显示“7e1212”
++ (NSString *)convertHexStrToString:(NSString *)str ;
+//将NSString转换成十六进制的字符串则可使用如下方式:
++ (NSString *)convertStringToHexStr:(NSString *)str ;
 
 +(BOOL)isDeviceIpad;
 /**

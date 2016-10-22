@@ -29,7 +29,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        keySettingArr = @[@"vexs", @"mapW", @"mapH"];
+        keySettingArr = @[@"vexs", @"mapW", @"mapH", @"offsetW", @"offsetH"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiInfo:) name:NOTI_SETTINGINFOMATION object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiInfo:) name:NOTI_EDITGRAPHINFO object:nil];
         return self;
@@ -241,6 +241,7 @@
     return arr;
 }
 
+//keySettingArr = @[@"vexs", @"mapW", @"mapH", @"offsetW", @"offsetH"];
 - (NSInteger)getVexsNum {
     NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:NOTI_SETTINGINFOMATION];
     NSNumber *number = [dic objectForKey:keySettingArr[0]];
@@ -262,6 +263,24 @@
 - (NSInteger)getMapHeight {
     NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:NOTI_SETTINGINFOMATION];
     NSNumber *number = [dic objectForKey:keySettingArr[2]];
+    if (!number || [number integerValue] == 0) {
+        return 500;
+    }
+    return [number integerValue];
+}
+
+- (NSInteger)getOffsetWidth {
+    NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:NOTI_SETTINGINFOMATION];
+    NSNumber *number = [dic objectForKey:keySettingArr[3]];
+    if (!number || [number integerValue] == 0) {
+        return 500;
+    }
+    return [number integerValue];
+}
+
+- (NSInteger)getOffsetHeight {
+    NSDictionary *dic = [[NSUserDefaults standardUserDefaults] objectForKey:NOTI_SETTINGINFOMATION];
+    NSNumber *number = [dic objectForKey:keySettingArr[4]];
     if (!number || [number integerValue] == 0) {
         return 500;
     }

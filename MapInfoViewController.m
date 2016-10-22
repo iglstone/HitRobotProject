@@ -45,15 +45,16 @@
     }];
     [doneBtn addTarget:self action:@selector(btnTaped:) forControlEvents:UIControlEventTouchUpInside];
     
-    
     int i = 0;
-    NSArray *arr = @[@"点个数", @"地图宽度(cm)", @"地图长度(cm)"];
-    NSArray *arrTag = @[@"100", @"101", @"102"];
-    NSArray *arr2 = @[@">=4", @"1000", @"500"];
+    NSArray *arr = @[@"点个数", @"地图长度(cm)", @"地图高度(cm)", @"水平偏移(cm)", @"竖直偏移(cm)"];
+    NSArray *arrTag = @[@"100", @"101", @"102", @"103", @"104"];
+    NSArray *arr2 = @[@">=4", @"2365", @"1395", @"600", @"935"];
     NSInteger vexNum = [[DataCenter sharedDataCenter] getVexsNum];
     NSInteger mapW = [[DataCenter sharedDataCenter] getMapWidth];
     NSInteger mapH = [[DataCenter sharedDataCenter] getMapHeight];
-    NSArray *ttt = @[@(vexNum), @(mapW), @(mapH)];
+    NSInteger offW = [[DataCenter sharedDataCenter] getOffsetWidth];
+    NSInteger offH = [[DataCenter sharedDataCenter] getOffsetHeight];
+    NSArray *ttt = @[@(vexNum), @(mapW), @(mapH), @(offW), @(offH)];
     
     for (i = 0 ; i < arr.count; i++) {
         UILabel *label = [UILabel new];
@@ -84,7 +85,8 @@
 - (void) btnTaped:(UIButton *)btn {
     NSString *title = btn.titleLabel.text;
     if ([title isEqualToString:@"完成"]) {
-        NSArray *keyArr = @[@"vexs", @"mapW", @"mapH"];
+        NSArray *keyArr = @[@"vexs", @"mapW", @"mapH", @"offsetW", @"offsetH"];
+//        keySettingArr = @[@"vexs", @"mapW", @"mapH", @"offsetW", @"offsetH"];
         NSMutableDictionary *dic = [NSMutableDictionary new];
         for (int i = 0; i < keyArr.count; i++) {
             UITextField *te = (UITextField *) [self.view viewWithTag:100 + i];

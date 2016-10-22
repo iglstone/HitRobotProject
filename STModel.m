@@ -20,10 +20,12 @@
         NSLog(@"err protocol");
         return nil;
     }
+    
     if ([string isEqualToString:@"~*DeadZone"]) {
         NSLog(@"~*DeadZone");
         return nil;
     }
+    
     if ([STModel getCount:string ofsubString:@"|"] == 4) {
         NSArray *strings = [string componentsSeparatedByString:@"|"];
         

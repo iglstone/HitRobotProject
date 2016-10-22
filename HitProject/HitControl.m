@@ -64,6 +64,11 @@ static HitControl* _instance = nil;
     [server sendMessage:@"0x010101" debugstring:@"控制模式"];
 }
 
+- (void)circleMode {
+    [server sendMessage:@"0x800101" debugstring:@"无轨循环模式"];
+}
+
+
 - (void)forward {
     [server sendMessage:@"0x020101" debugstring:@"前进"];
 }
@@ -175,6 +180,7 @@ static HitControl* _instance = nil;
         NSLog(@"desk num is less than input num");
         return;
     }
+    
 }
 
 - (void)cancelSendMeal {
@@ -215,12 +221,66 @@ static HitControl* _instance = nil;
     [server sendMessage:@"0x410101" debugstring:@"停止播放"];
 }
 
+- (void) sendTouchPointToRobot: (CGPoint) touchPoint angle:(int )angel {
+    NSString *cmd ;
+    NSString *stX ;
+    NSString *stY ;
+    
+    if (touchPoint.x >= 0) {
+        stX = [NSString stringWithFormat:@"0%04d", (int)touchPoint.x];
+    }else{
+        stX = [NSString stringWithFormat:@"1%04d", abs((int)touchPoint.x)];
+    }
+    
+    if (touchPoint.y >= 0) {
+        stY = [NSString stringWithFormat:@"0%04d", (int)touchPoint.y];
+    }else{
+        stY = [NSString stringWithFormat:@"1%04d", abs((int)touchPoint.y)];
+    }
+    
+    //后面四位数角度和正负
+    if (angel >= 0) {
+        cmd = [NSString stringWithFormat:@"%@%@0%03d",stX,stY,angel];
+    } else {
+        cmd = [NSString stringWithFormat:@"%@%@1%03d",stX,stY,abs(angel)];
+    }
+    
+    //    NSLog(@"__String: %@", cmd);
+    [[[ServerSocket sharedSocket] mutableArrayValueForKey:@"messagesArray"] addObject:[NSString stringWithFormat:@"__String: %@", cmd]];
+    cmd = [CommonsFunc convertStringToHexStr:cmd];
+    
+    NSString *tmp = [NSString stringWithFormat: @"7e01000000%@60",cmd];
+    NSString *hexSt = [CommonsFunc convertHexStrToString:tmp];
+    [server sendMessage:hexSt debugstring:cmd];
+}
+
 - (void) sendTouchPointToRobot: (CGPoint) touchPoint {
+    [self sendTouchPointToRobot:touchPoint angle:0];
+    
+    //changed 10.18 for new protocol
+    /*********
     NSString *cmd = [NSString stringWithFormat:@"~#%03d,%03d`",(int)touchPoint.x,(int)touchPoint.y];
     [server sendMessage:cmd debugstring:cmd];
+    ********/
 }
 
 - (void) sendPathToRobot:(NSInteger)index ofRealPosition:(NSArray *)positionArr ofDeskNum:(NSArray *)deskArr {
+    switch (index) {
+        case 0:
+            index = 0;//起始点
+            break;
+        case 1:
+            index = 3;//3D
+            break;
+        case 2:
+            index = 6;//独轮车
+            break;
+        case 3:
+            index = 7;//终点
+            break;
+        default:
+            break;
+    }
     CGPoint pt = CGPointFromString( [positionArr objectAtIndex:index] );
     [server sendMessage:[NSString stringWithFormat:@"~#%03d,%03d`",(int)pt.x,(int)pt.y] debugstring:deskArr[index]];
     

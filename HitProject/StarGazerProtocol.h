@@ -23,7 +23,9 @@ typedef NS_OPTIONS(uint8_t, StarGazerMode) {
 
 - (NSString *) composeDownLoadStringOfMode:(StarGazerMode)mode data:(NSString *)dataString;
 
+/*
 //send the starGazer protocol to stargazer
 - (void) sendMessage:(NSString *)string Mode:(StarGazerMode)mode;
+*/
 
 @end

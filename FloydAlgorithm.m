@@ -215,6 +215,63 @@
     //    gragh.weightAndAngels[end][start].weight = INTMAX;//反方向给堵住
 }
 
+
+//实际的cm坐标转换成坐标系坐标 //cm -> pix
++ (CGPoint)changeCood:(CGPoint) pt {
+    int scH = [[UIScreen mainScreen] bounds].size.height - 49;
+    int scW = [[UIScreen mainScreen] bounds].size.width;
+    
+    int showPixW = scW - 2 * MAPOFFSETOFSCREEN ;
+    int showPixH = scH - 2 * MAPOFFSETOFSCREEN ;
+    int realW = (int)[DataCenter sharedDataCenter].getMapWidth;  // MAPMAXWIDTH;  //cm，一楼 2365，offset 935
+    int realH = (int)[DataCenter sharedDataCenter].getMapHeight; //MAPMAXHEIGHT; //cm，一楼 1395，offset 600
+    float scaleX = (float) showPixW / realW ;  //every cm  To pix;
+    float scaleY = (float) showPixH / realH ; //
+    
+    float positionXLenth = scaleX * pt.y;
+    float positionYLenth = scaleY * pt.x;
+    
+    //test one floor of service robot launch, changed 10.19
+    float OFFSETW =  [DataCenter sharedDataCenter].getOffsetWidth * scaleX; // OFFSETPICW * scaleX;
+    float OFFSETH = [DataCenter sharedDataCenter].getOffsetHeight * scaleY; // OFFSETPICH * scaleY;
+    
+    float newXx = MAPOFFSETOFSCREEN + OFFSETW + positionXLenth;
+    float newYy = MAPOFFSETOFSCREEN + OFFSETH + positionYLenth;
+    
+    int newXOff = newXx ;
+    int newYOff = newYy ;
+    
+    CGPoint new = CGPointMake(newXOff, newYOff);
+    return new;
+    
+}
+
+//屏幕坐标系转换成实际坐标系
++ (CGPoint)changeCoodToRealPosition:(CGPoint) touchPosition
+{
+    
+    int scH = [[UIScreen mainScreen] bounds].size.height - 49;
+    int scW = [[UIScreen mainScreen] bounds].size.width;
+    
+    int showPixW = scW - 2 * MAPOFFSETOFSCREEN;
+    int showPixH = scH - 2 * MAPOFFSETOFSCREEN;
+    int realW = (int)[DataCenter sharedDataCenter].getMapWidth; // MAPMAXWIDTH;  //cm，一楼 2365，offset 935
+    int realH = (int)[DataCenter sharedDataCenter].getMapHeight; // MAPMAXHEIGHT; //cm，一楼 1395，offset 600
+    float scaleX = (float) realW / showPixW  ;  //every cm  To pix;
+    float scaleY = (float) realH / showPixH  ;
+    
+    float newXx = (touchPosition.y - MAPOFFSETOFSCREEN) * scaleY - [DataCenter sharedDataCenter].getOffsetHeight; //(MAPMAXHEIGHT - OFFSETPICH) ;
+    float newYy = (touchPosition.x - MAPOFFSETOFSCREEN) * scaleX - [DataCenter sharedDataCenter].getOffsetWidth;  //(OFFSETPICW) ;
+    
+    int newXOff = (int)newXx ;
+    int newYOff = (int)newYy ;
+    
+    CGPoint new = CGPointMake( newXOff , newYOff ) ;
+    return new ;
+    
+}
+
+/* backup
 //实际的cm坐标转换成坐标系坐标
 + (CGPoint)changeCood:(CGPoint) pt {
     int scH = [[UIScreen mainScreen] bounds].size.height - 49;
@@ -222,20 +279,20 @@
     
     int showPixW = scW - 2 * MAPOFFSETOFSCREEN;
     int showPixH = scH - 2 * MAPOFFSETOFSCREEN;
-    int realW = MAPMAXWIDTH;  //cm
-    int realH = MAPMAXHEIGHT; //cm
+    int realW = MAPMAXWIDTH;  //cm，一楼 1090，offset 160
+    int realH = MAPMAXHEIGHT; //cm，一楼 2365，offset 600
     float scaleX = (float) showPixW / realW ;//every cm  To pix;
     float scaleY = (float) showPixH / realH  ;//
     
     float positionXLenth = scaleX * pt.x;
     float positionYLenth = scaleY * pt.y;
     
-    float newX = 0 + positionXLenth;//这里 POSITIONOFFSET 表示在父类中的
+    float newX = 0 + positionXLenth ;//这里 POSITIONOFFSET 表示在父类中的
     float newY = 0 + showPixH - positionYLenth ;
-    //    int newXOff = newX + ROUTEOFFSET;
-    //    int newYOff = newY - ROUTEOFFSET;
+ 
     int newXOff = newX ;
     int newYOff = newY ;
+ 
     CGPoint new = CGPointMake(newXOff, newYOff);
     return new;
 }
@@ -262,6 +319,7 @@
     CGPoint new = CGPointMake(newXOff, newYOff);
     return new;
 }
+*/
 
 
 #pragma mark - initNodeFonc---备份

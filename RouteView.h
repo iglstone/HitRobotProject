@@ -16,5 +16,9 @@
 - (void)drawLineAndPoints :(mGraph *)graph withPointsArray:(NSArray *)positions withTailAngel:(vexAngels *)angels vexsTabel:(vexsPre2DTabel *)table ;
 //- (void) drawLineAndPoints :(mGraph *)graph withPointsArray:(NSArray *)positions withTailAngel:(vexAngels *)angels ;
 - (void) setCanEdit:(BOOL) bol ;//default NO
+
 - (void) saveRoute;
+
+- (void) producePathToFinal:(int)finalIndex ;
+
 @end

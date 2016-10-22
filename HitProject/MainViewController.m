@@ -19,7 +19,7 @@
 #define DEBUGTAG 199
 #define NSUSERDEFAULT_DISCONNECT  @"NSUSERDEFAULT_DISCONNECT"
 
-@interface MainViewController () <UITableViewDataSource,UITableViewDelegate> {
+@interface MainViewController () <UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate> {
     NSMutableArray *m_cellsArray;
     int disconectTimes;
     NSTimer *schedulTimer;
@@ -79,6 +79,7 @@
     
     RobotRouteViewController3 *fifth = [RobotRouteViewController3 new];
     fifth.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"无轨导航" image:image selectedImage:nil];
+//    self.viewControllers = @[first, second, third, fourth];// fifth];
     self.viewControllers = @[first, second, third, fourth, fifth];
     
     [self addRightSideViewContainer];
@@ -207,7 +208,7 @@
     [table reloadData];
     if (m_messagesArray.count >= 1) {
         [table scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:(m_messagesArray.count -1) inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-    }else{
+    } else {
         return;
     }
 }
@@ -220,6 +221,7 @@
             tmpModel.robotName = name;
         }
     }];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [m_tableView reloadData];
     });
@@ -231,10 +233,18 @@
 
 - (void)notiNoRobotToast :(NSNotification *)noti {
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请选择机器人" message:nil delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+    alert.delegate = self;
     [alert show];
 }
 
 #pragma mark - table delegete
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        [ServerSocket sharedSocket].showTag = false;
+    }
+    
+}
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (tableView.tag == DEBUGTAG) {
         static NSString * identity = @"debugId";
@@ -303,6 +313,8 @@
         [self setStopBtnRed];
         model.isCheck = YES;
         [control sendCheckSigalWithSocket:model.socket];//check mode and speed config
+        //暂时不搞了
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONFIRMROBOT object:nil];
     }
     else
     {

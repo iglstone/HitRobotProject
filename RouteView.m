@@ -13,7 +13,7 @@
 
 #define POSITIONOFFSET 30 //整体地图相对于背景的偏移
 #define ROUTEOFFSET    30 //路径相对于整体地图的偏移，，0，0 点不是在地图的最坐下角
-#define THRSHHOLDCIRCLE 20
+#define THRSHHOLDCIRCLE 80//40
 
 @interface RouteView (){
     UIBezierPath *m_bezierPath ;         // globel line and point path
@@ -39,6 +39,9 @@
     NSMutableArray *pathArr ;
     NSArray *graphModelsArray;
     
+    NSTimer *time2 ;
+    BOOL sendDataToRobot;
+    
 }
 @end
 
@@ -63,7 +66,7 @@
         m_pathLayer.strokeColor = [UIColor blueColor].CGColor;
         [self.layer addSublayer:m_pathLayer];
         
-        self.backgroundColor = [UIColor clearColor];// [UIColor lightGrayColor];
+        self.backgroundColor = [UIColor clearColor]; //[UIColor lightGrayColor];
         [[ServerSocket sharedSocket] addObserver:self forKeyPath:@"starGazerAckString" options:NSKeyValueObservingOptionNew context:nil];
         
         robotPositionOfScreen = CGPointZero;
@@ -71,8 +74,13 @@
         NSTimer *time = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateRobotPosition:) userInfo:nil repeats:YES];
         [time fire];
         
-        NSTimer *time2 = [NSTimer scheduledTimerWithTimeInterval:0.8 target:self selector:@selector(sendPositonToRobot:) userInfo:nil repeats:YES];
+        time2 = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(sendPositonToRobot:) userInfo:nil repeats:YES];
         [time2 fire];
+        
+        sendDataToRobot = false;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiNoRobot:) name:NOTICE_NOROBOT object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notiConfirmRobot:) name:NOTICE_CONFIRMROBOT object:nil];
         
         labelsArray = [NSMutableArray new];
         
@@ -96,27 +104,45 @@
 
 #pragma mark - actions
 
+- (void)notiNoRobot:(NSNotification *)niti {
+    //no robot
+    sendDataToRobot = true;
+    [pathArr removeAllObjects];
+}
+- (void)notiConfirmRobot :(NSNotification *)noti {
+    //选择机器人后开始计算
+    sendDataToRobot = false;
+    [pathArr removeAllObjects];//清空所有
+}
+
 - (void)updateRobotPosition :(NSTimer *)time {
-    UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:robotPositionOfScreen radius:10 startAngle:0.0 endAngle:2 * M_PI clockwise:0];
-    [path moveToPoint:robotPositionOfScreen];
-    int l1 = 25*cosf(robotAngelOfScreen/180*M_PI);
-    int l2 = 25*sinf(robotAngelOfScreen/180*M_PI);
-    [path addLineToPoint:CGPointMake(robotPositionOfScreen.x + l1, robotPositionOfScreen.y + l2)];
-    m_realTimePointLayer.path = path.CGPath;
+    UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:robotPositionOfScreen radius:10 startAngle:0.0 endAngle:2 * M_PI clockwise:0] ;
+    [path moveToPoint:robotPositionOfScreen] ;
+    int l1 = 25*cosf(robotAngelOfScreen/180*M_PI) ;
+    int l2 = 25*sinf(robotAngelOfScreen/180*M_PI) ;
+    [path addLineToPoint:CGPointMake(robotPositionOfScreen.x + l1, robotPositionOfScreen.y + l2)] ;
+    m_realTimePointLayer.path = path.CGPath ;
+    
 }
 
 //judge the robot has come to the position
-// only used when touch end and search the path, because pathArr will be the nil until then.
-- (void)sendPositonToRobot:(NSTimer *)time{
+//only used when touch end and search the path, because pathArr will be the nil until then.
+- (void)sendPositonToRobot:(NSTimer *)time {
+    if (sendDataToRobot) {
+        //no robot connect
+        return;
+    }
     if (pathArr.count == 0) {
         NSLog(@"hasnot search the path or reach the final position");
         return;
     }
+    else
+        NSLog(@"checkout");
     
     NSString *vexAngs = [pathArr objectAtIndex:0];//get first object
     NSArray *arr = [vexAngs componentsSeparatedByString:@","];
     NSInteger pointIndex = [[arr objectAtIndex:0] integerValue];
-    NSInteger angel = [[arr objectAtIndex:1] integerValue];
+    //NSInteger angel = [[arr objectAtIndex:1] integerValue];
     EditGraphModel *tmpGraphModel = [graphModelsArray objectAtIndex:pointIndex];
     NSString *xys = tmpGraphModel.ptXYS;
     CGPoint realPt = CGPointFromString(xys);
@@ -125,11 +151,16 @@
     [[HitControl sharedControl] sendTouchPointToRobot:realPt];
     
     if ((fabs( tmpGazerModel.modelX - realPt.x) < THRSHHOLDCIRCLE ) && (fabs(tmpGazerModel.modelY - realPt.y) < THRSHHOLDCIRCLE)) {
-        NSLog(@"now in cicle next angel");
+        
+        [pathArr removeObjectAtIndex:0];//remove the fisrt position in arr
+        
+        /*
+        //NSLog(@"now in cicle next angel");
         if (fabs( angel - tmpGazerModel.modelAngel) < 5) {
             NSLog(@"oooo :position right");
             [pathArr removeObjectAtIndex:0];//remove the fisrt position in arr
         }
+        */
     }
     
 }
@@ -162,7 +193,7 @@
         NSString *newString  = [change objectForKey:@"new"];
         tmpGazerModel = [STModel stmodelWithString:newString]; //解析string
         if (tmpGazerModel) {
-            robotAngelOfScreen = tmpGazerModel.modelAngel + 90;
+            robotAngelOfScreen = tmpGazerModel.modelAngel + 180;// ＋ 90;
             robotPositionOfScreen = [FloydAlgorithm changeCood: CGPointMake(tmpGazerModel.modelX, tmpGazerModel.modelY)];
         }
     }
@@ -224,9 +255,13 @@
         UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:pt radius:10 startAngle:0 endAngle:2*M_PI clockwise:YES];
         touchPointLayer.path = path.CGPath;
         CGPoint realPosition = [FloydAlgorithm changeCoodToRealPosition:pt];
+        
+        /***********TEST***************/
         [[HitControl sharedControl] sendTouchPointToRobot:realPosition];
         
-        [self drawRobotPositonByScreenPositionStart:robotPositionOfScreen end:pt];
+        /**********测试不需要***********/
+        //[self drawRobotPositonByScreenPositionStart:robotPositionOfScreen end:pt];
+        /*****************************/
     }
 }
 
@@ -297,7 +332,7 @@
 
 #pragma mark - private mathod
 
-//从任意点坐标计算最短路径到终点并描述出来
+//从任意点坐标计算最短路径到终点并描画出来
 - (void) drawRobotPositonByScreenPositionStart:(CGPoint)start end:(CGPoint )end
 {
     CGPoint startR = [FloydAlgorithm changeCoodToRealPosition:start];
@@ -305,9 +340,25 @@
     int firstIndex = (int)[self findNearestIndexByRealPosition:startR];
     int lastIndex = (int)[self findNearestIndexByRealPosition:endR];
     
+    [self producePathfrom:firstIndex to:lastIndex];
+}
+
+//产生路径，要求横平竖直，目的是pathArr装载数据，
+- (void) producePathToFinal:(int)finalIndex
+{
+    //CGPoint startR = [FloydAlgorithm changeCoodToRealPosition:robotPositionOfScreen]; //这句话要求横平竖直
+    CGPoint startR = CGPointMake(tmpGazerModel.modelX, tmpGazerModel.modelY);
+    int firstIndex = (int)[self findNearestIndexByRealPosition:startR];
+    [self producePathfrom:firstIndex to:finalIndex];
+}
+
+- (void) producePathfrom:(int)firstIndex to:(int)lastIndex
+{
     NSString *pathSting = [[FloydAlgorithm sharedFloydAlgorithm] findShortestPath:tmpGraph from:firstIndex to:lastIndex pointsTabel:vesxPreTabel robotAngels:vexsAngels];
-    NSArray *arr = [pathSting componentsSeparatedByString:@"->"];
     
+    /*
+    //这句话描画出路径
+    NSArray *arr = [pathSting componentsSeparatedByString:@"->"];
     UIBezierPath *bezier = [UIBezierPath new];
     for (int i = 0; i < arr.count; i++) {
         NSString *indexAndAngel = [arr objectAtIndex:i];
@@ -322,18 +373,24 @@
             [bezier moveToPoint:pt];
         }
     }
+    
     m_pathLayer.path = bezier.CGPath;
+    */
+    
     NSLog(@"Path__:%@", pathSting);
     [self processingPath:pathSting];
-
 }
 
 //pathString:3,0->0,-90->1,70, 将pathstring切换成数组
 - (void)processingPath : (NSString *)pathString {
+    
     if (pathString.length == 0) {
         NSLog(@"pathString length is zero, wrong");
     }
     NSArray *arr = [pathString componentsSeparatedByString:@"->"];
+    
+    [pathArr removeAllObjects];
+    //init path arr
     pathArr = [NSMutableArray arrayWithArray:arr];
     
 }

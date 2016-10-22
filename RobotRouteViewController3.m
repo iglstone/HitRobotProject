@@ -43,7 +43,8 @@
 @implementation RobotRouteViewController3
 #pragma mark - life cicle
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     m_realPosotionsArray = [NSMutableArray new];
@@ -86,6 +87,15 @@
             NSLog(@"composeDownLoadStringOfMode nil");
         }
     }
+    
+    UIImageView *starGzaerTagImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"starGazerTag"]];
+    [self.view addSubview:starGzaerTagImage];
+    [starGzaerTagImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.view).offset(30+10);
+        make.bottom.equalTo(self.view).offset(-49 - 30 - 10);
+        make.size.mas_equalTo(CGSizeMake(90, 90));
+    }];
+    
 }
 
 - (void) drawRouteView
@@ -114,6 +124,7 @@
         MainViewController *main = (MainViewController *)tab;
         [main hideTabelAndDebugLabel];
     }
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -139,11 +150,13 @@
 
 #pragma mark - addViews
 - (void)addBtns {
-    rightContainer = [[UIView alloc] initWithFrame:CGRectMake(screenWidth - 120, 20, 100, screenHeight - 49 - 20*2)];
+//    rightContainer = [[UIView alloc] initWithFrame:CGRectMake(screenWidth - 120, 20, 100, screenHeight - 49 - 20*2)];
+    rightContainer = [[UIView alloc] initWithFrame:CGRectMake( 200, 20, 100, screenHeight - 49 - 20*2)];
     rightContainer.backgroundColor = [UIColor lightGrayColor];
     [self.view addSubview:rightContainer];
+    //[self.view insertSubview:rightContainer atIndex:200];
     
-    deskNameArr = @[@"隐藏", @"参数设置", @"选择地图", @"EditGraph", @"隐藏路径", @"201桌", @"202桌", @"203桌",@"204桌"];
+    deskNameArr = @[@"隐藏", @"参数设置", @"选择地图", @"EditGraph", @"隐藏路径", @"起点", @"3D打印", @"独轮车",@"终点"];
     for (int i = 0; i < deskNameArr.count; i++) {
         UIButton *positionBtn = [UIButton new];
         if (i==4) {
@@ -152,9 +165,11 @@
             positionBtn.backgroundColor = [UIColor orangeColor];
         [rightContainer addSubview:positionBtn];
         [positionBtn setTitle:deskNameArr[i] forState:UIControlStateNormal];
+        
         [positionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.view.mas_top).offset(20 + 55 * i);
-            make.right.equalTo(self.view).offset(-20);
+            make.top.equalTo(self.view.mas_top).offset(20 + 70 * i);
+//            make.right.equalTo(self.view).offset(-20);
+            make.right.equalTo(rightContainer.mas_right);
             make.width.mas_equalTo(@100);
         }];
         [positionBtn addTarget:self action:@selector(btnTaped:) forControlEvents:UIControlEventTouchUpInside];
@@ -171,7 +186,8 @@
         [UIView beginAnimations:@"ani" context:nil];
         [UIView setAnimationDuration:0.4];
         [UIView setAnimationCurve:UIViewAnimationCurveLinear];
-        rightContainer.frame = CGRectMake(screenWidth - 120, 20, 100, 35);
+//        rightContainer.frame = CGRectMake(screenWidth - 120, 20, 100, 35);
+        rightContainer.frame = CGRectMake(200, 20, 100, 35);
         [UIView commitAnimations];
         
         for (UIButton *btn in rightContainer.subviews) {
@@ -189,7 +205,8 @@
         [UIView beginAnimations:@"ani" context:nil];
         [UIView setAnimationDuration:0.4];
         [UIView setAnimationCurve:UIViewAnimationCurveLinear];
-        rightContainer.frame = CGRectMake(screenWidth - 120, 20, 100, screenHeight - 49 - 20*2);
+//        rightContainer.frame = CGRectMake(screenWidth - 120, 20, 100, screenHeight - 49 - 20*2);
+        rightContainer.frame = CGRectMake(200, 20, 100, screenHeight - 49 - 20*2);
         [UIView commitAnimations];
         
         for (UIButton *btn in rightContainer.subviews) {
@@ -238,15 +255,35 @@
     
     // send position message
     NSString *deskNum = btn.titleLabel.text;
+    
     NSInteger index = [deskNameArr indexOfObjectPassingTest:^BOOL(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([deskNum isEqualToString:obj]) {
+        if ([deskNum isEqualToString:obj])
+        {
             return YES;
         }
         return NO;
     }];
     if (index != NSNotFound) {
-        [[HitControl sharedControl] sendPathToRobot:index ofRealPosition:m_realPosotionsArray ofDeskNum:deskNameArr];
+        //[[HitControl sharedControl] sendPathToRobot:index ofRealPosition:m_realPosotionsArray ofDeskNum:deskNameArr];
+        switch (index) {
+            case 5:
+                index = 0;//起始点
+                break;
+            case 6:
+                index = 3;//3D
+                break;
+            case 7:
+                index = 5;//独轮车
+                break;
+            case 8:
+                index = 6;//终点
+                break;
+            default:
+                break;
+        }
+        [routeView producePathToFinal:(int)index];//产生路径并发送到下位机
     }
+    
 }
 
 - (void)logSomeThing {

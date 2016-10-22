@@ -7,7 +7,7 @@
 //
 
 #import "StarGazerViewController2.h"
-
+#import "StarGazerProtocol.h"
 
 #define CALCSTOPTAG  101
 #define CALCSTARTTAG 102
@@ -19,6 +19,8 @@
 @interface StarGazerViewController2 () <UIPickerViewDelegate, UIPickerViewDataSource>
 {
     ServerSocket *server;
+    StarGazerProtocol *stProtocol;
+    
     NSString *longString;
     UIView *drawView;
     CAShapeLayer *pointShapeLayer;
@@ -40,6 +42,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     server = [ServerSocket sharedSocket];
+    stProtocol = [StarGazerProtocol sharedStarGazerProtocol];
     self.markTypePickview.delegate = self;
     self.markTypePickview.dataSource = self;
     longString  = nil;
@@ -100,16 +103,6 @@
 - (void)dealloc {
     [server removeObserver:self forKeyPath:@"starGazerAckString"];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 #pragma mark - delegates
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
@@ -228,7 +221,12 @@
     }else
         tmp = [NSString stringWithFormat:@"~#%@|%@", paraString, numString];
     self.labelSendData.text = tmp;
-    return tmp;
+    
+    //装成协议发送出去
+    NSString *proString = [stProtocol composeDownLoadStringOfMode:StarGazerModeSetting data:tmp];
+    
+    return proString;
+    //return tmp;
 }
 
 @end

@@ -60,6 +60,22 @@
     }else
         arr = @[@"*桌号",@"*信号",@"备注",@"其他"];
     NSArray *arr2 = @[self.deskName,self.signal,@"备注",@"其他"];
+    
+    int num = self.isSong == TRUE ? 4 :4;
+    UIView *labelView;
+    for (int i =0; i<num; i++) {
+        labelView = [self labelAndTextfield:100+i label:arr[i] textFeild:arr2[i]];
+        [view addSubview:labelView];
+        [labelView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(view).offset(i*50 + 60);
+            make.height.mas_equalTo(40);
+            make.left.equalTo(view);
+            make.right.equalTo(view);
+        }];
+    }
+
+    
+    /***** 有轨磁导航机器人左右转程序
     int num = self.isSong == TRUE ? 4 :1;
     UIView *labelView;
     for (int i =0; i<num; i++) {
@@ -93,6 +109,7 @@
         [rb setChecked:YES];
         [RadioButton addObserverForGroupId:@"turn group" observer:self];
     }
+    ****/
 }
 
 -(void)radioButtonSelectedAtIndex:(NSUInteger)index inGroup:(NSString *)groupId{

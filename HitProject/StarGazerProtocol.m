@@ -18,7 +18,8 @@
 
 @implementation StarGazerProtocol
 
-+ (instancetype )sharedStarGazerProtocol {
++ (instancetype )sharedStarGazerProtocol
+{
     static StarGazerProtocol *sharedStarGazer = nil;
     static dispatch_once_t pridicate;
     dispatch_once(&pridicate, ^{
@@ -27,7 +28,8 @@
     return sharedStarGazer;
 }
 
-- (instancetype)init {
+- (instancetype )init
+{
     self  = [super init];
     if (self) {
         [[ServerSocket sharedSocket] addObserver:self forKeyPath:@"starGazerUpLoadString" options:NSKeyValueObservingOptionNew context:nil];
@@ -38,7 +40,8 @@
 }
 
 //接收下位机代码
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+- (void )observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
     if ([keyPath isEqualToString:@"starGazerUpLoadString"]) {
         NSString *newString  = [change objectForKey:@"new"];
         NSLog(@"new string:%@", newString);
@@ -47,6 +50,21 @@
         NSString *subData = [newString substringWithRange:NSMakeRange(5, newString.length - 7)];
         NSLog(@"subCmdMode: %@; subData: %@", subCmdMode, subData);
         
+        const char *cmdC = [subCmdMode UTF8String];
+        char cmd = cmdC[0];
+        
+        if (cmd == '2')
+        {
+            NSLog(@"请求回复");
+        }
+        else if (cmd == '1')
+        {
+            NSLog(@"状态回复");
+        }
+        else
+        {
+            NSLog(@"紧急事件回复,cmd: %c",cmd);
+        }
         
         /*
         tmpGazerModel = [STModel stmodelWithString:newString]; //解析string
@@ -100,6 +118,7 @@
 }
 
 
+/*
 - (void) sendMessage:(NSString *)string Mode:(StarGazerMode)mode
 {
     NSString *sendS = [self composeDownLoadStringOfMode:mode data:string];
@@ -108,5 +127,6 @@
     
     [[ServerSocket  sharedSocket] sendMessage:sendS debugstring:debugString];
 }
+*/
 
 @end

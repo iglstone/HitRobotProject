@@ -22,6 +22,8 @@
 - (NSInteger)getVexsNum;
 - (NSInteger)getMapWidth;
 - (NSInteger)getMapHeight;
+- (NSInteger)getOffsetWidth ;
+- (NSInteger)getOffsetHeight ;
 
 - (NSArray *)getRealPositionsArr ;
 - (CGPoint )getRealPositionsOfIndex:(NSInteger)index ;

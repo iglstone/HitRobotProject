@@ -33,6 +33,8 @@
 
 @property (nonatomic) BOOL isRunning;
 
+@property (nonatomic) BOOL showTag;
+
 + (instancetype) sharedSocket;
 
 /**

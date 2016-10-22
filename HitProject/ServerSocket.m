@@ -15,12 +15,14 @@
     NSString *sendedMessageTwice;
     AsyncSocket *tmpSocket;
     NSMutableArray *socketMessageModlesArray;
+    
 }
 @end
 
 @implementation ServerSocket
 @synthesize receiveMessage;
 @synthesize isRunning;
+@synthesize showTag;
 
 static ServerSocket* _instance = nil;
 #pragma mark - Lifecycle
@@ -47,6 +49,8 @@ static ServerSocket* _instance = nil;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toBackGround:) name:NOTICE_BACKGROUND object:nil];
         socketMessageModlesArray = [[NSMutableArray alloc] init];
         self.messagesArray = [NSMutableArray new];
+        
+        showTag = false;
     }
     return self;
 }
@@ -129,16 +133,21 @@ static ServerSocket* _instance = nil;
     }
 }
 
-- (void)dealyNoticeSuccess:(NSTimer *)timer {
+- (void)dealyNoticeSuccess:(NSTimer *)timer
+{
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CONNECTSUCCESS object:nil userInfo:[timer userInfo]];
 }
 
 - (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag
 {
+
+    //NSString *msg = [self convertDataToHexStr:data];
     NSString *msg = [ServerSocket dataToString:data];
-    NSLog(@"Server didReadData = %@",[ServerSocket dataToString:data]);
+    NSLog(@"Server didReadData of String = %@",msg);
+    //NSLog(@"Server didReadData of Hex = %@", msg);
     
-    [[self mutableArrayValueForKey:@"messagesArray"] addObject:msg];
+    
+    if(msg)[[self mutableArrayValueForKey:@"messagesArray"] addObject:msg];
     BOOL isShow = [self dealWithReceivedMessage:msg socket:sock];
     if (isShow) {
         if ([msg isEqualToString:@"o"]) {
@@ -150,8 +159,10 @@ static ServerSocket* _instance = nil;
             [tmpMain setDebugLabelText:msg mode:MESSAGEMODE_RECV];
         }
     }
+    
     msg = nil;
     [sock readDataWithTimeout:TIMEOUT_SECKENTS tag:0];
+    
 }
 
 /**
@@ -234,6 +245,32 @@ static ServerSocket* _instance = nil;
     return willShowOnLabel;
 }
 
+
+//普通字符串转换为十六进制的。
+-(NSString *)hexStringFromString:(NSString *)string {
+    NSData *myD = [string dataUsingEncoding:NSUTF8StringEncoding];
+    Byte *bytes = (Byte *)[myD bytes];
+    //下面是Byte 转换为16进制。
+    NSString *hexStr=@"";
+    for(int i=0;i<[myD length];i++)
+        
+    {
+        NSString *newHexStr = [NSString stringWithFormat:@"%x",bytes[i]&0xff];///16进制数
+        
+        if([newHexStr length]==1)
+            
+            hexStr = [NSString stringWithFormat:@"%@0%@",hexStr,newHexStr];
+        
+        else
+            
+            hexStr = [NSString stringWithFormat:@"%@%@",hexStr,newHexStr]; 
+    } 
+    return hexStr;
+    
+}
+
+
+
 /**
  *  发送到client的数据，
  *  @param string :data need send to ip addr
@@ -241,21 +278,41 @@ static ServerSocket* _instance = nil;
  */
 - (void)sendMessage :(NSString *)string debugstring:(NSString *)debugs
 {
+    //控制协议
     if ([string hasPrefix:@"0x"]) {
-        string = [CommonsFunc stringFromHexString:string];
+        NSString *tmp = [NSString stringWithFormat:@"7e01%@%@60",string,@"0000000000000000000000000000"];
+        tmp = [tmp stringByReplacingOccurrencesOfString:@"0x" withString:@""];
+        string = [CommonsFunc convertHexStrToString:tmp];//[self convertHexStrToString:tmp];
+        NSLog(@"test changed string :%@", string);
+        
+        //changed 10.18, for new protocle
+        //string = [CommonsFunc stringFromHexString:string];
     }
+    
+    //坐标协议直接发
     if (string) {
-        [[self mutableArrayValueForKey:@"messagesArray"] addObject:string];
+        if ([string hasPrefix:@"~"]) {
+            
+        }else
+            [[self mutableArrayValueForKey:@"messagesArray"] addObject:string];//[CommonsFunc stringFromHexString:string]];
     }
+    
     AppDelegate *dele = (AppDelegate*) [[UIApplication sharedApplication] delegate];
-    if (self.selectedSocketArray.count == 0 ) { //filtering the stopmove and stopSingSongs cmd.
+    
+    if (self.selectedSocketArray.count == 0 ) {
+        //filtering the stopmove and stopSingSongs cmd.
+//        if (showTag) {
+//            return ;
+//        }
         if ([debugs isEqualToString:@"停止"] || [debugs isEqualToString:@"停止播放"]) {
             //g:stopmove  P:stopSingSong
         } else {
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_NOROBOT object:nil];//通知到主界面去提示没有连接
+            showTag = true;
             return;
         }
     }
+    
     if ([dele.main isKindOfClass:[MainViewController class]]) {
         MainViewController *tmpMain = (MainViewController *)dele.main;
         [tmpMain setDebugLabelText:debugs mode:MESSAGEMODE_SEND];
@@ -405,6 +462,56 @@ static ServerSocket* _instance = nil;
 + (NSData *)stringToData:(NSString *)string
 {
     return [string dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+- (NSData *)convertHexStrToData:(NSString *)str {
+    if (!str || [str length] == 0) {
+        return nil;
+    }
+    
+    NSMutableData *hexData = [[NSMutableData alloc] initWithCapacity:8];
+    NSRange range;
+    if ([str length] % 2 == 0) {
+        range = NSMakeRange(0, 2);
+    } else {
+        range = NSMakeRange(0, 1);
+    }
+    for (NSInteger i = range.location; i < [str length]; i += 2) {
+        unsigned int anInt;
+        NSString *hexCharStr = [str substringWithRange:range];
+        NSScanner *scanner = [[NSScanner alloc] initWithString:hexCharStr];
+        
+        [scanner scanHexInt:&anInt];
+        NSData *entity = [[NSData alloc] initWithBytes:&anInt length:1];
+        [hexData appendData:entity];
+        
+        range.location += range.length;
+        range.length = 2;
+    }
+    
+    NSLog(@"hexdata: %@", hexData);
+    return hexData;
+}
+
+- (NSString *)convertDataToHexStr:(NSData *)data {
+    if (!data || [data length] == 0) {
+        return @"";
+    }
+    NSMutableString *string = [[NSMutableString alloc] initWithCapacity:[data length]];
+    
+    [data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
+        unsigned char *dataBytes = (unsigned char*)bytes;
+        for (NSInteger i = 0; i < byteRange.length; i++) {
+            NSString *hexStr = [NSString stringWithFormat:@"%x", (dataBytes[i]) & 0xff];
+            if ([hexStr length] == 2) {
+                [string appendString:hexStr];
+            } else {
+                [string appendFormat:@"0%@", hexStr];
+            }
+        }
+    }];
+    
+    return string;
 }
 
 @end

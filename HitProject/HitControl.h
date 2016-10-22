@@ -27,6 +27,8 @@
 
 - (void)controlMode ;
 
+- (void)circleMode ;
+
 - (void)forward ;
 
 - (void)backward ;
