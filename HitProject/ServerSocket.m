@@ -280,13 +280,15 @@ static ServerSocket* _instance = nil;
 {
     //控制协议
     if ([string hasPrefix:@"0x"]) {
+        /*
         NSString *tmp = [NSString stringWithFormat:@"7e01%@%@60",string,@"0000000000000000000000000000"];
         tmp = [tmp stringByReplacingOccurrencesOfString:@"0x" withString:@""];
         string = [CommonsFunc convertHexStrToString:tmp];//[self convertHexStrToString:tmp];
         NSLog(@"test changed string :%@", string);
+        */
         
         //changed 10.18, for new protocle
-        //string = [CommonsFunc stringFromHexString:string];
+        string = [CommonsFunc stringFromHexString:string];
     }
     
     //坐标协议直接发
@@ -301,9 +303,7 @@ static ServerSocket* _instance = nil;
     
     if (self.selectedSocketArray.count == 0 ) {
         //filtering the stopmove and stopSingSongs cmd.
-//        if (showTag) {
-//            return ;
-//        }
+
         if ([debugs isEqualToString:@"停止"] || [debugs isEqualToString:@"停止播放"]) {
             //g:stopmove  P:stopSingSong
         } else {
