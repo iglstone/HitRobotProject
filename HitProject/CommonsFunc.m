@@ -56,7 +56,7 @@
         return nil;
     }
     
-    NSMutableData *hexData = [[NSMutableData alloc] initWithCapacity:8];
+    NSMutableData *hexData = [[NSMutableData alloc] init ];//WithCapacity:8];
     NSRange range;
     if ([str length] % 2 == 0) {
         range = NSMakeRange(0, 2);

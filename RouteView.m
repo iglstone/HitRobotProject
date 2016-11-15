@@ -10,10 +10,11 @@
 #import "STModel.h"
 #import "EditGraphModelAndCell.h"
 #import "FloydAlgorithm.h"
+#import "CommonsFunc.h"
 
 #define POSITIONOFFSET 30 //整体地图相对于背景的偏移
 #define ROUTEOFFSET    30 //路径相对于整体地图的偏移，，0，0 点不是在地图的最坐下角
-#define THRSHHOLDCIRCLE 80//40
+#define THRSHHOLDCIRCLE 80//120//80//40
 
 #define TURNANGELTRHESHOLD 20//定义最大转向角，小于这个角度过度点就不发送到下位机
 
@@ -43,6 +44,9 @@
     
     NSTimer *time2 ;
     BOOL noRobotConnected;
+    
+    int startInt;
+    int endInd;
     
 }
 @end
@@ -101,6 +105,9 @@
         pathArr = [NSMutableArray new];
         graphModelsArray = [[DataCenter sharedDataCenter] getGraphModlesArr];
         
+        
+        startInt = 0;
+        endInd = 3;
         return self;
     }
     return self;
@@ -113,10 +120,9 @@
     NSInteger end = [[DataCenter sharedDataCenter] getCircleEnd];
     
     //填充pathArr数据
-    [self producePathfrom:(int)start to:(int)end];
+    [self producePathfrom:(int)start to:(int)end];//(int)end];
     
-    NSTimer *time = [NSTimer scheduledTimerWithTimeInterval:1.2 target:self selector:@selector(circleModeToRobot:) userInfo:nil repeats:YES];
-    [time fire];
+    [self circleModeToRobot];
     
 }
 
@@ -133,7 +139,8 @@
 }
 */
 
-- (void)updateRobotPosition :(NSTimer *)time {
+- (void)updateRobotPosition :(NSTimer *)time
+{
     UIBezierPath *path = [UIBezierPath bezierPathWithArcCenter:robotPositionOfScreen radius:10 startAngle:0.0 endAngle:2 * M_PI clockwise:0] ;
     [path moveToPoint:robotPositionOfScreen] ;
     int l1 = 25*cosf(robotAngelOfScreen/180*M_PI) ;
@@ -155,7 +162,8 @@
     NSArray *arr = [vexAngs componentsSeparatedByString:@","];
     NSInteger pointIndex = [[arr objectAtIndex:0] integerValue];
     //NSInteger angel = [[arr objectAtIndex:1] integerValue];
-    EditGraphModel *tmpGraphModel = [graphModelsArray objectAtIndex:pointIndex];
+    //EditGraphModel *tmpGraphModel = [graphModelsArray objectAtIndex:pointIndex];
+    EditGraphModel *tmpGraphModel = [[[DataCenter sharedDataCenter] getGraphModlesArr] objectAtIndex:pointIndex];
     NSString *xys = tmpGraphModel.ptXYS;
     CGPoint realPt = CGPointFromString(xys);
 
@@ -163,45 +171,43 @@
 }
 
 
-- (void) circleModeToRobot :(NSTimer *)timer {
-//    if (noRobotConnected) {
-//        //no robot connect
-//        return;
-//    }
+- (void) circleModeToRobot ;
+{
     if ([ServerSocket sharedSocket].selectedSocketArray.count == 0) {
         NSLog(@"no robot connected, return");
         [pathArr removeAllObjects];
         return;
     }
     if (pathArr.count == 0) {
-        [timer invalidate];
+        NSLog(@"no path data ,return");
         return;
     }
     
-    CGPoint realPt = [self getRealPointByIndex:0];
+    for (int i = 0; i < pathArr.count; i ++)
+    {
+        CGPoint realPt = [self getRealPointByIndex:i];
+        [[HitControl sharedControl] circleModeOfTotal:(int)pathArr.count index:i position:realPt angel:0];
+    }
+    
+    [self makeToast:@"循环指令发送完成" duration:1.5 position:CSToastPositionCenter];
+    
+    [pathArr removeAllObjects];
     
     //send to robot every time.
-    [[HitControl sharedControl] sendTouchPointToRobot:realPt];
-    
-    [pathArr removeObjectAtIndex:0];//remove the fisrt position in arr
+    //[[HitControl sharedControl] sendTouchPointToRobot:realPt];
+    //[pathArr removeObjectAtIndex:0];//remove the fisrt position in arr
 }
 
 //judge the robot has come to the position
 //only used when touch end and search the path, because pathArr will be the nil until then.
-- (void)sendPositonToRobot:(NSTimer *)time {
+- (void)sendPositonToRobot:(NSTimer *)time
+{
     if ([ServerSocket sharedSocket].selectedSocketArray.count == 0) {
         NSLog(@"no robot connected, return");
         [pathArr removeAllObjects];
         return;
     }
-    /*
-    if (noRobotConnected)
-    {
-        //no robot connect
-        return;
-    }
-    */
-    
+
     if (pathArr.count == 0)
     {
         NSLog(@"no path route");
@@ -209,27 +215,77 @@
     }
     else
         NSLog(@"time fire to robot");
-    
+
     //每次取第一个。。
     CGPoint realPt = [self getRealPointByIndex:0];
-    
+
     //send to robot every time.
     [[HitControl sharedControl] sendTouchPointToRobot:realPt];
-    
+
     if ((fabs( tmpGazerModel.modelX - realPt.x) < THRSHHOLDCIRCLE ) && (fabs(tmpGazerModel.modelY - realPt.y) < THRSHHOLDCIRCLE)) {
-        
+
         [pathArr removeObjectAtIndex:0];//remove the fisrt position in arr
         
-        /*
-        //NSLog(@"now in cicle next angel");
-        if (fabs( angel - tmpGazerModel.modelAngel) < 5) {
-            NSLog(@"oooo :position right");
-            [pathArr removeObjectAtIndex:0];//remove the fisrt position in arr
+        if (pathArr.count == 0) {
+            
+            int tmp = startInt;
+            startInt = endInd;
+            endInd = tmp;
+            
+            [self producePathfrom:startInt to:endInd];
+            
         }
-        */
+        
     }
     
 }
+
+
+//- (void)sendPositonToRobot:(NSTimer *)time
+//{
+//    if ([ServerSocket sharedSocket].selectedSocketArray.count == 0) {
+//        NSLog(@"no robot connected, return");
+//        [pathArr removeAllObjects];
+//        return;
+//    }
+//    
+//    /*
+//     if (noRobotConnected)
+//     {
+//     //no robot connect
+//     return;
+//     }
+//     */
+//    
+//    if (pathArr.count == 0)
+//    {
+//        NSLog(@"no path route");
+//        return;
+//    }
+//    else
+//        NSLog(@"time fire to robot");
+//    
+//    //每次取第一个。。
+//    CGPoint realPt = [self getRealPointByIndex:0];
+//    
+//    //send to robot every time.
+//    [[HitControl sharedControl] sendTouchPointToRobot:realPt];
+//    
+//    if ((fabs( tmpGazerModel.modelX - realPt.x) < THRSHHOLDCIRCLE ) && (fabs(tmpGazerModel.modelY - realPt.y) < THRSHHOLDCIRCLE)) {
+//        
+//        [pathArr removeObjectAtIndex:0];//remove the fisrt position in arr
+//        
+//        /*
+//         //NSLog(@"now in cicle next angel");
+//         if (fabs( angel - tmpGazerModel.modelAngel) < 5) {
+//         NSLog(@"oooo :position right");
+//         [pathArr removeObjectAtIndex:0];//remove the fisrt position in arr
+//         }
+//         */
+//    }
+//    
+//}
+
 
 #pragma mark - draw views
 /**

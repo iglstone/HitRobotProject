@@ -14,6 +14,7 @@
 #import "DataCenter.h"
 #import "MapInfoViewController.h"
 #import "StarGazerProtocol.h"
+#import "HitControl.h"
 
 #define TOUCHPINCHTHRESHHOLD 10
 #define RIGHTBACKGROUNDVIEWOFSEET 30
@@ -47,8 +48,17 @@
 {
     self = [super init];
     if (self) {
+        m_realPosotionsArray = [NSMutableArray new];
+        screenHeight = [[UIScreen mainScreen] bounds].size.height;
+        screenWidth = [[UIScreen mainScreen] bounds].size.width;
+        sharedData = [DataCenter sharedDataCenter];
+        
         routeView = [[RouteView alloc] initWithFrame:CGRectMake(0, 0, self.imgView.frame.size.width, self.imgView.frame.size.height)];
         [routeView setCanEdit:YES];
+        
+        
+        //init something before
+        [self drawRouteView];
     }
     return self;
 }
@@ -57,10 +67,7 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    m_realPosotionsArray = [NSMutableArray new];
-    screenHeight = [[UIScreen mainScreen] bounds].size.height;
-    screenWidth = [[UIScreen mainScreen] bounds].size.width;
-    sharedData = [DataCenter sharedDataCenter];
+    
     
     UIEdgeInsets edge = UIEdgeInsetsMake(RIGHTBACKGROUNDVIEWOFSEET, RIGHTBACKGROUNDVIEWOFSEET, RIGHTBACKGROUNDVIEWOFSEET + 49, RIGHTBACKGROUNDVIEWOFSEET);
     self.imgView = [[UIImageView alloc] initWithFrame:UIEdgeInsetsInsetRect(self.view.frame, edge)];
@@ -85,7 +92,7 @@
     [backgroundView insertSubview:routeView belowSubview: backgroundView];
     
     [self addBtns];
-    [self drawRouteView];
+    //[self drawRouteView];//move to init part
     
     //refresh the draw
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(drawRouteView) name:NOTI_REFRESHDRAW object:nil];
@@ -110,6 +117,29 @@
     
 }
 
+- (void)addForGongBo{
+    //add btns
+    /*
+    Container = [[UIView alloc] initWithFrame:CGRectMake( 200, 20, 100, screenHeight - 49 - 20*2)];
+    NSArray *points = @[@"隐藏", @"参数设置", @"选择地图", @"EditGraph", @"隐藏路径", @"起点", @"3D打印", @"独轮车",@"终点"];
+    for (int i = 0; i < points.count; i++) {
+        UIButton *positionBtn = [UIButton new];
+        positionBtn.backgroundColor = [UIColor orangeColor];
+        [rightContainer addSubview:positionBtn];
+        [positionBtn setTitle:deskNameArr[i] forState:UIControlStateNormal];
+        
+        [positionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.view.mas_top).offset(20 + 70 * i);
+            make.right.equalTo(rightContainer.mas_right);
+            make.width.mas_equalTo(@100);
+        }];
+        
+        [positionBtn addTarget:self action:@selector(sendPos:) forControlEvents:UIControlEventTouchUpInside];
+    */
+}
+
+
+//init something before and refresh part
 - (void) drawRouteView
 {
     m_realPosotionsArray = [NSMutableArray arrayWithArray:[sharedData getRealPositionsArr]];
@@ -282,21 +312,41 @@
                 index = 0;//起始点
                 break;
             case 6:
-                index = 3;//3D
+//                index = 3;//3D
+                index = 1;
                 break;
             case 7:
-                index = 5;//独轮车
+                index = 2;//5;//独轮车
                 break;
             case 8:
-                index = 6;//终点
+                index = 3;//6;//终点
                 break;
             default:
                 break;
         }
         [routeView producePathToFinal:(int)index];//产生路径并发送到下位机
+        
+        //CGPoint pt = [self getRealPointByIndex:(int)index];
+        //[[HitControl sharedControl] sendTouchPointToRobot:pt];
+        
     }
     
 }
+
+- (CGPoint )getRealPointByIndex:(int)index
+{
+    if ( index >= 4 ) {
+        NSLog(@"error of index..");
+        return CGPointMake(0, 0);
+    }
+    
+    EditGraphModel *tmpGraphModel = [[[DataCenter sharedDataCenter] getGraphModlesArr] objectAtIndex:index];
+    NSString *xys = tmpGraphModel.ptXYS;
+    CGPoint realPt = CGPointFromString(xys);
+    
+    return realPt;
+}
+
 
 - (void)logSomeThing {
     //    NSLog(@"各顶点间最短路径如下：");

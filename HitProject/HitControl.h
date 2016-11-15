@@ -27,7 +27,9 @@
 
 - (void)controlMode ;
 
-- (void)circleMode ;
+//- (void)circleMode ;
+//循环模式添加新的协议
+- (void)circleModeOfTotal:(int)total index:(int)index position:(CGPoint)position angel:(int)angel ;
 
 - (void)forward ;
 

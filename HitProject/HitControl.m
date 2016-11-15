@@ -4,7 +4,6 @@
 //
 //  Created by 郭龙 on 15/11/6.
 //  Copyright (c) 2015年 郭龙. All rights reserved.
-//
 
 #import "HitControl.h"
 
@@ -63,11 +62,6 @@ static HitControl* _instance = nil;
 - (void)controlMode {
     [server sendMessage:@"0x010101" debugstring:@"控制模式"];
 }
-
-- (void)circleMode {
-    [server sendMessage:@"0x800101" debugstring:@"无轨循环模式"];
-}
-
 
 - (void)forward {
     [server sendMessage:@"0x020101" debugstring:@"前进"];
@@ -221,7 +215,26 @@ static HitControl* _instance = nil;
     [server sendMessage:@"0x410101" debugstring:@"停止播放"];
 }
 
-- (void) sendTouchPointToRobot: (CGPoint) touchPoint angle:(int )angel {
+//- (void)circleMode {
+//    [server sendMessage:@"0x800101" debugstring:@"无轨循环模式"];
+//}
+
+//循环模式添加新的协议
+- (void)circleModeOfTotal:(int)total index:(int)index position:(CGPoint)position angel:(int)angel
+{
+    NSString *sendPos = [self composePosition:position angel:angel];
+    
+    [[[ServerSocket sharedSocket] mutableArrayValueForKey:@"messagesArray"] addObject:[NSString stringWithFormat:@"__String: %@", sendPos]];
+    
+    NSString * cmd = [CommonsFunc convertStringToHexStr:sendPos];
+    NSString *tmp = [NSString stringWithFormat: @"7e0107%02d%02d%@60",total,index, cmd];//注意二进制码那一块
+    NSString *hexSt = [CommonsFunc convertHexStrToString:tmp];
+    
+    [server sendMessage:hexSt debugstring:sendPos];
+}
+
+- (NSString *)composePosition:(CGPoint) touchPoint angel:(int)angel
+{
     NSString *cmd ;
     NSString *stX ;
     NSString *stY ;
@@ -245,10 +258,15 @@ static HitControl* _instance = nil;
         cmd = [NSString stringWithFormat:@"%@%@1%03d",stX,stY,abs(angel)];
     }
     
-    //    NSLog(@"__String: %@", cmd);
+    return cmd;
+}
+
+- (void) sendTouchPointToRobot: (CGPoint) touchPoint angle:(int )angel
+{
+    NSString *cmd = [self composePosition:touchPoint angel:angel];
+    
     [[[ServerSocket sharedSocket] mutableArrayValueForKey:@"messagesArray"] addObject:[NSString stringWithFormat:@"__String: %@", cmd]];
     cmd = [CommonsFunc convertStringToHexStr:cmd];
-    
     NSString *tmp = [NSString stringWithFormat: @"7e01000000%@60",cmd];
     NSString *hexSt = [CommonsFunc convertHexStrToString:tmp];
     [server sendMessage:hexSt debugstring:cmd];
@@ -271,6 +289,7 @@ static HitControl* _instance = nil;
             break;
         case 1:
             index = 3;//3D
+            //index = 1;//gongbo
             break;
         case 2:
             index = 6;//独轮车

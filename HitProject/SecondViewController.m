@@ -368,12 +368,13 @@
     else if(index == 2)
     {
         NSLog(@"circle mode");
-        [control circleMode];//发命令
+        //[control circleMode]; //发命令
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTICE_CIRCLEMODE object:nil];
     }
 }
 
-- (void )circleMode{
+- (void )circleMode
+{
     NSLog(@"circleMode and send positions to robot");
 }
 
