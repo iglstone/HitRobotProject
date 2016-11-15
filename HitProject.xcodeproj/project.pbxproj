@@ -985,7 +985,7 @@
 				GCC_PREFIX_HEADER = /Users/guolong/Documents/2iOSDev/HitRobotProject/HitProject/PrefixHeader.pch;
 				INFOPLIST_FILE = HitProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hitrobot.wuhuhate;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hitrobot.wuhuhateyougui;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1003,7 +1003,7 @@
 				GCC_PREFIX_HEADER = /Users/guolong/Documents/2iOSDev/HitRobotProject/HitProject/PrefixHeader.pch;
 				INFOPLIST_FILE = HitProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hitrobot.wuhuhate;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hitrobot.wuhuhateyougui;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";

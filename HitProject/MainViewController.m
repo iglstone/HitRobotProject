@@ -77,10 +77,10 @@
     FourthViewController *fourth = [FourthViewController new];
     fourth.tabBarItem = [[UITabBarItem alloc]initWithTitle:@"语音界面" image:image selectedImage:nil];
     
-    RobotRouteViewController3 *fifth = [RobotRouteViewController3 new];
-    fifth.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"无轨导航" image:image selectedImage:nil];
+//    RobotRouteViewController3 *fifth = [RobotRouteViewController3 new];
+//    fifth.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"无轨导航" image:image selectedImage:nil];
 //    self.viewControllers = @[first, second, third, fourth];// fifth];
-    self.viewControllers = @[first, second, third, fourth, fifth];
+    self.viewControllers = @[first, second, third, fourth];//, fifth];
     
     [self addRightSideViewContainer];
     [self.view addSubview:self.p_debugLabel];
