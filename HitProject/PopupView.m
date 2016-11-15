@@ -61,6 +61,8 @@
         arr = @[@"*桌号",@"*信号",@"备注",@"其他"];
     NSArray *arr2 = @[self.deskName,self.signal,@"备注",@"其他"];
     
+    
+    /*
     int num = self.isSong == TRUE ? 4 :4;
     UIView *labelView;
     for (int i =0; i<num; i++) {
@@ -73,9 +75,9 @@
             make.right.equalTo(view);
         }];
     }
-
+    */
     
-    /***** 有轨磁导航机器人左右转程序
+    /***** 有轨磁导航机器人左右转程序*/
     int num = self.isSong == TRUE ? 4 :1;
     UIView *labelView;
     for (int i =0; i<num; i++) {
@@ -109,7 +111,7 @@
         [rb setChecked:YES];
         [RadioButton addObserverForGroupId:@"turn group" observer:self];
     }
-    ****/
+    /****/
 }
 
 -(void)radioButtonSelectedAtIndex:(NSUInteger)index inGroup:(NSString *)groupId{
